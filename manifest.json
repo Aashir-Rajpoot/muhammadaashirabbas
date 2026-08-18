@@ -1,0 +1,15 @@
+{
+  "name": "Aashir X — Digital Universe",
+  "short_name": "Aashir X",
+  "description": "A living, weather-and-time-aware interactive digital universe by Muhammad Aashir Abbas.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#05060a",
+  "theme_color": "#05060a",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "./aashir-profile.jpeg", "sizes": "192x192", "type": "image/jpeg" },
+    { "src": "./aashir-profile.jpeg", "sizes": "512x512", "type": "image/jpeg" }
+  ]
+}

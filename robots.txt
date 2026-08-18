@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aashir-rajpoot.github.io/sitemap.xml
