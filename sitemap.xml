@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://aashir-rajpoot.github.io/</loc></url>
-  <url><loc>https://aashir-rajpoot.github.io/aboutus.html</loc></url>
+
+    <url>
+        <loc>https://muhammadaashirabbas.aashirrajpoot757.workers.dev/</loc>
+    </url>
+
+    <url>
+        <loc>https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aboutus.html</loc>
+    </url>
+
 </urlset>
