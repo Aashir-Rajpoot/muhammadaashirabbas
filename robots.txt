@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://aashir-rajpoot.github.io/sitemap.xml
+
+Sitemap: https://muhammadaashirabbas.aashirrajpoot757.workers.dev/sitemap.xml
