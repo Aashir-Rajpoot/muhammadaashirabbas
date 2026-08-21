@@ -73,23 +73,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:image" content="https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aashir-profile.jpeg">
   <meta name="twitter:image:alt" content="Muhammad Aashir Abbas">
 
-  <!-- Person Structured Data -->
+  <!-- Unified Person Entity -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person",
     "name": "Muhammad Aashir Abbas",
     "alternateName": "Aashir Rajpoot",
     "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/",
     "image": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aashir-profile.jpeg",
     "jobTitle": "Digital Creator",
-    "description": "Digital creator studying Cyber Security, building websites and digital projects across design and technology.",
+    "description": "Muhammad Aashir Abbas — also known as Aashir Rajpoot — is a Cyber Security student (3rd Semester) and digital creator holding a 3-Year Diploma (DAE) in Information Technology. He builds and publishes web projects across design, technology and security.",
+    "alumniOf": [
+      { "@type": "EducationalOrganization", "name": "DAE — Information Technology (3-Year Diploma)" }
+    ],
+    "knowsAbout": ["Cyber Security", "Cloud", "Web & Frontend", "Design & UI/UX", "E-Commerce", "Digital Marketing", "Data Analytics", "Networking & IT Infrastructure", "Ethical Hacking Fundamentals", "Content Creation & Photography", "Problem Solving & Project Management"],
     "sameAs": [
       "https://www.facebook.com/share/1DmQ7qDxAf/",
       "https://www.linkedin.com/in/muhammad-aashir-abbas-9679b0279",
       "https://www.instagram.com/aashirrajpoot757",
       "https://youtube.com/@aashirnovavax",
       "https://www.threads.com/@aashirrajpoot757",
+      "https://github.com/Aashir-Rajpoot",
       "https://www.fiverr.com/s/NeBWVEN"
     ]
   }
@@ -102,10 +108,60 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     "@type": "WebSite",
     "name": "Aashir X — Digital Universe",
     "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/",
-    "author": {
-      "@type": "Person",
-      "name": "Muhammad Aashir Abbas"
-    }
+    "author": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" },
+    "publisher": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+  }
+  </script>
+
+  <!-- Project Entities ("Things I Build") -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CreativeWork",
+        "name": "Aashir Portfolio",
+        "url": "https://aashir-rajpoot.github.io/Aashir-Portfolio/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Aashir Gallery",
+        "url": "https://aashir-rajpoot.github.io/aashirgallery/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Aashir Weather",
+        "applicationCategory": "UtilityApplication",
+        "url": "https://aashir-rajpoot.github.io/AashirRajpoot-Weather/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Aashir Dictionary",
+        "applicationCategory": "ReferenceApplication",
+        "url": "https://aashir-rajpoot.github.io/Aashirrajpootdictionary/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Aashir Expense Tracker",
+        "applicationCategory": "FinanceApplication",
+        "url": "https://aashir-rajpoot.github.io/aashir-expense-tracker/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" },
+        "subjectOf": {
+          "@type": "WebPage",
+          "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/projects/aashir-expense-tracker"
+        }
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Quran Read",
+        "url": "https://aashir-rajpoot.github.io/quranread/",
+        "creator": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+      }
+    ]
   }
   </script>
 
@@ -370,6 +426,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <a class="connect-link" href="https://www.threads.com/@aashirrajpoot757" target="_blank" rel="noopener noreferrer" aria-label="Threads">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3c-5 0-8 3.2-8 8.7 0 5.6 3.2 9.3 8.3 9.3 3.6 0 5.7-1.7 5.7-4.4 0-2.1-1.4-3.4-3.7-3.7 1.7-.5 2.7-1.7 2.7-3.3 0-2.3-1.9-3.7-4.6-3.7-2 0-3.6.8-4.5 2.1"/></svg>
           <span>Threads</span>
+        </a>
+        <a class="connect-link" href="https://github.com/Aashir-Rajpoot" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.54 2.87 8.38 6.84 9.74.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.36-3.37-1.36-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.28 2.75 1.05a9.3 9.3 0 015 0c1.9-1.33 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.59.69.48A10.02 10.02 0 0022 12.26C22 6.58 17.52 2 12 2z"/></svg>
+          <span>GitHub</span>
         </a>
         <a class="connect-link" href="https://www.fiverr.com/s/NeBWVEN" target="_blank" rel="noopener noreferrer" aria-label="Fiverr">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 21V10.5M8 10.5c0-2.2 1.3-3.5 3.5-3.5H13M5 10.5h9M15 21v-8M15 13h4M15 13c0-1.3 1-2 2-2h2"/><circle cx="17" cy="6" r="1"/></svg>
