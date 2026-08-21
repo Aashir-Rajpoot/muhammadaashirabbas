@@ -23,31 +23,41 @@
 <meta name="twitter:description" content="Cyber Security student, digital creator and builder — personal profile, education, skills, certificates and projects.">
 <meta name="twitter:image" content="https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aashir-profile.jpeg">
 
+<!-- Unified Person Entity (same @id as homepage) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "mainEntity": {
-    "@type": "Person",
-    "name": "Muhammad Aashir Abbas",
-    "alternateName": "Aashir Rajpoot",
-    "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aboutus",
-    "image": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aashir-profile.jpeg",
-    "jobTitle": "Digital Creator",
-    "description": "Cyber Security student (3rd Semester) and digital creator, holding a 3-Year Diploma (DAE) in Information Technology.",
-    "alumniOf": [
-      { "@type": "EducationalOrganization", "name": "DAE — Information Technology (3-Year Diploma)" }
-    ],
-    "knowsAbout": ["Cyber Security", "Cloud", "Web & Frontend", "Design & UI/UX", "E-Commerce", "Digital Marketing", "Data Analytics", "Networking & IT Infrastructure", "Ethical Hacking Fundamentals", "Content Creation & Photography", "Problem Solving & Project Management"],
-    "sameAs": [
-      "https://www.facebook.com/share/1Hf26dKEhm/",
-      "https://www.linkedin.com/in/muhammad-aashir-abbas-9679b0279",
-      "https://www.instagram.com/aashirrajpoot757",
-      "https://youtube.com/@aashirnovavax",
-      "https://www.threads.com/@aashirrajpoot757",
-      "https://www.fiverr.com/s/NeBWVEN"
-    ]
-  }
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aboutus#webpage",
+      "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aboutus",
+      "mainEntity": { "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/#person",
+      "name": "Muhammad Aashir Abbas",
+      "alternateName": "Aashir Rajpoot",
+      "url": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/",
+      "image": "https://muhammadaashirabbas.aashirrajpoot757.workers.dev/aashir-profile.jpeg",
+      "jobTitle": "Digital Creator",
+      "description": "Muhammad Aashir Abbas — also known as Aashir Rajpoot — is a Cyber Security student (3rd Semester) and digital creator holding a 3-Year Diploma (DAE) in Information Technology. He builds and publishes web projects across design, technology and security.",
+      "alumniOf": [
+        { "@type": "EducationalOrganization", "name": "DAE — Information Technology (3-Year Diploma)" }
+      ],
+      "knowsAbout": ["Cyber Security", "Cloud", "Web & Frontend", "Design & UI/UX", "E-Commerce", "Digital Marketing", "Data Analytics", "Networking & IT Infrastructure", "Ethical Hacking Fundamentals", "Content Creation & Photography", "Problem Solving & Project Management"],
+      "sameAs": [
+        "https://www.facebook.com/share/1DmQ7qDxAf/",
+        "https://www.linkedin.com/in/muhammad-aashir-abbas-9679b0279",
+        "https://www.instagram.com/aashirrajpoot757",
+        "https://youtube.com/@aashirnovavax",
+        "https://www.threads.com/@aashirrajpoot757",
+        "https://github.com/Aashir-Rajpoot",
+        "https://www.fiverr.com/s/NeBWVEN"
+      ]
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -354,6 +364,7 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Aashir Portfolio</h3>
           <p class="pc-desc">A personal portfolio site presenting his work and background.</p>
           <span class="pc-cat">Personal · Professional</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/Aashir-Portfolio/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
         </article>
 
@@ -362,6 +373,7 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Aashir Gallery</h3>
           <p class="pc-desc">A photo gallery site for browsing and presenting images.</p>
           <span class="pc-cat">Photography · Visual</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/aashirgallery/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
         </article>
 
@@ -370,6 +382,7 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Aashir Weather</h3>
           <p class="pc-desc">A weather application showing live conditions and forecasts.</p>
           <span class="pc-cat">Utility · Weather</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/AashirRajpoot-Weather/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
         </article>
 
@@ -378,6 +391,7 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Aashir Dictionary</h3>
           <p class="pc-desc">A dictionary tool for looking up word meanings quickly.</p>
           <span class="pc-cat">Reference · Language</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/Aashirrajpootdictionary/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
         </article>
 
@@ -386,7 +400,9 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Aashir Expense Tracker</h3>
           <p class="pc-desc">A tool for logging and tracking everyday expenses.</p>
           <span class="pc-cat">Finance · Data</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/aashir-expense-tracker/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
+          <a class="pc-link" href="/projects/aashir-expense-tracker" style="margin-top:2px;">Read Case Study <span aria-hidden="true">→</span></a>
         </article>
 
         <article class="project-card">
@@ -394,6 +410,7 @@ This website brings together selected work, projects, and areas of interest, ref
           <h3 class="pc-title">Quran Read</h3>
           <p class="pc-desc">A reading tool built for a simple, focused Quran reading experience.</p>
           <span class="pc-cat">Reading · Reflection</span>
+          <span class="pc-by" style="display:block;margin-top:2px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);">Built by Muhammad Aashir Abbas</span>
           <a class="pc-link" href="https://aashir-rajpoot.github.io/quranread/" target="_blank" rel="noopener noreferrer">Explore Project <span aria-hidden="true">↗</span></a>
         </article>
 
@@ -436,7 +453,7 @@ This website brings together selected work, projects, and areas of interest, ref
       <h2>Connect With Me</h2>
       <p class="about-lede">Find him online.</p>
       <div class="connect-grid">
-        <a class="connect-link" href="https://www.facebook.com/share/1Hf26dKEhm/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <a class="connect-link" href="https://www.facebook.com/share/1DmQ7qDxAf/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5H16l.4-3H13.5V8.5c0-.9.25-1.5 1.55-1.5H16.5V4.3C16.2 4.26 15.2 4.17 14 4.17c-2.4 0-4 1.46-4 4.14V10.5H7.5v3H10V21h3.5z"/></svg>
           <span>Facebook</span>
         </a>
@@ -455,6 +472,10 @@ This website brings together selected work, projects, and areas of interest, ref
         <a class="connect-link" href="https://www.threads.com/@aashirrajpoot757" target="_blank" rel="noopener noreferrer" aria-label="Threads">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3c-5 0-8 3.2-8 8.7 0 5.6 3.2 9.3 8.3 9.3 3.6 0 5.7-1.7 5.7-4.4 0-2.1-1.4-3.4-3.7-3.7 1.7-.5 2.7-1.7 2.7-3.3 0-2.3-1.9-3.7-4.6-3.7-2 0-3.6.8-4.5 2.1"/></svg>
           <span>Threads</span>
+        </a>
+        <a class="connect-link" href="https://github.com/Aashir-Rajpoot" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.54 2.87 8.38 6.84 9.74.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.36-3.37-1.36-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.73 0 0 .84-.28 2.75 1.05a9.3 9.3 0 015 0c1.9-1.33 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.59.69.48A10.02 10.02 0 0022 12.26C22 6.58 17.52 2 12 2z"/></svg>
+          <span>GitHub</span>
         </a>
         <a class="connect-link" href="https://www.fiverr.com/s/NeBWVEN" target="_blank" rel="noopener noreferrer" aria-label="Fiverr">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 21V10.5M8 10.5c0-2.2 1.3-3.5 3.5-3.5H13M5 10.5h9M15 21v-8M15 13h4M15 13c0-1.3 1-2 2-2h2"/><circle cx="17" cy="6" r="1"/></svg>
