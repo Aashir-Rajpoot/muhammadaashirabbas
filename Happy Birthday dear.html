@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Your Birthday Journey ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Italiana&family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#c98fe8;
+    --secondary:#e88fb0;
+    --accent:#ffd488;
+    --bg-deep:#0f0a1a;
+    --bg-mid:#251440;
+    --bg-warm:#3a1f52;
+    --glow: rgba(201,143,232,0.45);
+    --cream:#fff7ec;
+    --ink:#3a1f38;
+    --glass:rgba(255,255,255,0.09);
+    --glass-strong:rgba(255,255,255,0.16);
+  }
+  body.theme-boy{
+    --primary:#3aa0ff;
+    --secondary:#7b5cff;
+    --accent:#5fe6ff;
+    --bg-deep:#05070f;
+    --bg-mid:#0b1330;
+    --bg-warm:#101b45;
+    --glow: rgba(58,160,255,0.5);
+  }
+  body.theme-girl{
+    --primary:#ff8fb3;
+    --secondary:#c98fe8;
+    --accent:#ffd488;
+    --bg-deep:#170a1f;
+    --bg-mid:#2c1440;
+    --bg-warm:#4a2350;
+    --glow: rgba(255,143,179,0.5);
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{ margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:var(--bg-deep); font-family:'Quicksand',sans-serif; color:var(--cream); transition:background 1s ease; }
+  .display{ font-family:'Italiana',serif; letter-spacing:0.04em; }
+  .script{ font-family:'Cormorant Garamond',serif; font-style:italic; }
+
+  #app{ position:relative; width:100vw; height:100vh; overflow:hidden; }
+
+  #bg-sky{
+    position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse at 20% 20%, var(--glow), transparent 55%),
+      radial-gradient(ellipse at 80% 15%, var(--glow), transparent 50%),
+      radial-gradient(ellipse at 50% 100%, var(--glow), transparent 60%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 45%, var(--bg-warm) 100%);
+    background-size:200% 200%;
+    animation: bgDrift 22s ease-in-out infinite alternate;
+    transition: background 1.2s ease;
+  }
+  @keyframes bgDrift{ 0%{background-position:0% 0%;} 100%{background-position:100% 60%;} }
+
+  canvas#fx{ position:fixed; inset:0; z-index:1; pointer-events:none; width:100%; height:100%; }
+  #emoji-layer{ position:fixed; inset:0; z-index:6; pointer-events:none; overflow:hidden; }
+
+  .step{
+    position:absolute; inset:0; z-index:5;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:6vh 6vw; text-align:center;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transform:scale(1.04); filter:blur(6px);
+    transition:opacity 0.85s ease, transform 0.85s ease, filter 0.85s ease;
+    overflow-y:auto;
+  }
+  .step.active{ opacity:1; visibility:visible; pointer-events:auto; transform:scale(1); filter:blur(0px); }
+  .step.leaving{ opacity:0; transform:scale(0.96); filter:blur(8px); }
+
+  .eyebrow{ font-size:0.7rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--accent); opacity:0.85; margin-bottom:12px; }
+  h1.title{ font-size:clamp(1.7rem,6vw,3.2rem); margin:0 0 8px; font-weight:400; color:var(--cream); text-shadow:0 0 30px var(--glow); }
+  p.line{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1rem,2.6vw,1.4rem); color:#f0e6ff; max-width:34em; margin:6px 0; opacity:0; transform:translateY(14px); animation:lineIn 0.9s ease forwards; }
+  @keyframes lineIn{ to{opacity:1; transform:translateY(0);} }
+
+  .btn{
+    position:relative; margin-top:30px; padding:15px 34px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:0.95rem;
+    letter-spacing:0.06em; text-transform:uppercase; color:#1a1024;
+    background:linear-gradient(135deg, var(--accent), var(--primary) 60%, var(--secondary));
+    border:none; border-radius:999px; cursor:pointer;
+    box-shadow:0 8px 24px var(--glow); transition:transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    -webkit-user-select:none; user-select:none; touch-action:manipulation; overflow:hidden;
+  }
+  .btn:hover{ transform:translateY(-3px) scale(1.03); box-shadow:0 12px 32px var(--glow); }
+  .btn:active{ transform:translateY(0) scale(0.97); filter:brightness(0.95); }
+  .btn.ghost{ background:transparent; color:var(--accent); border:1.5px solid var(--glow); box-shadow:none; }
+  .btn.ghost:hover{ background:rgba(255,255,255,0.06); }
+  .btn:disabled{ opacity:0.35; cursor:default; transform:none; filter:none; box-shadow:none; }
+  .btn-ripple{ position:absolute; border-radius:50%; background:rgba(255,255,255,0.6); transform:scale(0); animation:rip 0.6s ease-out forwards; pointer-events:none; }
+  @keyframes rip{ to{ transform:scale(3); opacity:0; } }
+
+  #progress{
+    position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:50;
+    font-size:0.7rem; letter-spacing:0.2em; color:var(--accent); opacity:0.85; font-weight:700;
+    background:var(--glass); padding:6px 16px; border-radius:999px; backdrop-filter:blur(6px);
+    transition:opacity 0.4s ease; display:none;
+  }
+  #progress.show{ display:block; }
+
+  #sound-toggle{
+    position:fixed; top:14px; right:14px; z-index:50; width:42px; height:42px; border-radius:50%;
+    background:var(--glass); border:1px solid rgba(255,255,255,0.22); color:var(--cream); font-size:1.05rem;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  #sound-toggle:hover{ transform:scale(1.08); background:var(--glass-strong); }
+
+  /* ---------- Step 1: personalize ---------- */
+  .form-card{
+    width:min(92vw, 420px); padding:30px 26px; border-radius:22px;
+    background:var(--glass); border:1px solid rgba(255,255,255,0.16); backdrop-filter:blur(14px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  }
+  .field-label{ font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin:18px 0 8px; text-align:left; }
+  .field-label:first-child{ margin-top:0; }
+  #name-input{
+    width:100%; padding:14px 16px; border-radius:14px; border:1.5px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.07); color:var(--cream); font-family:'Quicksand',sans-serif; font-size:1.05rem;
+    outline:none; transition:border 0.2s ease, box-shadow 0.2s ease;
+  }
+  #name-input::placeholder{ color:rgba(255,247,236,0.4); }
+  #name-input:focus{ border-color:var(--primary); box-shadow:0 0 0 3px var(--glow); }
+
+  .theme-choices{ display:flex; gap:12px; }
+  .theme-btn{
+    flex:1; padding:18px 10px; border-radius:16px; border:1.5px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.06); color:var(--cream); font-family:'Quicksand',sans-serif; font-weight:700; font-size:1rem;
+    cursor:pointer; transition:all 0.25s ease; text-align:center;
+  }
+  .theme-btn .emoji{ display:block; font-size:1.8rem; margin-bottom:6px; }
+  .theme-btn:hover{ border-color:var(--glow); transform:translateY(-2px); }
+  .theme-btn.selected{ background:linear-gradient(135deg, var(--accent), var(--primary)); color:#1a1024; box-shadow:0 8px 24px var(--glow); border-color:transparent; transform:translateY(-2px) scale(1.02); }
+  .theme-btn.dimmed{ opacity:0.4; }
+
+  .form-error{ color:#ffb3b3; font-size:0.85rem; margin-top:14px; min-height:1.2em; font-family:'Cormorant Garamond',serif; font-style:italic; }
+
+  /* ---------- Envelope (step 3) ---------- */
+  .envelope-wrap{ position:relative; width:min(70vw,240px); height:min(50vw,170px); margin:20px auto 6px; }
+  .envelope{ position:relative; width:100%; height:100%; animation:bob 3.2s ease-in-out infinite; filter:drop-shadow(0 10px 30px rgba(0,0,0,0.35)); cursor:pointer; }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+  .env-body{ position:absolute; inset:0; background:linear-gradient(160deg,#fff2df,#ffd9b8); border-radius:10px; box-shadow:inset 0 0 0 2px rgba(255,255,255,0.5), 0 0 40px var(--glow); }
+  .env-flap{ position:absolute; top:0; left:0; width:100%; height:60%; background:linear-gradient(160deg,#ffe3c2,#ffcaa8); clip-path:polygon(0 0,100% 0,50% 85%); transform-origin:top center; border-radius:10px 10px 0 0; transition:transform 1s cubic-bezier(.6,.1,.3,1); z-index:3; }
+  .envelope.open .env-flap{ transform:rotateX(180deg); }
+  .letter{ position:absolute; left:8%; bottom:6%; width:84%; height:0%; background:linear-gradient(180deg,#fffdf8,#fff3e4); border-radius:6px; z-index:2; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.25); transition:height 1s ease 0.5s, transform 1s ease 0.5s, bottom 1s ease 0.5s; }
+  .envelope.open .letter{ height:150%; bottom:40%; transform:translateY(-30%); }
+
+  .letter-card{
+    max-width:420px; width:min(92vw,420px); margin:16px auto 0; padding:26px 28px;
+    background:linear-gradient(180deg, rgba(255,253,248,0.97), rgba(255,243,228,0.97)); color:#5a2f4a; border-radius:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.35); opacity:0; transform:translateY(20px) scale(0.96); transition:opacity 0.8s ease, transform 0.8s ease;
+  }
+  .letter-card.show{ opacity:1; transform:translateY(0) scale(1); }
+  .letter-card h2{ font-family:'Italiana',serif; font-weight:400; margin:0 0 8px; font-size:1.35rem; }
+  .letter-card p{ font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem; margin:5px 0; }
+
+  /* ---------- Cake (step 4) ---------- */
+  .cake-wrap{ position:relative; width:min(72vw,290px); margin:10px auto; }
+  .cake{ position:relative; width:100%; }
+  .tier{ margin:0 auto; border-radius:10px 10px 4px 4px; position:relative; }
+  .tier1{ width:78%; height:16vw; max-height:66px; background:linear-gradient(180deg, var(--secondary), var(--primary)); box-shadow:inset 0 -6px 10px rgba(0,0,0,0.12); }
+  .tier2{ width:100%; height:20vw; max-height:82px; background:linear-gradient(180deg,#fff0da,#ffd9a8); box-shadow:inset 0 -6px 10px rgba(0,0,0,0.1); margin-top:-2px; }
+  .plate{ width:110%; height:10px; margin:0 auto; background:linear-gradient(180deg,#fff,#e9d7ff); border-radius:50%; box-shadow:0 6px 16px rgba(0,0,0,0.3); }
+  .candles{ position:absolute; top:-32px; left:0; width:100%; height:32px; display:flex; justify-content:space-evenly; align-items:flex-end; }
+  .candle{ position:relative; width:7px; height:26px; background:linear-gradient(180deg,#fff,#ffd9a8); border-radius:2px; cursor:pointer; }
+  .candle .wick{ position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:2px; height:6px; background:#5a3a2a; }
+  .candle .flame{ position:absolute; top:-20px; left:50%; transform:translateX(-50%) scale(0); width:11px; height:16px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:radial-gradient(circle at 50% 70%, #fff6c8, var(--accent) 55%, #ff8a3d 90%); box-shadow:0 0 16px 4px rgba(255,180,80,0.8); transition:transform 0.4s cubic-bezier(.34,1.56,.64,1); animation:flicker 1s ease-in-out infinite alternate; }
+  @keyframes flicker{ 0%{transform:translateX(-50%) scale(1) rotate(-2deg);} 100%{transform:translateX(-50%) scale(1.08) rotate(2deg);} }
+  .candle.lit .flame{ transform:translateX(-50%) scale(1); }
+  .candle.blown .flame{ animation:none; transform:translateX(-50%) scale(0); }
+  .cake-glow{ position:absolute; inset:-30px; border-radius:50%; opacity:0; transition:opacity 1s ease; pointer-events:none; background:radial-gradient(circle, var(--glow), transparent 65%); }
+  .cake-wrap.glow .cake-glow{ opacity:1; }
+  .candle-count{ margin-top:42px; font-size:0.92rem; letter-spacing:0.06em; color:var(--accent); }
+
+  /* ---------- Gift (step 5) ---------- */
+  .gift-wrap{ position:relative; width:min(52vw,200px); height:min(52vw,200px); margin:20px auto; cursor:pointer; }
+  .gift-box{ position:absolute; bottom:0; width:100%; height:60%; background:linear-gradient(135deg, var(--secondary), var(--primary)); border-radius:6px; box-shadow:0 20px 40px rgba(0,0,0,0.3); transition:transform 0.15s ease; }
+  .gift-wrap.shake1 .gift-box{ animation:shake 0.4s ease; }
+  .gift-wrap.shake2 .gift-box{ animation:shake 0.4s ease; box-shadow:0 20px 40px rgba(0,0,0,0.3), 0 0 24px var(--glow); }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px) rotate(-2deg);} 75%{transform:translateX(6px) rotate(2deg);} }
+  .gift-lid{ position:absolute; top:26%; width:106%; left:-3%; height:18%; background:linear-gradient(135deg, var(--accent), var(--secondary)); border-radius:6px; transition:transform 0.8s cubic-bezier(.5,-0.4,.4,1.4), opacity 0.6s ease; transform-origin:left center; box-shadow:0 8px 16px rgba(0,0,0,0.25); }
+  .gift-wrap.open .gift-lid{ transform:translateY(-140%) rotate(-35deg); opacity:0; }
+  .ribbon-v{ position:absolute; left:47%; top:0; width:6%; height:100%; background:var(--accent); z-index:2; }
+  .ribbon-h{ position:absolute; top:44%; left:0; width:100%; height:8%; background:var(--accent); z-index:2; }
+  .bow{ position:absolute; top:6%; left:50%; transform:translateX(-50%); font-size:1.9rem; z-index:3; transition:transform 0.6s ease, opacity 0.6s ease; }
+  .gift-wrap.open .bow{ transform:translate(-50%,-60px) scale(0.7) rotate(-20deg); opacity:0; }
+  .gift-light{ position:absolute; inset:0; border-radius:50%; opacity:0; background:radial-gradient(circle, rgba(255,240,200,0.9), transparent 60%); pointer-events:none; }
+  .gift-wrap.open .gift-light{ animation:pulseLight 1.4s ease-out; }
+  @keyframes pulseLight{ 0%{transform:scale(0.3); opacity:0.9;} 100%{transform:scale(2.4); opacity:0;} }
+  .gift-hint{ margin-top:12px; font-size:0.85rem; color:var(--accent); letter-spacing:0.05em; }
+
+  /* ---------- Cards (step 6) ---------- */
+  .cards-grid{ display:grid; grid-template-columns:repeat(2, minmax(120px,1fr)); gap:14px; max-width:480px; width:100%; margin:16px auto 0; }
+  @media (min-width:560px){ .cards-grid{ grid-template-columns:repeat(3,1fr); } }
+  .flip-card{ position:relative; height:116px; perspective:800px; cursor:pointer; }
+  .flip-inner{ position:relative; width:100%; height:100%; transition:transform 0.7s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; }
+  .flip-card.flipped .flip-inner{ transform:rotateY(180deg); }
+  .flip-face{ position:absolute; inset:0; border-radius:14px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; backface-visibility:hidden; }
+  .flip-front{ background:var(--glass); border:1px solid rgba(255,255,255,0.22); font-weight:700; font-size:0.9rem; box-shadow:0 8px 24px rgba(0,0,0,0.2); }
+  .flip-back{ background:linear-gradient(160deg,#fff3e0,#ffe0ea); color:#5a2f4a; transform:rotateY(180deg); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.88rem; box-shadow:0 8px 24px rgba(0,0,0,0.25); }
+
+  /* ---------- Power (step 7) ---------- */
+  .power-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; max-width:420px; width:100%; margin:20px auto 0; }
+  .power-btn{ padding:22px 10px; border-radius:16px; border:1.5px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06); color:var(--cream); font-family:'Quicksand',sans-serif; font-weight:700; font-size:1.05rem; cursor:pointer; transition:all 0.3s ease; }
+  .power-btn:hover{ transform:translateY(-2px); border-color:var(--glow); }
+  .power-btn.selected{ background:linear-gradient(135deg, var(--accent), var(--primary)); color:#1a1024; box-shadow:0 10px 30px var(--glow); transform:translateY(-3px) scale(1.03); }
+  .power-btn.dimmed{ opacity:0.35; }
+  .power-reveal{ margin-top:24px; opacity:0; transition:opacity 0.7s ease; }
+  .power-reveal.show{ opacity:1; }
+
+  /* ---------- Wish (step 8) ---------- */
+  .orb-wrap{ position:relative; width:150px; height:150px; margin:22px auto; }
+  .orb{ width:100%; height:100%; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff6d8, var(--accent) 40%, var(--secondary) 75%, var(--primary)); box-shadow:0 0 60px 20px var(--glow); animation:orbPulse 3.4s ease-in-out infinite; }
+  @keyframes orbPulse{ 0%,100%{transform:scale(1); filter:brightness(1);} 50%{transform:scale(1.06); filter:brightness(1.15);} }
+  .orb-wrap.charging .orb{ animation:orbCharge 1.8s ease-in-out infinite; }
+  @keyframes orbCharge{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.28);} }
+
+  /* ---------- Challenge (step 9) ---------- */
+  .game-field{ position:relative; width:min(92vw,520px); height:min(56vh,340px); margin:18px auto 0; border-radius:20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); overflow:hidden; }
+  .target{ position:absolute; width:52px; height:52px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #fff, var(--accent) 45%, var(--primary) 90%); box-shadow:0 0 24px 8px var(--glow); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.4rem; animation:targetPop 0.35s ease; }
+  @keyframes targetPop{ from{ transform:scale(0);} to{ transform:scale(1);} }
+  .challenge-count{ margin-top:14px; font-size:0.95rem; color:var(--accent); letter-spacing:0.06em; }
+
+  /* ---------- Finale (step 10) ---------- */
+  #step-finale h1.title{ font-size:clamp(2rem,8vw,4rem); }
+  .finale-line{ opacity:0; }
+  .finale-name{ font-family:'Italiana',serif; font-size:clamp(2.2rem,9vw,4.5rem); color:var(--accent); text-shadow:0 0 40px var(--glow); margin:6px 0; }
+  .finale-actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+  .balloon{ position:fixed; bottom:-140px; font-size:2.4rem; z-index:4; pointer-events:none; animation:floatUp linear forwards; }
+  @keyframes floatUp{ to{ transform:translateY(-120vh) translateX(var(--drift,0px)) rotate(var(--rot,0deg)); opacity:0.9; } }
+
+  .float-emoji{ position:absolute; pointer-events:none; animation:emojiRise linear forwards; }
+  @keyframes emojiRise{ 0%{ opacity:0; transform:translateY(0) scale(0.6) rotate(0deg);} 15%{opacity:1;} 100%{ opacity:0; transform:translateY(-160px) scale(1.1) rotate(var(--erot,30deg)); } }
+
+  ::selection{ background:var(--glow); }
+  @media (max-width:480px){ .letter-card{ padding:20px 18px; } .btn{ padding:13px 26px; font-size:0.88rem; } .power-grid{ gap:10px; } }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="bg-sky"></div>
+  <canvas id="fx"></canvas>
+  <div id="emoji-layer"></div>
+  <div id="progress">✨ 1 / 10</div>
+  <button id="sound-toggle" aria-label="Toggle music">🔈</button>
+
+  <!-- STEP 1: PERSONALIZE -->
+  <section class="step active" id="step-personalize">
+    <div class="eyebrow">before we begin</div>
+    <h1 class="title display">What's your name? ✨</h1>
+    <div class="form-card">
+      <div class="field-label">First, tell me your name</div>
+      <input type="text" id="name-input" placeholder="Enter your name..." maxlength="24" autocomplete="off">
+      <div class="field-label">Now choose your vibe 💫</div>
+      <div class="theme-choices">
+        <button type="button" class="theme-btn" id="btn-boy" data-theme="boy"><span class="emoji">👦</span>BOY</button>
+        <button type="button" class="theme-btn" id="btn-girl" data-theme="girl"><span class="emoji">👧</span>GIRL</button>
+      </div>
+      <div class="form-error" id="form-error"></div>
+      <button class="btn" id="btn-start-journey" style="width:100%;">Start My Birthday Journey ✨</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: WELCOME -->
+  <section class="step" id="step-welcome">
+    <div class="eyebrow">mission briefing</div>
+    <h1 class="title display" id="welcome-hey">Hey, there! 👋</h1>
+    <p class="line script" id="welcome-l1" style="animation-delay:0.15s;">Today isn't just another day...</p>
+    <p class="line script" id="welcome-l2" style="animation-delay:0.55s;">It's YOUR day. 🎉</p>
+    <p class="line script" id="welcome-l3" style="animation-delay:0.95s;">I've prepared a little adventure for you.</p>
+    <button class="btn" id="btn-welcome-next">Let's Begin 🚀</button>
+  </section>
+
+  <!-- STEP 3: ENVELOPE -->
+  <section class="step" id="step-envelope">
+    <div class="eyebrow">mission 01</div>
+    <h1 class="title display" id="env-title">A secret message has arrived for you...</h1>
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope">
+        <div class="env-body"></div>
+        <div class="letter"></div>
+        <div class="env-flap"></div>
+      </div>
+    </div>
+    <button class="btn" id="btn-open-envelope">Open The Message</button>
+    <div class="letter-card" id="letter-card">
+      <h2 class="display" id="letter-dear">Dear friend,</h2>
+      <p>Someone wanted to make your birthday a little more special...</p>
+      <p>But this isn't just a message.</p>
+      <p>There are still 7 surprises waiting for you.</p>
+      <button class="btn" id="btn-continue-letter">Next Surprise ✨</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: CAKE GAME -->
+  <section class="step" id="step-cake">
+    <div class="eyebrow">mission 02</div>
+    <h1 class="title display" id="cake-title">Light all the candles! 🕯️</h1>
+    <p class="line script">Tap each candle to bring it to life</p>
+    <div class="cake-wrap" id="cake-wrap">
+      <div class="cake-glow"></div>
+      <div class="cake">
+        <div class="candles" id="candles-row"></div>
+        <div class="tier tier1"></div>
+        <div class="tier tier2"></div>
+        <div class="plate"></div>
+      </div>
+    </div>
+    <div class="candle-count" id="candle-count">0 / 0 candles lit</div>
+    <button class="btn" id="btn-blow" style="display:none;">Blow the Candles 💨</button>
+    <button class="btn ghost" id="btn-cake-next" style="display:none;">Continue ✨</button>
+  </section>
+
+  <!-- STEP 5: GIFT GAME -->
+  <section class="step" id="step-gift">
+    <div class="eyebrow">mission 03</div>
+    <h1 class="title display" id="gift-title">Something is hiding inside...</h1>
+    <p class="line script">Can you unlock it?</p>
+    <div class="gift-wrap" id="gift-wrap">
+      <div class="gift-light"></div>
+      <div class="bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-box"></div>
+      <div class="ribbon-v"></div>
+      <div class="ribbon-h"></div>
+    </div>
+    <div class="gift-hint" id="gift-hint">Tap the gift 3 times</div>
+    <div id="gift-reveal" style="opacity:0; transition:opacity 0.8s ease 0.3s; margin-top:10px;">
+      <h2 class="display" style="font-size:1.4rem; margin:6px 0 0;">You unlocked surprise #2 🎉</h2>
+      <p class="line script" style="animation:none; opacity:1;">Because you deserve something special.</p>
+      <button class="btn" id="btn-gift-next">Continue</button>
+    </div>
+  </section>
+
+  <!-- STEP 6: COMPLIMENT CARDS -->
+  <section class="step" id="step-cards">
+    <div class="eyebrow">mission 04</div>
+    <h1 class="title display">A few little secrets 💫</h1>
+    <div class="cards-grid" id="cards-grid"></div>
+    <button class="btn" id="btn-cards-next" style="margin-top:24px;">Next</button>
+  </section>
+
+  <!-- STEP 7: POWER SELECTION -->
+  <section class="step" id="step-power">
+    <div class="eyebrow">mission 05</div>
+    <h1 class="title display">Every birthday hero needs a power...</h1>
+    <div class="power-grid" id="power-grid"></div>
+    <div class="power-reveal" id="power-reveal"></div>
+    <button class="btn" id="btn-power-next" style="display:none;">That's Me 👑</button>
+  </section>
+
+  <!-- STEP 8: WISH -->
+  <section class="step" id="step-wish">
+    <div class="eyebrow">mission 06</div>
+    <h1 class="title display" id="wish-line1">Close your eyes for a second.</h1>
+    <p class="line script" id="wish-line2" style="animation-delay:0.2s;">Think of one thing you really want this year.</p>
+    <div class="orb-wrap" id="orb-wrap"><div class="orb"></div></div>
+    <button class="btn" id="btn-wish">I Made My Wish</button>
+    <div id="wish-reveal" style="opacity:0; transition:opacity 1s ease;">
+      <p class="line script" style="animation:none; opacity:1;">I hope it finds its way to you. 💫</p>
+      <button class="btn" id="btn-wish-next">One Last Surprise</button>
+    </div>
+  </section>
+
+  <!-- STEP 9: CHALLENGE -->
+  <section class="step" id="step-challenge">
+    <div class="eyebrow">mission 07 — final challenge</div>
+    <h1 class="title display">Click the glowing star! ⭐</h1>
+    <div class="game-field" id="game-field"></div>
+    <div class="challenge-count" id="challenge-count">0 / 5</div>
+    <button class="btn" id="btn-challenge-next" style="display:none;">Show My Final Surprise 🎉</button>
+  </section>
+
+  <!-- STEP 10: FINALE -->
+  <section class="step" id="step-finale">
+    <p class="line script finale-line" id="finale-ready" style="animation:none;">Ready?</p>
+    <h1 class="title display finale-line" id="finale-title" style="animation:none;">🎂 HAPPY BIRTHDAY 🎂</h1>
+    <div class="finale-name finale-line" id="finale-name" style="animation:none;"></div>
+    <p class="line script finale-line" id="finale-l1" style="animation:none;">May this year bring you more laughter,</p>
+    <p class="line script finale-line" id="finale-l2" style="animation:none;">more adventures,</p>
+    <p class="line script finale-line" id="finale-l3" style="animation:none;">more unforgettable memories,</p>
+    <p class="line script finale-line" id="finale-l4" style="animation:none;">and everything you've been wishing for.</p>
+    <h2 class="title display finale-line" id="finale-final" style="animation:none; font-size:clamp(1.4rem,5vw,2.2rem); margin-top:14px;"></h2>
+    <p class="line script finale-line" id="finale-next" style="animation:none;">Your next chapter starts now.</p>
+    <div class="finale-actions finale-line" id="finale-actions" style="animation:none;">
+      <button class="btn" id="btn-replay">Play Again 🔄</button>
+      <button class="btn ghost" id="btn-new">Create Another Surprise ✨</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+let birthdayName = "";
+let birthdayTheme = "";
+
+const themes = {
+  boy:  { icons:['🚀','⚡','⭐','🪐','🔥','🎮'], powers:[
+            {id:'adventure', label:'🚀 Adventure'},
+            {id:'power',     label:'⚡ Power'},
+            {id:'fearless',  label:'🔥 Fearless'},
+            {id:'legend',    label:'🎮 Legend'}
+          ], finaleIcons:['🚀','⚡','🔥','⭐','🪐'], particleColors:['#3aa0ff','#7b5cff','#5fe6ff','#ffffff'] },
+  girl: { icons:['💕','✨','🌸','🦋','🎀','🌙'], powers:[
+            {id:'magic',     label:'✨ Magic'},
+            {id:'happiness', label:'💖 Happiness'},
+            {id:'freedom',   label:'🦋 Freedom'},
+            {id:'queen',     label:'👑 Queen'}
+          ], finaleIcons:['💕','✨','🌸','🦋','🎀'], particleColors:['#ff8fb3','#c98fe8','#ffd488','#ffffff'] }
+};
+
+const STEPS = ['step-personalize','step-welcome','step-envelope','step-cake','step-gift','step-cards','step-power','step-wish','step-challenge','step-finale'];
+
+const gameState = {
+  candlesTotal: 7,
+  candlesLit: 0,
+  giftClicks: 0,
+  cardsOpened: 0,
+  powerChosen: null,
+  targetsHit: 0,
+  targetsNeeded: 5,
+  musicOn: false
+};
+
+function currentTheme(){ return themes[birthdayTheme] || themes.girl; }
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx = null;
+function getCtx(){
+  if(!audioCtx){
+    try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ audioCtx = null; }
+  }
+  return audioCtx;
+}
+function playTone(freq, duration, type, gainStart, delay){
+  const ctx = getCtx();
+  if(!ctx) return;
+  delay = delay || 0;
+  const t0 = ctx.currentTime + delay;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, t0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(gainStart || 0.15, t0 + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t0); osc.stop(t0 + duration + 0.05);
+}
+function sfxClick(){ playTone(520,0.12,'triangle',0.12); }
+function sfxCandle(){ playTone(700,0.18,'sine',0.14); playTone(1000,0.14,'sine',0.08,0.05); }
+function sfxEnvelope(){ playTone(300,0.3,'sawtooth',0.05); playTone(600,0.25,'sine',0.1,0.1); }
+function sfxGift(){ playTone(440,0.2,'sine',0.12); playTone(660,0.2,'sine',0.12,0.08); playTone(880,0.3,'sine',0.12,0.16); }
+function sfxFlip(){ playTone(880,0.1,'sine',0.08); }
+function sfxHit(){ playTone(1100,0.12,'triangle',0.12); }
+function sfxSparkle(){ playTone(1200,0.15,'sine',0.08); playTone(1600,0.12,'sine',0.06,0.06); }
+function sfxCelebrate(){ [523,659,784,1047].forEach((f,i)=> playTone(f,0.35,'triangle',0.1,i*0.09)); }
+
+let musicNodes = null;
+function startMusic(){
+  const ctx = getCtx(); if(!ctx || musicNodes) return;
+  const master = ctx.createGain(); master.gain.value = 0.05; master.connect(ctx.destination);
+  const osc1 = ctx.createOscillator(); osc1.type='sine'; osc1.frequency.value=261.6;
+  const osc2 = ctx.createOscillator(); osc2.type='sine'; osc2.frequency.value=329.6;
+  const lfo = ctx.createOscillator(); lfo.frequency.value=0.1;
+  const lfoGain = ctx.createGain(); lfoGain.gain.value=0.03;
+  lfo.connect(lfoGain).connect(master.gain);
+  osc1.connect(master); osc2.connect(master);
+  osc1.start(); osc2.start(); lfo.start();
+  musicNodes = { master, osc1, osc2, lfo };
+}
+function stopMusic(){
+  if(!musicNodes) return;
+  try{ musicNodes.osc1.stop(); musicNodes.osc2.stop(); musicNodes.lfo.stop(); }catch(e){}
+  musicNodes = null;
+}
+function toggleMusic(){
+  gameState.musicOn = !gameState.musicOn;
+  const btn = document.getElementById('sound-toggle');
+  if(gameState.musicOn){ getCtx(); startMusic(); btn.textContent='🔊'; }
+  else{ stopMusic(); btn.textContent='🔈'; }
+}
+document.getElementById('sound-toggle').addEventListener('click', toggleMusic);
+
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.btn');
+  if(!btn) return;
+  sfxClick();
+  const rect = btn.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  const size = Math.max(rect.width, rect.height) * 1.2;
+  ripple.className = 'btn-ripple';
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+  btn.appendChild(ripple);
+  setTimeout(()=> ripple.remove(), 650);
+});
+
+/* ============================================================
+   CANVAS PARTICLES
+   ============================================================ */
+const canvas = document.getElementById('fx');
+const ctx2d = canvas.getContext('2d');
+let W,H,DPR;
+function resizeCanvas(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W*DPR; canvas.height = H*DPR;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  ctx2d.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let particles = [];
+let ambientStars = [];
+function initAmbientStars(){
+  ambientStars = [];
+  const count = W < 600 ? 45 : 90;
+  for(let i=0;i<count;i++){
+    ambientStars.push({ x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.6+0.4, tw:Math.random()*Math.PI*2, speed:Math.random()*0.4+0.15 });
+  }
+}
+initAmbientStars();
+
+function themeColors(){ return currentTheme().particleColors; }
+
+function createParticles(type, x, y, count){
+  count = count || 18;
+  const cols = themeColors();
+  for(let i=0;i<count;i++){
+    const angle = Math.random()*Math.PI*2;
+    const speed = Math.random()*3+1;
+    let color,size,gravity,life,shape;
+    if(type==='heart'){ color=cols[0]; size=Math.random()*8+8; gravity=-0.02; life=90+Math.random()*40; shape='heart'; }
+    else if(type==='spark'){ color=cols[Math.floor(Math.random()*cols.length)]; size=Math.random()*3+1.5; gravity=0.02; life=40+Math.random()*20; shape='dot'; }
+    else if(type==='confetti'){ color=cols[Math.floor(Math.random()*cols.length)]; size=Math.random()*6+4; gravity=0.06; life=140+Math.random()*60; shape='rect'; }
+    else { color=cols[Math.floor(Math.random()*cols.length)]; size=Math.random()*3+1.5; gravity=0.03; life=60+Math.random()*30; shape='dot'; }
+    particles.push({ x,y, vx:Math.cos(angle)*speed*(type==='confetti'?0.6:1), vy:Math.sin(angle)*speed-(type==='heart'?2:0)-(type==='confetti'?2:0), gravity,size,color,life,age:0,shape, rot:Math.random()*Math.PI*2, rotSpeed:(Math.random()-0.5)*0.2 });
+  }
+}
+function createConfettiBurst(x,y,count){ createParticles('confetti',x,y,count||60); }
+function createFireworks(x,y){ createParticles('firework',x,y,40); }
+
+function drawHeartShape(cx,cy,size,color,alpha){
+  ctx2d.save(); ctx2d.globalAlpha=alpha; ctx2d.translate(cx,cy); ctx2d.scale(size/16,size/16);
+  ctx2d.beginPath(); ctx2d.moveTo(0,4);
+  ctx2d.bezierCurveTo(0,-2,-8,-2,-8,4); ctx2d.bezierCurveTo(-8,10,0,14,0,18);
+  ctx2d.bezierCurveTo(0,14,8,10,8,4); ctx2d.bezierCurveTo(8,-2,0,-2,0,4);
+  ctx2d.fillStyle=color; ctx2d.fill(); ctx2d.restore();
+}
+
+function animateFrame(){
+  ctx2d.clearRect(0,0,W,H);
+  ambientStars.forEach(s=>{
+    s.tw += 0.03*s.speed;
+    const alpha = 0.35 + Math.sin(s.tw)*0.35;
+    ctx2d.beginPath();
+    ctx2d.fillStyle = `rgba(255,255,255,${Math.max(0,alpha)})`;
+    ctx2d.arc(s.x,s.y,s.r,0,Math.PI*2); ctx2d.fill();
+  });
+  particles.forEach(p=>{
+    p.age++; p.x+=p.vx; p.y+=p.vy; p.vy+=p.gravity; p.rot+=p.rotSpeed;
+    const alpha = Math.max(0, 1 - p.age/p.life);
+    if(p.shape==='heart'){ drawHeartShape(p.x,p.y,p.size,p.color,alpha); }
+    else if(p.shape==='rect'){
+      ctx2d.save(); ctx2d.globalAlpha=alpha; ctx2d.translate(p.x,p.y); ctx2d.rotate(p.rot);
+      ctx2d.fillStyle=p.color; ctx2d.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6); ctx2d.restore();
+    } else {
+      ctx2d.beginPath(); ctx2d.globalAlpha=alpha; ctx2d.fillStyle=p.color;
+      ctx2d.shadowColor=p.color; ctx2d.shadowBlur=6;
+      ctx2d.arc(p.x,p.y,p.size,0,Math.PI*2); ctx2d.fill(); ctx2d.shadowBlur=0;
+    }
+  });
+  ctx2d.globalAlpha=1;
+  particles = particles.filter(p=> p.age < p.life && p.y < H+50);
+  requestAnimationFrame(animateFrame);
+}
+requestAnimationFrame(animateFrame);
+
+setInterval(()=>{
+  if(Math.random() < 0.45 && document.getElementById('step-personalize').classList.contains('active') === false){
+    createParticles('heart', Math.random()*W, H+20, 1);
+  }
+}, 1500);
+
+/* floating emoji particles (theme icons drifting up) */
+const emojiLayer = document.getElementById('emoji-layer');
+function spawnEmoji(list, x, y, count){
+  count = count || 6;
+  for(let i=0;i<count;i++){
+    const span = document.createElement('span');
+    span.className = 'float-emoji';
+    span.textContent = list[Math.floor(Math.random()*list.length)];
+    const size = 16 + Math.random()*16;
+    span.style.fontSize = size+'px';
+    span.style.left = (x + (Math.random()-0.5)*90) + 'px';
+    span.style.top = (y + (Math.random()-0.5)*40) + 'px';
+    span.style.setProperty('--erot', (Math.random()*60-30)+'deg');
+    span.style.animationDuration = (1.4 + Math.random()*0.8) + 's';
+    emojiLayer.appendChild(span);
+    setTimeout(()=> span.remove(), 2400);
+  }
+}
+
+/* ============================================================
+   STEP NAVIGATION
+   ============================================================ */
+function updateProgress(id){
+  const idx = STEPS.indexOf(id) + 1;
+  const progressEl = document.getElementById('progress');
+  if(id === 'step-personalize'){ progressEl.classList.remove('show'); return; }
+  progressEl.classList.add('show');
+  progressEl.textContent = `✨ ${idx} / ${STEPS.length}`;
+}
+
+function showStep(id){
+  document.querySelectorAll('.step').forEach(s=>{ if(s.id !== id) s.classList.remove('active'); });
+  requestAnimationFrame(()=>{
+    document.getElementById(id).classList.add('active');
+    updateProgress(id);
+  });
+}
+
+function nextStep(fromId, toId){
+  const from = document.getElementById(fromId);
+  from.classList.add('leaving');
+  createParticles('spark', W/2, H/2, 20);
+  setTimeout(()=>{ from.classList.remove('leaving'); showStep(toId); }, 420);
+}
+
+/* ============================================================
+   STEP 1 — PERSONALIZATION
+   ============================================================ */
+const nameInput = document.getElementById('name-input');
+const btnBoy = document.getElementById('btn-boy');
+const btnGirl = document.getElementById('btn-girl');
+const formError = document.getElementById('form-error');
+let selectedThemeChoice = "";
+
+function selectTheme(theme){
+  selectedThemeChoice = theme;
+  btnBoy.classList.toggle('selected', theme==='boy');
+  btnGirl.classList.toggle('selected', theme==='girl');
+  btnBoy.classList.toggle('dimmed', theme!=='boy');
+  btnGirl.classList.toggle('dimmed', theme!=='girl');
+  applyTheme(theme);
+  formError.textContent = '';
+}
+btnBoy.addEventListener('click', ()=> selectTheme('boy'));
+btnGirl.addEventListener('click', ()=> selectTheme('girl'));
+
+function applyTheme(theme){
+  document.body.classList.remove('theme-boy','theme-girl');
+  document.body.classList.add('theme-' + theme);
+}
+
+document.getElementById('btn-start-journey').addEventListener('click', function(){
+  const name = nameInput.value.trim();
+  if(!name){
+    formError.textContent = 'Please enter your name ❤️';
+    nameInput.focus();
+    return;
+  }
+  if(!selectedThemeChoice){
+    formError.textContent = 'Please choose a theme ✨';
+    return;
+  }
+  birthdayName = name;
+  birthdayTheme = selectedThemeChoice;
+  formError.textContent = '';
+  if(!gameState.musicOn){ toggleMusic(); }
+  personalizeText();
+  buildPowerGrid();
+  buildCandles();
+  buildCards();
+  nextStep('step-personalize','step-welcome');
+});
+
+/* ============================================================
+   PERSONALIZE TEXT ACROSS THE SITE
+   ============================================================ */
+function personalizeText(){
+  document.getElementById('welcome-hey').textContent = `Hey, ${birthdayName}! 👋`;
+  document.getElementById('env-title').textContent = `A secret message has arrived for you, ${birthdayName}...`;
+  document.getElementById('letter-dear').textContent = `Dear ${birthdayName},`;
+  document.getElementById('cake-title').textContent = `${birthdayName}, light all the candles! 🕯️`;
+  document.getElementById('gift-title').textContent = `${birthdayName}, something is hiding inside...`;
+  document.getElementById('wish-line1').textContent = `${birthdayName}...`;
+  document.getElementById('finale-name').textContent = birthdayName;
+  document.getElementById('finale-final').textContent = `Happy Birthday, ${birthdayName}! ❤️`;
+}
+
+/* ============================================================
+   STEP 2 — WELCOME
+   ============================================================ */
+document.getElementById('btn-welcome-next').addEventListener('click', ()=>{
+  nextStep('step-welcome','step-envelope');
+});
+
+/* ============================================================
+   STEP 3 — ENVELOPE
+   ============================================================ */
+function openEnvelope(){
+  const env = document.getElementById('envelope');
+  if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  sfxEnvelope();
+  const rect = env.getBoundingClientRect();
+  createParticles('heart', rect.left+rect.width/2, rect.top, 12);
+  spawnEmoji(currentTheme().icons, rect.left+rect.width/2, rect.top, 6);
+  setTimeout(()=>{
+    document.getElementById('letter-card').classList.add('show');
+    document.getElementById('btn-open-envelope').style.display = 'none';
+  }, 900);
+}
+document.getElementById('envelope').addEventListener('click', openEnvelope);
+document.getElementById('btn-open-envelope').addEventListener('click', openEnvelope);
+document.getElementById('btn-continue-letter').addEventListener('click', ()=>{
+  nextStep('step-envelope','step-cake');
+});
+
+/* ============================================================
+   STEP 4 — CAKE GAME
+   ============================================================ */
+function buildCandles(){
+  gameState.candlesTotal = 5 + Math.floor(Math.random()*5); // 5-9
+  gameState.candlesLit = 0;
+  const row = document.getElementById('candles-row');
+  row.innerHTML = '';
+  for(let i=0;i<gameState.candlesTotal;i++){
+    const c = document.createElement('div');
+    c.className = 'candle lit';
+    c.innerHTML = '<div class="wick"></div><div class="flame"></div>';
+    c.addEventListener('click', ()=> lightCandle(c));
+    row.appendChild(c);
+  }
+  document.getElementById('candle-count').textContent = `0 / ${gameState.candlesTotal} candles lit`;
+}
+
+function lightCandle(el){
+  if(el.classList.contains('blown')) return;
+  el.classList.add('blown');
+  sfxCandle();
+  const rect = el.getBoundingClientRect();
+  createParticles('spark', rect.left+rect.width/2, rect.top, 8);
+  gameState.candlesLit++;
+  document.getElementById('candle-count').textContent = `${gameState.candlesLit} / ${gameState.candlesTotal} candles lit`;
+  if(gameState.candlesLit === gameState.candlesTotal){ allCandlesLit(); }
+}
+
+function allCandlesLit(){
+  const wrap = document.getElementById('cake-wrap');
+  wrap.classList.add('glow');
+  sfxCelebrate();
+  const rect = wrap.getBoundingClientRect();
+  createConfettiBurst(rect.left+rect.width/2, rect.top, 60);
+  createFireworks(rect.left+rect.width/2, rect.top-20);
+  document.getElementById('candle-count').textContent = `Perfect, ${birthdayName}! 🔥`;
+  setTimeout(()=>{ finishBlowing(); }, 700);
+}
+
+document.getElementById('btn-blow').addEventListener('click', blowCandles);
+let blowInterval = null;
+function blowCandles(){
+  if(blowInterval) return;
+  const candles = Array.from(document.querySelectorAll('#candles-row .candle.lit:not(.blown)'));
+  let i = 0;
+  blowInterval = setInterval(()=>{
+    if(i >= candles.length){ clearInterval(blowInterval); blowInterval=null; finishBlowing(); return; }
+    candles[i].classList.add('blown');
+    playTone(260-i*8, 0.15, 'sine', 0.08);
+    i++;
+  }, 220);
+}
+
+function finishBlowing(){
+  const wrap = document.getElementById('cake-wrap');
+  wrap.classList.remove('glow');
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:#0a0512;opacity:0;transition:opacity 0.5s ease;z-index:40;pointer-events:none;';
+  document.body.appendChild(overlay);
+  requestAnimationFrame(()=> overlay.style.opacity = '0.85');
+  setTimeout(()=>{ overlay.style.background = 'radial-gradient(circle, var(--glow), rgba(10,5,18,0.2))'; overlay.style.opacity='1'; sfxSparkle(); }, 550);
+  setTimeout(()=>{ overlay.style.opacity = '0'; }, 950);
+  setTimeout(()=> overlay.remove(), 1500);
+  document.getElementById('btn-blow').style.display = 'none';
+  document.getElementById('btn-cake-next').style.display = 'inline-block';
+}
+document.getElementById('btn-cake-next').addEventListener('click', ()=>{
+  nextStep('step-cake','step-gift');
+});
+
+/* ============================================================
+   STEP 5 — GIFT GAME (3 clicks)
+   ============================================================ */
+document.getElementById('gift-wrap').addEventListener('click', function(){
+  if(this.classList.contains('open')) return;
+  gameState.giftClicks++;
+  const rect = this.getBoundingClientRect();
+  const cx = rect.left+rect.width/2, cy = rect.top+rect.height*0.3;
+  const hint = document.getElementById('gift-hint');
+  if(gameState.giftClicks === 1){
+    this.classList.add('shake1');
+    hint.textContent = 'It moved! Tap again...';
+  } else if(gameState.giftClicks === 2){
+    this.classList.add('shake2');
+    createParticles('spark', cx, cy, 12);
+    hint.textContent = 'Almost there... one more tap';
+  } else if(gameState.giftClicks >= 3){
+    this.classList.add('open');
+    sfxGift();
+    createParticles('spark', cx, cy, 30);
+    createParticles('heart', cx, cy, 12);
+    spawnEmoji(currentTheme().icons, cx, cy, 8);
+    hint.textContent = '';
+    setTimeout(()=>{ document.getElementById('gift-reveal').style.opacity = '1'; }, 500);
+  }
+});
+document.getElementById('btn-gift-next').addEventListener('click', ()=>{
+  nextStep('step-gift','step-cards');
+});
+
+/* ============================================================
+   STEP 6 — COMPLIMENT CARDS
+   ============================================================ */
+function complimentMessages(){
+  return [
+    `${birthdayName}, never forget how awesome you are.`,
+    `Your smile can change the whole mood of a room.`,
+    `You're allowed to dream bigger this year.`,
+    `May this year bring you unforgettable moments.`,
+    `Today, you officially deserve unlimited happiness.`
+  ];
+}
+function buildCards(){
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
+  gameState.cardsOpened = 0;
+  complimentMessages().forEach(msg=>{
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.innerHTML = `<div class="flip-inner"><div class="flip-face flip-front">Open Me 👀</div><div class="flip-face flip-back">${msg}</div></div>`;
+    card.addEventListener('click', ()=>{
+      if(!card.classList.contains('flipped')){
+        gameState.cardsOpened++;
+        sfxFlip();
+        const rect = card.getBoundingClientRect();
+        createParticles('spark', rect.left+rect.width/2, rect.top+rect.height/2, 8);
+      }
+      card.classList.toggle('flipped');
+    });
+    grid.appendChild(card);
+  });
+}
+document.getElementById('btn-cards-next').addEventListener('click', ()=>{
+  nextStep('step-cards','step-power');
+});
+
+/* ============================================================
+   STEP 7 — POWER SELECTION
+   ============================================================ */
+function buildPowerGrid(){
+  const grid = document.getElementById('power-grid');
+  grid.innerHTML = '';
+  gameState.powerChosen = null;
+  document.getElementById('power-reveal').classList.remove('show');
+  document.getElementById('power-reveal').innerHTML = '';
+  document.getElementById('btn-power-next').style.display = 'none';
+  currentTheme().powers.forEach(p=>{
+    const btn = document.createElement('button');
+    btn.className = 'power-btn';
+    btn.type = 'button';
+    btn.textContent = p.label;
+    btn.addEventListener('click', ()=> choosePower(p, btn));
+    grid.appendChild(btn);
+  });
+}
+function choosePower(power, btnEl){
+  if(gameState.powerChosen) return;
+  gameState.powerChosen = power;
+  document.querySelectorAll('.power-btn').forEach(b=>{
+    if(b === btnEl){ b.classList.add('selected'); } else { b.classList.add('dimmed'); }
+  });
+  const rect = btnEl.getBoundingClientRect();
+  const cx = rect.left+rect.width/2, cy = rect.top+rect.height/2;
+  sfxSparkle();
+  if(power.id === 'power'){ createParticles('spark', cx, cy, 30); }
+  else if(power.id === 'fearless'){ spawnEmoji(['🔥'], cx, cy, 10); }
+  else if(power.id === 'adventure' || power.id === 'legend'){ createParticles('spark', cx, cy, 24); spawnEmoji(currentTheme().icons, cx, cy, 6); }
+  else if(power.id === 'magic'){ createParticles('spark', cx, cy, 26); }
+  else if(power.id === 'happiness'){ createParticles('heart', cx, cy, 18); }
+  else if(power.id === 'freedom'){ spawnEmoji(['🦋'], cx, cy, 8); }
+  else if(power.id === 'queen'){ spawnEmoji(['👑','✨'], cx, cy, 10); }
+  const revealEl = document.getElementById('power-reveal');
+  revealEl.innerHTML = `<p class="line script" style="animation:none; opacity:1;">${birthdayName} chose: <strong>${power.label}</strong></p>`;
+  requestAnimationFrame(()=> revealEl.classList.add('show'));
+  document.getElementById('btn-power-next').style.display = 'inline-block';
+}
+document.getElementById('btn-power-next').addEventListener('click', ()=>{
+  nextStep('step-power','step-wish');
+});
+
+/* ============================================================
+   STEP 8 — WISH
+   ============================================================ */
+document.getElementById('btn-wish').addEventListener('click', function(){
+  const orbWrap = document.getElementById('orb-wrap');
+  orbWrap.classList.add('charging');
+  sfxSparkle();
+  this.disabled = true;
+  let bursts = 0;
+  const burstTimer = setInterval(()=>{
+    createParticles('spark', Math.random()*W, Math.random()*H, 1);
+    const rect = orbWrap.getBoundingClientRect();
+    createFireworks(rect.left+rect.width/2+(Math.random()-0.5)*120, rect.top+rect.height/2+(Math.random()-0.5)*120);
+    bursts++;
+    if(bursts > 8) clearInterval(burstTimer);
+  }, 220);
+  setTimeout(()=>{
+    orbWrap.classList.remove('charging');
+    sfxCelebrate();
+    const rect = orbWrap.getBoundingClientRect();
+    createFireworks(rect.left+rect.width/2, rect.top+rect.height/2);
+    document.getElementById('wish-reveal').style.opacity = '1';
+  }, 2000);
+});
+document.getElementById('btn-wish-next').addEventListener('click', ()=>{
+  nextStep('step-wish','step-challenge');
+  startChallenge();
+});
+
+/* ============================================================
+   STEP 9 — REACTION CHALLENGE
+   ============================================================ */
+let challengeActive = false;
+function startChallenge(){
+  gameState.targetsHit = 0;
+  challengeActive = true;
+  document.getElementById('challenge-count').textContent = `0 / ${gameState.targetsNeeded}`;
+  document.getElementById('btn-challenge-next').style.display = 'none';
+  const field = document.getElementById('game-field');
+  field.innerHTML = '';
+  setTimeout(spawnTarget, 100);
+}
+function spawnTarget(){
+  if(!challengeActive) return;
+  const field = document.getElementById('game-field');
+  field.innerHTML = '';
+  const fw = field.clientWidth, fh = field.clientHeight;
+  const size = 52;
+  const x = Math.random() * Math.max(1, fw - size);
+  const y = Math.random() * Math.max(1, fh - size);
+  const t = document.createElement('div');
+  t.className = 'target';
+  t.textContent = '⭐';
+  t.style.left = x + 'px';
+  t.style.top = y + 'px';
+  t.addEventListener('click', onTargetHit);
+  field.appendChild(t);
+}
+function onTargetHit(e){
+  if(!challengeActive) return;
+  sfxHit();
+  const rect = e.target.getBoundingClientRect();
+  createParticles('spark', rect.left+rect.width/2, rect.top+rect.height/2, 16);
+  e.target.remove();
+  gameState.targetsHit++;
+  document.getElementById('challenge-count').textContent = `${gameState.targetsHit} / ${gameState.targetsNeeded}`;
+  if(gameState.targetsHit >= gameState.targetsNeeded){
+    challengeActive = false;
+    document.getElementById('challenge-count').textContent = `Legendary! 🔥`;
+    sfxCelebrate();
+    document.getElementById('btn-challenge-next').style.display = 'inline-block';
+  } else {
+    spawnTarget();
+  }
+}
+document.getElementById('btn-challenge-next').addEventListener('click', ()=>{
+  nextStep('step-challenge','step-finale');
+  startFinale();
+});
+
+/* ============================================================
+   STEP 10 — FINALE
+   ============================================================ */
+function startFinale(){
+  const lines = ['finale-ready','finale-title','finale-name','finale-l1','finale-l2','finale-l3','finale-l4','finale-final','finale-next','finale-actions'];
+  lines.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    el.style.transform = 'translateY(14px)';
+    el.style.opacity = '0';
+    setTimeout(()=>{ el.style.opacity='1'; el.style.transform='translateY(0)'; }, 350 + i*420);
+  });
+
+  setTimeout(()=>{
+    sfxCelebrate();
+    let count = 0;
+    const finaleInterval = setInterval(()=>{
+      createConfettiBurst(Math.random()*W, -20, 30);
+      createFireworks(Math.random()*W, Math.random()*H*0.5);
+      count++;
+      if(count > 10) clearInterval(finaleInterval);
+    }, 500);
+
+    const icons = currentTheme().finaleIcons;
+    for(let i=0;i<10;i++){
+      setTimeout(()=>{
+        const b = document.createElement('div');
+        b.className = 'balloon';
+        b.textContent = icons[i % icons.length];
+        b.style.left = (Math.random()*90+5) + 'vw';
+        b.style.setProperty('--drift', (Math.random()*160-80)+'px');
+        b.style.setProperty('--rot', (Math.random()*40-20)+'deg');
+        b.style.animationDuration = (7+Math.random()*4)+'s';
+        document.body.appendChild(b);
+        setTimeout(()=> b.remove(), 12000);
+      }, i*350);
+    }
+  }, 350 + lines.length*420);
+}
+
+/* ============================================================
+   RESET / PLAY AGAIN / CREATE ANOTHER
+   ============================================================ */
+function resetVisualState(){
+  document.getElementById('envelope').classList.remove('open');
+  document.getElementById('letter-card').classList.remove('show');
+  document.getElementById('btn-open-envelope').style.display = 'inline-block';
+
+  buildCandles();
+  document.getElementById('cake-wrap').classList.remove('glow');
+  document.getElementById('btn-blow').style.display = 'none';
+  document.getElementById('btn-cake-next').style.display = 'none';
+
+  gameState.giftClicks = 0;
+  const giftWrap = document.getElementById('gift-wrap');
+  giftWrap.classList.remove('open','shake1','shake2');
+  document.getElementById('gift-reveal').style.opacity = '0';
+  document.getElementById('gift-hint').textContent = 'Tap the gift 3 times';
+
+  buildCards();
+  buildPowerGrid();
+
+  document.getElementById('orb-wrap').classList.remove('charging');
+  document.getElementById('btn-wish').disabled = false;
+  document.getElementById('wish-reveal').style.opacity = '0';
+
+  challengeActive = false;
+  document.getElementById('game-field').innerHTML = '';
+  document.getElementById('btn-challenge-next').style.display = 'none';
+
+  ['finale-ready','finale-title','finale-name','finale-l1','finale-l2','finale-l3','finale-l4','finale-final','finale-next','finale-actions'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+  });
+
+  document.querySelectorAll('.balloon').forEach(b=> b.remove());
+}
+
+document.getElementById('btn-replay').addEventListener('click', ()=>{
+  resetVisualState();
+  personalizeText();
+  showStep('step-welcome');
+});
+
+document.getElementById('btn-new').addEventListener('click', ()=>{
+  resetVisualState();
+  nameInput.value = '';
+  selectedThemeChoice = '';
+  btnBoy.classList.remove('selected','dimmed');
+  btnGirl.classList.remove('selected','dimmed');
+  formError.textContent = '';
+  document.body.classList.remove('theme-boy','theme-girl');
+  showStep('step-personalize');
+});
+
+/* init */
+updateProgress('step-personalize');
+</script>
+</body>
+</html>
