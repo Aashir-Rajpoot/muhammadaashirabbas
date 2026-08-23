@@ -839,6 +839,193 @@ function updateMotionStatus() {
   if (el) el.textContent = reduceMotion ? 'REDUCED' : 'ACTIVE';
 }
 
+/* ========================================================================= AASHIR OS
+   Self-contained module: reuses DayThemeSystem's theme (no independent theme/
+   midnight system), the existing project data, and Reality.locationLabel from
+   LocationEngine. Terminal is a safe frontend simulation only — no real
+   filesystem/shell/server access. */
+const OSEngine = {
+  apps: [
+    { id: '01', name: 'Aashir Portfolio', tag: 'Personal · Professional', type: 'Website', desc: "A personal portfolio site presenting his work and background.", url: 'https://aashir-rajpoot.github.io/Aashir-Portfolio/' },
+    { id: '02', name: 'Aashir Gallery', tag: 'Photography · Visual', type: 'Website', desc: 'A photo gallery site for browsing and presenting images.', url: 'https://aashir-rajpoot.github.io/aashirgallery/' },
+    { id: '03', name: 'Aashir Weather', tag: 'Utility · Weather', type: 'Web App', desc: 'A weather application showing live conditions and forecasts.', url: 'https://aashir-rajpoot.github.io/AashirRajpoot-Weather/' },
+    { id: '04', name: 'Aashir Dictionary', tag: 'Reference · Language', type: 'Web App', desc: 'A dictionary tool for looking up word meanings quickly.', url: 'https://aashir-rajpoot.github.io/Aashirrajpootdictionary/' },
+    { id: '05', name: 'Aashir Expense Tracker', tag: 'Finance · Data', type: 'Web App', desc: 'A tool for logging and tracking everyday expenses.', url: 'https://aashir-rajpoot.github.io/aashir-expense-tracker/' },
+    { id: '06', name: 'Quran Read', tag: 'Reading · Reflection', type: 'Web App', desc: 'A reading tool built for a simple, focused Quran reading experience.', url: 'https://aashir-rajpoot.github.io/quranread/' },
+  ],
+  skillGroups: [
+    { cat: 'Security', items: ['Cyber Security', 'Ethical Hacking Fundamentals'] },
+    { cat: 'Systems & Cloud', items: ['Networking & IT Infrastructure', 'Cloud'] },
+    { cat: 'Web & Design', items: ['Web & Frontend', 'Design & UI/UX'] },
+    { cat: 'Commerce & Data', items: ['E-Commerce', 'Digital Marketing', 'Data Analytics'] },
+    { cat: 'Craft', items: ['Content Creation & Photography', 'Problem Solving & Project Management'] },
+  ],
+  booted: false,
+  clockTimer: null,
+
+  init() {
+    this.root = $('#aashir-os');
+    if (!this.root) return;
+    $('#os-enter').addEventListener('click', () => this.open());
+    $('#os-exit').addEventListener('click', () => this.close());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.root.classList.contains('open')) this.close(); });
+
+    $$('#os-nav button').forEach((btn) => btn.addEventListener('click', () => this.showModule(btn.dataset.mod)));
+
+    $('#os-window-close').addEventListener('click', () => this.closeWindow());
+    $('#os-window-layer').addEventListener('click', (e) => { if (e.target.id === 'os-window-layer') this.closeWindow(); });
+
+    this.renderApps();
+    this.renderSkills();
+    this.initTerminal();
+  },
+
+  open() {
+    this.root.classList.add('open');
+    this.root.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    this.startClock();
+    this.syncStatus();
+    if (!this.booted) { this.boot(); this.booted = true; }
+    else this.typeInit();
+  },
+  close() {
+    this.root.classList.remove('open');
+    this.root.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    clearInterval(this.clockTimer);
+  },
+
+  boot() {
+    const boot = $('#os-boot'), fill = $('#os-boot-fill'), status = $('#os-boot-status');
+    boot.classList.add('show');
+    requestAnimationFrame(() => { fill.style.width = '100%'; });
+    const steps = ['Loading identity…', 'Loading projects…', 'Loading modules…', 'Interface ready.'];
+    let i = 0;
+    const tick = reduceMotion ? 0 : 340;
+    const step = () => {
+      if (i < steps.length) { status.textContent = steps[i]; i++; setTimeout(step, tick); }
+      else {
+        boot.classList.remove('show');
+        this.typeInit();
+      }
+    };
+    step();
+  },
+
+  typeInit() {
+    const el = $('#os-init');
+    const lines = ['> initializing portfolio.exe', '> loading modules', '> system ready', '> welcome, user.'];
+    el.innerHTML = '';
+    lines.forEach((line, i) => {
+      const span = document.createElement('span');
+      span.textContent = line;
+      span.style.animationDelay = (i * 0.22) + 's';
+      if (i === lines.length - 1) span.classList.add('cur');
+      el.appendChild(span);
+    });
+    this.renderLog();
+  },
+
+  renderLog() {
+    const list = $('#os-log-list');
+    if (!list) return;
+    const now = new Date();
+    const t = now.toLocaleTimeString([], { hour12: false });
+    const entries = ['Portfolio initialized', 'Modules loaded', 'Project directory synced (6 apps)', 'Interface active'];
+    list.innerHTML = entries.map((e) => `<li>${e} — <span style="color:var(--ink-faint)">${t}</span></li>`).join('');
+  },
+
+  syncStatus() {
+    const themeNames = { mon: 'Ember Steel', tue: 'Verdant Glass', wed: 'Amber Editorial', thu: 'Violet Circuit', fri: 'Noir Gold', sat: 'Neon Nightlife', sun: 'Quiet Ivory' };
+    const themeEl = $('#os-theme-status');
+    if (themeEl) themeEl.textContent = 'Synced — ' + (themeNames[Reality.day] || Reality.day);
+    const motionEl = $('#os-motion-status');
+    if (motionEl) motionEl.textContent = reduceMotion ? 'Reduced' : 'Active';
+    const loc = Reality.locationLabel;
+    const locText = loc || 'Detecting…';
+    $('#os-location') && ($('#os-location').textContent = locText);
+    $('#os-id-location') && ($('#os-id-location').textContent = locText);
+  },
+
+  startClock() {
+    clearInterval(this.clockTimer);
+    const tick = () => {
+      const now = new Date();
+      $('#os-date').textContent = now.toLocaleDateString([], { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).toUpperCase();
+      $('#os-time').textContent = now.toLocaleTimeString([], { hour12: false });
+    };
+    tick();
+    this.clockTimer = setInterval(tick, 1000);
+  },
+
+  showModule(mod) {
+    $$('#os-nav button').forEach((b) => b.classList.toggle('active', b.dataset.mod === mod));
+    $$('.os-mod').forEach((s) => s.classList.toggle('active', s.dataset.modPanel === mod));
+    $('#os-main').scrollTop = 0;
+    if (mod === 'terminal') setTimeout(() => $('#os-term-input') && $('#os-term-input').focus(), 60);
+  },
+
+  renderApps() {
+    const grid = $('#os-app-grid');
+    if (!grid) return;
+    grid.innerHTML = this.apps.map((a) => `
+      <button class="os-app" type="button" data-id="${a.id}">
+        <div class="os-app-top"><span class="os-app-dot">●</span><span>${a.id}</span></div>
+        <h3 class="os-app-name">${a.name}</h3>
+        <span class="os-app-tag">${a.tag}</span>
+      </button>`).join('');
+    $$('.os-app', grid).forEach((btn) => btn.addEventListener('click', () => this.openWindow(btn.dataset.id)));
+  },
+
+  openWindow(id) {
+    const app = this.apps.find((a) => a.id === id);
+    if (!app) return;
+    $('#os-window-id').textContent = 'PROJECT ' + app.id + '  — □ ×';
+    $('#os-window-name').textContent = app.name;
+    $('#os-window-type').textContent = app.type;
+    $('#os-window-desc').textContent = app.desc;
+    $('#os-window-link').href = app.url;
+    $('#os-window-layer').classList.add('open');
+  },
+  closeWindow() { $('#os-window-layer').classList.remove('open'); },
+
+  renderSkills() {
+    const body = $('#os-skills-body');
+    if (!body) return;
+    body.innerHTML = this.skillGroups.map((g) => `
+      <div class="os-skill-cat">
+        <h3>${g.cat}</h3>
+        <div class="os-skill-tags">${g.items.map((s) => `<span class="os-skill-tag">${s}</span>`).join('')}</div>
+      </div>`).join('');
+  },
+
+  initTerminal() {
+    const out = $('#os-term-out'), input = $('#os-term-input');
+    if (!out || !input) return;
+    const print = (html) => { const p = document.createElement('div'); p.innerHTML = html; out.appendChild(p); out.scrollTop = out.scrollHeight; };
+    print('<span class="accent">AASHIR OS Terminal</span> — type "help" to see available commands.');
+    const commands = {
+      help: () => 'Available commands: help, about, projects, skills, contact, clear',
+      about: () => 'Muhammad Aashir Abbas (Aashir Rajpoot) — a technology-focused student and digital creator interested in software, cybersecurity, web development and digital design.',
+      projects: () => this.apps.map((a) => a.id + '  ' + a.name + '  — ' + a.tag).join('\n'),
+      skills: () => this.skillGroups.map((g) => g.cat.toUpperCase() + ': ' + g.items.join(', ')).join('\n'),
+      contact: () => 'GitHub: github.com/Aashir-Rajpoot · LinkedIn: linkedin.com/in/muhammad-aashir-abbas-9679b0279 · Instagram: @aashirrajpoot757',
+      clear: () => { out.innerHTML = ''; return null; },
+    };
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const raw = input.value.trim();
+      input.value = '';
+      if (!raw) return;
+      print('<span class="accent">aashir@os:~$</span> ' + raw);
+      const fn = commands[raw.toLowerCase()];
+      const result = fn ? fn() : 'command not found: ' + raw + ' — type "help"';
+      if (result) print(result.replace(/\n/g, '<br>'));
+    });
+  },
+};
+
 /* ========================================================================= INIT */
 document.addEventListener('DOMContentLoaded', () => {
   $('#year') && ($('#year').textContent = new Date().getFullYear());
@@ -857,6 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
   EasterEngine.init();
   updateMotionStatus();
   WeatherEngine.init();
+  OSEngine.init();
   registerServiceWorker();
 });
 
