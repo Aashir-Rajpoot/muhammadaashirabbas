@@ -943,3 +943,70 @@ body.theme-switching #env-ribbon{
   .os-clock span:first-child{ display:none; }
   .os-app-grid{ grid-template-columns:1fr 1fr; }
 }
+
+/* ========================================================================= DOWNLOAD APP PAGE
+   Added for /download-app.html — reuses existing design tokens (--gold,
+   --ink*, --line*, --font-*, --environment-void) so it matches the rest
+   of the site. Nothing above this point was changed. */
+
+.download-page{ max-width:1180px; margin:0 auto; padding-top:0; padding-bottom:0; }
+
+.app-cards{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:28px;
+  margin-top:30px;
+}
+
+.app-card{
+  border:1px solid var(--line-strong); border-radius:4px; background:rgba(var(--surface),0.4);
+  padding:34px 30px; display:flex; flex-direction:column; gap:16px;
+}
+
+.app-card-icon{
+  width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line-strong); border-radius:50%; color:rgb(var(--gold-soft));
+}
+.app-card-icon svg{ width:26px; height:26px; }
+
+.app-card h3{ font-size:clamp(1.4rem,3vw,1.8rem); font-weight:400; margin:0; }
+.app-card .about-lede{ margin-bottom:0; }
+
+.app-card .info-grid{ grid-template-columns:repeat(2,1fr); max-width:none; margin-top:6px; }
+@media (max-width:480px){ .app-card .info-grid{ grid-template-columns:1fr; } }
+
+.download-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  margin-top:6px; padding:16px 28px; border-radius:2px; border:1px solid rgb(var(--gold));
+  background:rgb(var(--gold)); color:rgb(var(--environment-void)); font-family:var(--font-mono);
+  font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), opacity .2s;
+}
+.download-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 30px -12px rgba(var(--gold),0.55); }
+
+.download-btn.is-disabled{
+  background:transparent; color:var(--ink-faint); border-color:var(--line-strong);
+  pointer-events:none; cursor:not-allowed;
+}
+
+.download-note{ font-family:var(--font-mono); font-size:.64rem; letter-spacing:.04em; color:var(--ink-faint); margin-top:2px; }
+
+.device-hint{
+  font-family:var(--font-mono); font-size:.66rem; letter-spacing:.06em; color:rgb(var(--gold-soft));
+  border:1px solid rgba(var(--gold),.35); border-radius:2px; padding:9px 16px; display:inline-block;
+  margin-top:22px;
+}
+
+.install-steps{ counter-reset:step; margin-top:18px; padding:0; list-style:none; max-width:60ch; }
+.install-steps li{
+  counter-increment:step; position:relative; padding-left:38px; margin-bottom:14px;
+  color:var(--ink-dim); font-size:.94rem; line-height:1.6;
+}
+.install-steps li::before{
+  content:counter(step); position:absolute; left:0; top:0; width:24px; height:24px;
+  border:1px solid var(--line-strong); border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:.68rem; color:rgb(var(--gold-soft));
+}
+
+.security-note{
+  margin-top:18px; padding:14px 18px; border-left:2px solid rgb(var(--gold));
+  background:rgba(var(--gold),0.06); font-size:.88rem; color:var(--ink-dim); max-width:60ch; line-height:1.6;
+}
