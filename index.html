@@ -38,15 +38,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <!-- Theme -->
   <meta name="theme-color" content="#0a0806">
 
-  <!-- Existing Theme Script -->
+  <!-- Daily Theme Script — applies today's local color/typography theme before first paint -->
   <script>
     (function(){
       try {
-        var t = localStorage.getItem('portfolio-theme');
-        var valid = ['luxury','gaming','ai','cyber','space'];
-        if(t && valid.indexOf(t) > -1 && t !== 'luxury'){
-          document.documentElement.setAttribute('data-theme', t);
-        }
+        var days = ['sun','mon','tue','wed','thu','fri','sat'];
+        document.documentElement.setAttribute('data-day', days[new Date().getDay()]);
       } catch(e) {}
     })();
   </script>
@@ -191,7 +188,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Sora:wght@400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Sora:wght@400;600;800&family=Space+Grotesk:wght@400;500;700&family=Playfair+Display:wght@500;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -248,25 +245,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <span class="env-dot" aria-hidden="true">·</span>
   <span class="env-clock" id="env-clock">--:--</span>
 </aside>
-
-<!-- ============ THEME SELECTOR ============ -->
-<div id="theme-dock" role="group" aria-label="Choose visual theme">
-  <button type="button" class="theme-btn" data-theme-btn="gaming" aria-pressed="false" aria-label="Gaming theme">
-    <span class="theme-btn-icon" aria-hidden="true">🎮</span><span class="theme-btn-label">Gaming</span>
-  </button>
-  <button type="button" class="theme-btn" data-theme-btn="ai" aria-pressed="false" aria-label="AI / Future theme">
-    <span class="theme-btn-icon" aria-hidden="true">🤖</span><span class="theme-btn-label">AI</span>
-  </button>
-  <button type="button" class="theme-btn" data-theme-btn="cyber" aria-pressed="false" aria-label="Cybersecurity theme">
-    <span class="theme-btn-icon" aria-hidden="true">🔐</span><span class="theme-btn-label">Cyber</span>
-  </button>
-  <button type="button" class="theme-btn" data-theme-btn="space" aria-pressed="false" aria-label="Space / Astronomy theme">
-    <span class="theme-btn-icon" aria-hidden="true">🌌</span><span class="theme-btn-label">Space</span>
-  </button>
-  <button type="button" class="theme-btn" data-theme-btn="luxury" aria-pressed="true" aria-label="Luxury / Minimal theme">
-    <span class="theme-btn-icon" aria-hidden="true">🖤</span><span class="theme-btn-label">Luxury</span>
-  </button>
-</div>
 
 <!-- ============ SYSTEM PANEL ============ -->
 <div id="system-panel" aria-hidden="true">
