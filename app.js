@@ -4,6 +4,7 @@
    AASHIR X — app.js
    RealityEngine
     ├── ThemeEngine     writes --environment-* CSS vars
+    ├── DayThemeSystem  automatic day-of-week theme + midnight hand-off
     ├── TimeEngine      local clock + day-phase
     ├── LocationEngine  geolocation + reverse geocode
     ├── WeatherEngine   Open-Meteo (keyless) live conditions
@@ -31,23 +32,32 @@ const Reality = {
   sunrise: null,
   sunset: null,
   locationLabel: null,
-  theme: 'luxury',        // luxury | gaming | ai | cyber | space
+  theme: 'luxury',        // legacy field, always 'luxury' — kept so ParticleEngine's
+                           // persona branches (gaming/ai/cyber/space) simply never fire.
+  day: 'mon',              // mon | tue | wed | thu | fri | sat | sun — today's local day
 };
 
-/* ========================================================================= THEME ENGINE */
+/* ========================================================================= THEME ENGINE
+   Writes --environment-* (the "living background") from the active day's base
+   palette, tinted by live weather. Called by DayThemeSystem on load/midnight
+   and again whenever weather/time-of-day data refreshes, so the background
+   stays reactive while the day still owns the primary color identity. */
 const ThemeEngine = {
   palettes: {
-    dawn:   { primary: '242,166,90',  secondary: '201,139,217', glow: '229,156,96',  void: '14,10,7'  },
-    day:    { primary: '217,181,140', secondary: '242,201,106', glow: '212,177,120', void: '16,13,10' },
-    sunset: { primary: '239,131,84',  secondary: '201,106,217', glow: '224,140,92',  void: '13,9,7'   },
-    night:  { primary: '197,164,108', secondary: '139,126,242', glow: '197,164,108', void: '10,8,6'   },
+    mon: { primary: '198,90,58',   secondary: '122,46,46',   glow: '217,116,82',  void: '18,11,9'  },
+    tue: { primary: '47,169,140',  secondary: '30,110,134',  glow: '79,203,168',  void: '7,15,13'  },
+    wed: { primary: '192,138,62',  secondary: '138,90,42',   glow: '217,168,92',  void: '18,14,8'  },
+    thu: { primary: '123,108,240', secondary: '179,108,240', glow: '154,140,255', void: '10,8,20'  },
+    fri: { primary: '212,175,55',  secondary: '139,30,63',   glow: '232,196,104', void: '13,9,6'   },
+    sat: { primary: '51,198,224',  secondary: '224,51,155',  glow: '95,224,240',  void: '7,10,18'  },
+    sun: { primary: '143,169,138', secondary: '183,160,140', glow: '169,194,160', void: '12,14,11' },
   },
   weatherOverride: {
     rain: { glow: '127,184,232' },
     snow: { glow: '223,233,242' },
   },
-  apply(phase, weather) {
-    const base = this.palettes[phase] || this.palettes.night;
+  apply(day, weather) {
+    const base = this.palettes[day] || this.palettes.mon;
     const root = document.documentElement.style;
     root.setProperty('--environment-primary', base.primary);
     root.setProperty('--environment-secondary', base.secondary);
@@ -57,77 +67,54 @@ const ThemeEngine = {
   },
 };
 
-/* ========================================================================= THEME SYSTEM (5-theme experience) */
-const ThemeSystem = {
-  ids: ['luxury', 'gaming', 'ai', 'cyber', 'space'],
-  storageKey: 'portfolio-theme',
-  current: 'luxury',
-  buttons: [],
-  badgeText: {
-    gaming: '// HUD ONLINE',
-    ai: '◍ NEURAL LINK ACTIVE',
-    cyber: 'SECURITY STATUS: ACTIVE · ENCRYPTED CONNECTION',
-    space: 'TRANSMISSION FROM DEEP SPACE',
+/* ========================================================================= DAY THEME SYSTEM
+   Fully automatic — no manual switch. Detects today's local day (index.html's
+   inline head script already set [data-day] before first paint to avoid any
+   flash), applies its color+font identity, and schedules a smooth cinematic
+   hand-off at the visitor's exact local midnight — no reload, every day. */
+const DayThemeSystem = {
+  ids: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+  current: null,
+  midnightTimer: null,
+
+  apply(id) {
+    this.current = id;
+    Reality.day = id;
+    document.documentElement.setAttribute('data-day', id);
+    ThemeEngine.apply(Reality.day, Reality.weather);
+    if (ParticleEngine.canvas) ParticleEngine.reseed();
+  },
+
+  scheduleMidnight() {
+    clearTimeout(this.midnightTimer);
+    const now = new Date();
+    const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1, 0);
+    const ms = nextMidnight - now;
+
+    this.midnightTimer = setTimeout(() => {
+      const nextId = this.ids[new Date().getDay()];
+      const overlay = $('#theme-transition');
+      const handOff = () => {
+        this.apply(nextId);
+        setTimeout(() => {
+          if (overlay) overlay.classList.remove('active');
+          document.body.classList.remove('theme-switching');
+        }, 720);
+      };
+      if (reduceMotion || !overlay) {
+        handOff();
+      } else {
+        document.body.classList.add('theme-switching');
+        overlay.classList.add('active');
+        setTimeout(handOff, 520);
+      }
+      this.scheduleMidnight();
+    }, ms);
   },
 
   init() {
-    this.buttons = $$('.theme-btn');
-    this.buttons.forEach((btn) => {
-      btn.addEventListener('click', () => this.setTheme(btn.dataset.themeBtn));
-    });
-
-    let saved = null;
-    try { saved = localStorage.getItem(this.storageKey); } catch (e) { /* storage unavailable */ }
-    const initial = this.ids.includes(saved) ? saved : 'luxury';
-    this.apply(initial, { initial: true });
-  },
-
-  setTheme(id) {
-    if (!this.ids.includes(id) || id === this.current) return;
-
-    if (reduceMotion) { this.apply(id); return; }
-
-    const overlay = $('#theme-transition');
-    document.body.classList.add('theme-switching');
-    overlay.classList.add('active');
-
-    setTimeout(() => {
-      this.apply(id);
-      setTimeout(() => {
-        overlay.classList.remove('active');
-        document.body.classList.remove('theme-switching');
-      }, 70);
-    }, 430);
-  },
-
-  apply(id, opts = {}) {
-    this.current = id;
-    Reality.theme = id;
-    document.documentElement.setAttribute('data-theme', id);
-
-    if (!opts.initial) {
-      try { localStorage.setItem(this.storageKey, id); } catch (e) { /* storage unavailable */ }
-    }
-
-    this.buttons.forEach((btn) => {
-      const active = btn.dataset.themeBtn === id;
-      btn.classList.toggle('active', active);
-      btn.setAttribute('aria-pressed', String(active));
-    });
-
-    const badge = $('#theme-badge');
-    if (badge) badge.textContent = this.badgeText[id] || '';
-
-    if (id === 'luxury') {
-      ThemeEngine.apply(Reality.phase, Reality.weather);
-    } else {
-      // ThemeEngine writes --environment-* as inline styles on <html>, which
-      // would otherwise outrank the html[data-theme="…"] stylesheet rules.
-      const rootStyle = document.documentElement.style;
-      ['--environment-primary', '--environment-secondary', '--environment-glow', '--environment-void']
-        .forEach((prop) => rootStyle.removeProperty(prop));
-    }
-    if (ParticleEngine.canvas) ParticleEngine.reseed();
+    this.apply(this.ids[new Date().getDay()]);
+    this.scheduleMidnight();
   },
 };
 
@@ -219,7 +206,7 @@ const TimeEngine = {
     if (nextPhase !== Reality.phase) {
       Reality.phase = nextPhase;
       if (Reality.theme === 'luxury') {
-        ThemeEngine.apply(Reality.phase, Reality.weather);
+        ThemeEngine.apply(Reality.day, Reality.weather);
         ParticleEngine.reseed();
       }
     }
@@ -262,7 +249,7 @@ const WeatherEngine = {
     $('#sys-weather').textContent = 'FALLBACK';
     $('#sys-env').textContent = 'LOCAL TIME ONLY';
     if (Reality.theme === 'luxury') {
-      ThemeEngine.apply(Reality.phase, 'clear');
+      ThemeEngine.apply(Reality.day, 'clear');
       ParticleEngine.reseed();
     }
   },
@@ -298,7 +285,7 @@ const WeatherEngine = {
 
           Reality.phase = TimeEngine.computePhase(new Date(), Reality.sunrise, Reality.sunset);
           if (Reality.theme === 'luxury') {
-            ThemeEngine.apply(Reality.phase, Reality.weather);
+            ThemeEngine.apply(Reality.day, Reality.weather);
             ParticleEngine.reseed();
           }
 
@@ -835,7 +822,7 @@ const EasterEngine = {
     const prev = getVar('--environment-glow');
     const alt = prev.split(',').reverse().join(',');
     root.setProperty('--environment-glow', alt);
-    setTimeout(() => ThemeEngine.apply(Reality.phase, Reality.weather), 1800);
+    setTimeout(() => ThemeEngine.apply(Reality.day, Reality.weather), 1800);
   },
   lightning() {
     if (reduceMotion) return;
@@ -857,8 +844,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#year') && ($('#year').textContent = new Date().getFullYear());
 
   BootEngine.init();
-  ThemeSystem.init();
-  if (Reality.theme === 'luxury') ThemeEngine.apply(Reality.phase, Reality.weather);
+  DayThemeSystem.init();
   TimeEngine.init();
   ParticleEngine.init();
   GlyphEngine.init();
