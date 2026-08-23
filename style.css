@@ -558,162 +558,207 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 
 html,body{ max-width:100%; overflow-x:hidden; }
 
+
 /* =========================================================================
-   THEME SYSTEM — 5 visual universes over one shared architecture.
-   Luxury (default) = the root palette above, untouched.
-   Every other theme overrides the same custom properties the whole site
-   already reads from (--gold, --ink*, --line*, --surface, --font-*,
-   --environment-*), so components never need per-theme duplication.
+   DAILY THEME SYSTEM — one shared architecture, 7 automatic day identities.
+   Default (:root, no [data-day] match yet) = the luxury palette above.
+   Each day overrides the same custom properties every component already
+   reads from (--gold, --ink*, --line*, --surface, --font-*, --environment-*),
+   so no component needs per-day duplication. --environment-* is additionally
+   modulated at runtime by ThemeEngine (time-of-day + live weather) using
+   each day's palette as its base — see app.js.
+   No manual switch: the active day is detected from local date only.
    ========================================================================= */
 
-/* ---------- 1. GAMING ---------- */
-html[data-theme="gaming"]{
-  --gold: 224,42,74;
-  --gold-soft: 178,92,255;
-  --environment-primary: 224,42,74;
-  --environment-secondary: 178,92,255;
-  --environment-glow: 232,70,108;
-  --environment-void: 8,6,10;
-  --ink: 240,238,246;
-  --ink-dim: rgba(240,238,246,0.66);
-  --ink-faint: rgba(240,238,246,0.36);
-  --line: rgba(224,42,74,0.16);
-  --line-strong: rgba(224,42,74,0.32);
-  --surface: 18,13,20;
+/* ---------- MONDAY — Ember Steel ---------- */
+html[data-day="mon"]{
+  --gold: 198,90,58;
+  --gold-soft: 224,138,102;
+  --environment-primary: 198,90,58;
+  --environment-secondary: 122,46,46;
+  --environment-glow: 217,116,82;
+  --environment-void: 18,11,9;
+  --ink: 242,236,230;
+  --ink-dim: rgba(242,236,230,0.64);
+  --ink-faint: rgba(242,236,230,0.34);
+  --line: rgba(198,90,58,0.16);
+  --line-strong: rgba(198,90,58,0.30);
+  --surface: 26,17,14;
   --font-display:'Orbitron','Arial Black',sans-serif;
   --font-body:'Rajdhani','Manrope',sans-serif;
   --ease-theme: cubic-bezier(.2,.85,.28,1);
-  --dur-reveal: .42s;
-  --marquee-dur: 16s;
-  --portrait-filter: contrast(1.2) saturate(1.15) brightness(.94);
-  --portrait-filter-hover: contrast(1.25) saturate(1.3) brightness(1);
+  --dur-reveal: .48s;
+  --marquee-dur: 18s;
+  --portrait-filter: contrast(1.15) saturate(1.1) brightness(.96);
+  --portrait-filter-hover: contrast(1.2) saturate(1.2) brightness(1);
 }
 
-/* ---------- 2. AI / FUTURE ---------- */
-html[data-theme="ai"]{
-  --gold: 96,200,255;
-  --gold-soft: 154,140,255;
-  --environment-primary: 96,200,255;
-  --environment-secondary: 154,140,255;
-  --environment-glow: 130,212,255;
-  --environment-void: 6,8,15;
-  --ink: 226,236,248;
-  --ink-dim: rgba(226,236,248,0.66);
-  --ink-faint: rgba(226,236,248,0.34);
-  --line: rgba(110,190,255,0.16);
-  --line-strong: rgba(110,190,255,0.3);
-  --surface: 13,17,27;
+/* ---------- TUESDAY — Verdant Glass ---------- */
+html[data-day="tue"]{
+  --gold: 47,169,140;
+  --gold-soft: 110,214,188;
+  --environment-primary: 47,169,140;
+  --environment-secondary: 30,110,134;
+  --environment-glow: 79,203,168;
+  --environment-void: 7,15,13;
+  --ink: 231,243,238;
+  --ink-dim: rgba(231,243,238,0.64);
+  --ink-faint: rgba(231,243,238,0.34);
+  --line: rgba(47,169,140,0.16);
+  --line-strong: rgba(47,169,140,0.30);
+  --surface: 13,24,20;
+  --font-display:'Space Grotesk','Manrope',sans-serif;
+  --font-body:'Manrope','Segoe UI',sans-serif;
+  --ease-theme: cubic-bezier(.4,0,.2,1);
+  --dur-reveal: .7s;
+  --marquee-dur: 30s;
+  --portrait-filter: contrast(1.05) saturate(1) brightness(1.02) hue-rotate(-6deg);
+  --portrait-filter-hover: contrast(1.1) saturate(1.1) brightness(1.06) hue-rotate(-6deg);
+}
+
+/* ---------- WEDNESDAY — Amber Editorial ---------- */
+html[data-day="wed"]{
+  --gold: 192,138,62;
+  --gold-soft: 214,182,132;
+  --environment-primary: 192,138,62;
+  --environment-secondary: 138,90,42;
+  --environment-glow: 217,168,92;
+  --environment-void: 18,14,8;
+  --ink: 241,233,220;
+  --ink-dim: rgba(241,233,220,0.62);
+  --ink-faint: rgba(241,233,220,0.34);
+  --line: rgba(192,138,62,0.14);
+  --line-strong: rgba(192,138,62,0.26);
+  --surface: 23,19,13;
+  --font-display:'Fraunces','Georgia',serif;
+  --font-body:'Manrope','Segoe UI',sans-serif;
+  --ease-theme: cubic-bezier(.16,.84,.44,1);
+  --dur-reveal: .75s;
+  --marquee-dur: 34s;
+  --portrait-filter: grayscale(.2) contrast(1.05);
+  --portrait-filter-hover: grayscale(0) contrast(1.05);
+}
+
+/* ---------- THURSDAY — Violet Circuit ---------- */
+html[data-day="thu"]{
+  --gold: 123,108,240;
+  --gold-soft: 179,108,240;
+  --environment-primary: 123,108,240;
+  --environment-secondary: 179,108,240;
+  --environment-glow: 154,140,255;
+  --environment-void: 10,8,20;
+  --ink: 234,231,251;
+  --ink-dim: rgba(234,231,251,0.64);
+  --ink-faint: rgba(234,231,251,0.34);
+  --line: rgba(123,108,240,0.16);
+  --line-strong: rgba(123,108,240,0.3);
+  --surface: 16,14,29;
+  --font-display:'Syne','Manrope',sans-serif;
+  --font-body:'Manrope','Segoe UI',sans-serif;
+  --ease-theme: cubic-bezier(.65,0,.35,1);
+  --dur-reveal: .6s;
+  --marquee-dur: 24s;
+  --portrait-filter: contrast(1.08) saturate(1.05) hue-rotate(8deg);
+  --portrait-filter-hover: contrast(1.15) saturate(1.15) hue-rotate(8deg);
+}
+
+/* ---------- FRIDAY — Noir Gold ---------- */
+html[data-day="fri"]{
+  --gold: 212,175,55;
+  --gold-soft: 232,207,120;
+  --environment-primary: 212,175,55;
+  --environment-secondary: 139,30,63;
+  --environment-glow: 232,196,104;
+  --environment-void: 13,9,6;
+  --ink: 245,239,226;
+  --ink-dim: rgba(245,239,226,0.64);
+  --ink-faint: rgba(245,239,226,0.34);
+  --line: rgba(212,175,55,0.16);
+  --line-strong: rgba(212,175,55,0.3);
+  --surface: 22,16,12;
+  --font-display:'Rajdhani','Manrope',sans-serif;
+  --font-body:'Manrope','Segoe UI',sans-serif;
+  --ease-theme: cubic-bezier(.22,.9,.3,1);
+  --dur-reveal: .5s;
+  --marquee-dur: 20s;
+  --portrait-filter: contrast(1.1) saturate(1.15) brightness(1.02);
+  --portrait-filter-hover: contrast(1.18) saturate(1.25) brightness(1.06);
+}
+
+/* ---------- SATURDAY — Neon Nightlife ---------- */
+html[data-day="sat"]{
+  --gold: 51,198,224;
+  --gold-soft: 130,225,240;
+  --environment-primary: 51,198,224;
+  --environment-secondary: 224,51,155;
+  --environment-glow: 95,224,240;
+  --environment-void: 7,10,18;
+  --ink: 228,246,251;
+  --ink-dim: rgba(228,246,251,0.64);
+  --ink-faint: rgba(228,246,251,0.34);
+  --line: rgba(51,198,224,0.16);
+  --line-strong: rgba(51,198,224,0.3);
+  --surface: 12,18,27;
   --font-display:'Sora','Manrope',sans-serif;
   --font-body:'Manrope','Segoe UI',sans-serif;
   --ease-theme: cubic-bezier(.4,0,.2,1);
-  --dur-reveal: .78s;
-  --marquee-dur: 30s;
-  --portrait-filter: contrast(1.05) saturate(.9) brightness(1.06) hue-rotate(6deg);
-  --portrait-filter-hover: contrast(1.1) saturate(1) brightness(1.1) hue-rotate(6deg);
+  --dur-reveal: .65s;
+  --marquee-dur: 26s;
+  --portrait-filter: contrast(1.08) saturate(1.15) brightness(1.03) hue-rotate(4deg);
+  --portrait-filter-hover: contrast(1.15) saturate(1.25) brightness(1.08) hue-rotate(4deg);
 }
 
-/* ---------- 3. CYBERSECURITY ---------- */
-html[data-theme="cyber"]{
-  --gold: 60,222,132;
-  --gold-soft: 214,168,72;
-  --environment-primary: 60,222,132;
-  --environment-secondary: 214,168,72;
-  --environment-glow: 90,232,150;
-  --environment-void: 5,8,6;
-  --ink: 214,240,222;
-  --ink-dim: rgba(214,240,222,0.64);
-  --ink-faint: rgba(214,240,222,0.34);
-  --line: rgba(60,222,132,0.16);
-  --line-strong: rgba(60,222,132,0.3);
-  --surface: 10,15,12;
-  --font-display:'JetBrains Mono','Courier New',monospace;
-  --font-body:'Manrope','Segoe UI',sans-serif;
-  --font-mono:'JetBrains Mono','Courier New',monospace;
-  --ease-theme: cubic-bezier(.77,0,.18,1);
-  --dur-reveal: .34s;
-  --marquee-dur: 20s;
-  --portrait-filter: grayscale(.45) contrast(1.12) sepia(.18) hue-rotate(62deg) saturate(1.5);
-  --portrait-filter-hover: grayscale(.2) contrast(1.15) sepia(.1) hue-rotate(62deg) saturate(1.6);
-}
-
-/* ---------- 4. SPACE / ASTRONOMY ---------- */
-html[data-theme="space"]{
-  --gold: 150,142,255;
-  --gold-soft: 120,172,255;
-  --environment-primary: 150,142,255;
-  --environment-secondary: 120,172,255;
-  --environment-glow: 182,174,255;
-  --environment-void: 6,7,15;
-  --ink: 232,232,247;
-  --ink-dim: rgba(232,232,247,0.64);
-  --ink-faint: rgba(232,232,247,0.34);
-  --line: rgba(150,142,255,0.16);
-  --line-strong: rgba(150,142,255,0.3);
-  --surface: 12,14,27;
-  --font-display:'Space Grotesk','Manrope',sans-serif;
+/* ---------- SUNDAY — Quiet Ivory ---------- */
+html[data-day="sun"]{
+  --gold: 143,169,138;
+  --gold-soft: 184,201,175;
+  --environment-primary: 143,169,138;
+  --environment-secondary: 183,160,140;
+  --environment-glow: 169,194,160;
+  --environment-void: 12,14,11;
+  --ink: 237,239,231;
+  --ink-dim: rgba(237,239,231,0.6);
+  --ink-faint: rgba(237,239,231,0.32);
+  --line: rgba(143,169,138,0.14);
+  --line-strong: rgba(143,169,138,0.26);
+  --surface: 19,21,17;
+  --font-display:'Playfair Display','Georgia',serif;
   --font-body:'Manrope','Segoe UI',sans-serif;
   --ease-theme: cubic-bezier(.16,.84,.44,1);
-  --dur-reveal: 1.05s;
-  --marquee-dur: 48s;
-  --portrait-filter: contrast(1.05) saturate(.85) brightness(1.02) hue-rotate(-10deg);
-  --portrait-filter-hover: contrast(1.1) saturate(.95) brightness(1.08) hue-rotate(-10deg);
+  --dur-reveal: .9s;
+  --marquee-dur: 40s;
+  --portrait-filter: grayscale(.3) contrast(1.02) brightness(1.02);
+  --portrait-filter-hover: grayscale(.05) contrast(1.05) brightness(1.05);
 }
 
-/* ---------- BODY TRANSITION FOR ENV COLORS SHOULD FOLLOW THEME EASE ---------- */
-html[data-theme] body{ transition-duration: .6s; }
+/* ---------- SMOOTH, CINEMATIC PROPERTY TRANSITIONS ---------- */
+html[data-day] body{ transition-duration: .6s; }
+:root, html[data-day]{
+  transition:
+    background var(--env-transition) var(--ease-soft);
+}
+:root{ --day-fade: 1.3s; }
+body, .system-inner, #env-ribbon, #nav-orb, .theme-badge, .hero-portrait img{
+  transition-property: background, background-color, color, border-color, box-shadow;
+  transition-duration: var(--day-fade);
+  transition-timing-function: var(--ease-soft);
+}
 
-/* ---------- BACKGROUND FX LAYER (grid / scan / nebula per theme) ---------- */
+/* ---------- MIDNIGHT TRANSITION OVERLAY (reused for the daily hand-off) ---------- */
 #theme-fx{
-  position:fixed; inset:0; z-index:1; pointer-events:none;
-  opacity:0; transition:opacity .6s var(--ease-soft);
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0;
 }
-html[data-theme="gaming"] #theme-fx{
-  opacity:1;
-  background-image:
-    linear-gradient(rgba(var(--environment-primary),.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--environment-primary),.07) 1px, transparent 1px);
-  background-size:44px 44px;
-  -webkit-mask-image: radial-gradient(ellipse 95% 80% at 50% 20%, black 30%, transparent 82%);
-  mask-image: radial-gradient(ellipse 95% 80% at 50% 20%, black 30%, transparent 82%);
-}
-html[data-theme="cyber"] #theme-fx{
-  opacity:1;
-  background-image: repeating-linear-gradient(0deg, rgba(var(--environment-primary),.055) 0px, rgba(var(--environment-primary),.055) 1px, transparent 1px, transparent 4px);
-}
-html[data-theme="ai"] #theme-fx{
-  opacity:1;
-  background:
-    radial-gradient(circle at 24% 18%, rgba(var(--environment-primary),.10), transparent 55%),
-    radial-gradient(circle at 78% 68%, rgba(var(--environment-secondary),.10), transparent 55%);
-}
-html[data-theme="space"] #theme-fx{
-  opacity:1;
-  background:
-    radial-gradient(ellipse 65% 45% at 18% 16%, rgba(var(--environment-secondary),.14), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 82% 74%, rgba(var(--environment-primary),.12), transparent 65%);
-}
-#theme-fx::after{
-  content:''; position:absolute; left:0; right:0; top:-4%; height:2px; opacity:0;
-  background:linear-gradient(90deg, transparent, rgba(var(--environment-glow),.55), transparent);
-}
-html[data-theme="gaming"] #theme-fx::after,
-html[data-theme="cyber"] #theme-fx::after{
-  opacity:1; animation:themeScanSweep 5.5s linear infinite;
-}
-@keyframes themeScanSweep{ 0%{ top:-4%; } 100%{ top:104%; } }
-
-/* ---------- CINEMATIC THEME TRANSITION ---------- */
 #theme-transition{
   position:fixed; inset:0; z-index:9400; pointer-events:none;
   background:rgb(var(--environment-void));
-  opacity:0; transition:opacity .42s var(--ease-soft);
+  opacity:0; transition:opacity .6s var(--ease-soft);
 }
 #theme-transition.active{ opacity:1; }
 body.theme-switching #main,
 body.theme-switching .marquee,
 body.theme-switching #env-ribbon{
   filter:blur(7px) saturate(1.1); transform:scale(.994);
-  transition:filter .5s var(--ease-soft), transform .5s var(--ease-soft);
+  transition:filter .7s var(--ease-soft), transform .7s var(--ease-soft);
 }
 @media (prefers-reduced-motion:reduce){
   #theme-transition{ transition:none; }
@@ -722,126 +767,4 @@ body.theme-switching #env-ribbon{
   }
 }
 
-/* ---------- THEME BADGE (decorative status line) ---------- */
-.theme-badge{
-  display:none; align-items:center; gap:8px; width:fit-content;
-  margin-bottom:14px; padding:6px 14px; border:1px solid var(--line-strong); border-radius:999px;
-  background:rgba(var(--surface),0.5); backdrop-filter:blur(8px);
-  font-family:var(--font-mono); font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
-  color:rgb(var(--gold)); opacity:0; transform:translateY(-6px);
-  animation:fadeUp .6s var(--ease) .1s forwards;
-}
-.theme-badge::before{
-  content:''; width:6px; height:6px; border-radius:50%; background:rgb(var(--gold));
-  box-shadow:0 0 8px 1px rgba(var(--gold),.8); animation:badgePulse 1.8s ease-in-out infinite;
-}
-@keyframes badgePulse{ 0%,100%{ opacity:.5; } 50%{ opacity:1; } }
-html[data-theme]:not([data-theme="luxury"]) .theme-badge{ display:inline-flex; }
-
-/* ---------- THEME SELECTOR DOCK ---------- */
-#theme-dock{
-  position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:650;
-  display:flex; align-items:center; gap:4px; padding:6px; border-radius:999px;
-  background:rgba(var(--surface),0.62); backdrop-filter:blur(16px);
-  border:1px solid var(--line-strong);
-  box-shadow:0 20px 50px -20px rgba(0,0,0,.6);
-  transition:background .5s var(--ease-soft), border-color .5s var(--ease-soft);
-}
-.theme-btn{
-  --btn-accent: var(--gold);
-  position:relative; display:flex; align-items:center; gap:7px; padding:9px 16px;
-  border-radius:999px; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--ink-dim); background:transparent;
-  transition:background .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease), transform .25s var(--ease);
-}
-.theme-btn-icon{ font-size:.95rem; line-height:1; filter:grayscale(.4); transition:filter .3s var(--ease); }
-.theme-btn:hover{
-  color:rgb(var(--btn-accent));
-  background:rgba(var(--btn-accent),0.1);
-  box-shadow:0 0 0 1px rgba(var(--btn-accent),0.35), 0 0 22px -4px rgba(var(--btn-accent),0.55);
-  transform:translateY(-1px);
-}
-.theme-btn:hover .theme-btn-icon{ filter:grayscale(0); }
-.theme-btn.active{
-  color:rgb(var(--btn-accent)); background:rgba(var(--btn-accent),0.16);
-  box-shadow:inset 0 0 0 1px rgba(var(--btn-accent),0.55);
-}
-.theme-btn.active .theme-btn-icon{ filter:grayscale(0); }
-.theme-btn.active::after{
-  content:''; position:absolute; left:16px; right:16px; bottom:4px; height:1.5px;
-  background:rgb(var(--btn-accent)); border-radius:2px;
-}
-.theme-btn:focus-visible{ outline:1px solid rgb(var(--btn-accent)); outline-offset:3px; }
-
-.theme-btn[data-theme-btn="gaming"]{ --btn-accent: 224,42,74; }
-.theme-btn[data-theme-btn="ai"]{ --btn-accent: 96,200,255; }
-.theme-btn[data-theme-btn="cyber"]{ --btn-accent: 60,222,132; }
-.theme-btn[data-theme-btn="space"]{ --btn-accent: 150,142,255; }
-.theme-btn[data-theme-btn="luxury"]{ --btn-accent: 197,164,108; }
-
-/* ---------- PER-THEME CARD / GLASS / GLOW TREATMENT ---------- */
-html[data-theme="ai"] .system-inner,
-html[data-theme="ai"] #radial-menu,
-html[data-theme="ai"] #env-ribbon,
-html[data-theme="ai"] #nav-orb,
-html[data-theme="ai"] #theme-dock{
-  backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
-  box-shadow:0 0 44px -14px rgba(var(--environment-glow),.4);
-}
-html[data-theme="ai"] .index-row:hover,
-html[data-theme="ai"] .index-row:focus-visible{
-  box-shadow:inset 0 0 0 1px rgba(var(--environment-primary),.25);
-}
-
-html[data-theme="gaming"] .index-row:hover,
-html[data-theme="gaming"] .index-row:focus-visible{
-  box-shadow:inset 0 0 0 1px rgba(var(--environment-primary),.4), 0 0 26px -8px rgba(var(--environment-glow),.55);
-}
-html[data-theme="gaming"] .hero-portrait img{
-  box-shadow:0 0 0 1px rgba(var(--environment-primary),.4), 0 40px 80px -30px rgba(0,0,0,.85);
-}
-html[data-theme="gaming"] .portrait-corner{ box-shadow:0 0 10px 0 rgba(var(--environment-glow),.7); }
-
-html[data-theme="cyber"] .eyebrow,
-html[data-theme="cyber"] .row-tag,
-html[data-theme="cyber"] .env-clock,
-html[data-theme="cyber"] #shuffle-btn{
-  font-family:var(--font-mono);
-}
-html[data-theme="cyber"] .index-row:hover .row-title,
-html[data-theme="cyber"] .index-row:focus-visible .row-title{ text-shadow:0 0 14px rgba(var(--environment-glow),.5); }
-html[data-theme="cyber"] .system-inner{ border-color:rgba(var(--environment-primary),.4); }
-
-html[data-theme="space"] .hero-portrait .portrait-glow{
-  inset:-26%; filter:blur(30px); background:radial-gradient(circle, rgba(var(--environment-secondary),.24), transparent 70%);
-}
-html[data-theme="space"] .row-title{ letter-spacing:-0.005em; }
-
-html[data-theme="luxury"] #theme-badge{ display:none; }
-
-/* ---------- MOBILE ---------- */
-@media (max-width:700px){
-  #theme-dock{
-    left:12px; right:12px; bottom:14px; transform:none; width:auto; max-width:none;
-    justify-content:flex-start; overflow-x:auto; -webkit-overflow-scrolling:touch;
-    scrollbar-width:none; padding:5px;
-  }
-  #theme-dock::-webkit-scrollbar{ display:none; }
-  .theme-btn{ padding:8px 12px; flex:0 0 auto; }
-  .theme-btn-label{ display:none; }
-  .theme-btn-icon{ font-size:1.05rem; }
-  .theme-badge{ font-size:.54rem; letter-spacing:.1em; }
-}
-@media (max-width:380px){
-  #theme-dock{ bottom:10px; }
-}
-
-/* keep bottom safe-area clear of the dock */
-@supports (padding: max(0px)){
-  #theme-dock{ bottom:max(22px, env(safe-area-inset-bottom)); }
-  @media (max-width:700px){ #theme-dock{ bottom:max(14px, env(safe-area-inset-bottom)); } }
-}
-
-/* keep footer content clear of the fixed dock */
-#site-footer{ padding-bottom:78px; }
-@media (max-width:700px){ #site-footer{ padding-bottom:74px; } }
+.theme-badge{ display:none; }
