@@ -279,6 +279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="name-line name-line-em">Universe</span>
         </h1>
         <p class="hero-role">Digital Creator — Technology, Security &amp; Design</p>
+        <button id="os-enter" type="button"><i></i>Enter Aashir OS</button>
       </div>
 
       <div class="hero-portrait" id="hero-portrait" tabindex="0" aria-label="Muhammad Aashir Abbas — long press for an identity animation">
@@ -449,6 +450,203 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ============ PORTAL LAUNCH TRANSITION ============ -->
 <div id="launch-overlay" aria-hidden="true">
   <span id="launch-title"></span>
+</div>
+
+<!-- ============ AASHIR OS ============ -->
+<div id="aashir-os" aria-hidden="true">
+  <div class="os-shell">
+    <div id="os-boot" aria-hidden="true">
+      <span class="os-boot-title">AASHIR OS</span>
+      <span class="os-boot-status" id="os-boot-status">INITIALIZING…</span>
+      <div class="os-boot-bar"><span id="os-boot-fill"></span></div>
+    </div>
+
+    <header class="os-topbar">
+      <div class="os-brand">AASHIR OS <span class="os-ver">v2.6.0 // STABLE</span></div>
+      <div class="os-clock">
+        <span id="os-date">—</span>
+        <span id="os-time">--:--:--</span>
+        <span class="os-status"><i></i>SYSTEM ONLINE</span>
+      </div>
+      <button id="os-exit" type="button">EXIT OS ×</button>
+    </header>
+
+    <div class="os-body">
+      <nav class="os-nav" id="os-nav" aria-label="AASHIR OS modules">
+        <button data-mod="system" class="active" type="button"><span class="os-nav-num">01</span>System</button>
+        <button data-mod="identity" type="button"><span class="os-nav-num">02</span>Identity</button>
+        <button data-mod="projects" type="button"><span class="os-nav-num">03</span>Projects</button>
+        <button data-mod="skills" type="button"><span class="os-nav-num">04</span>Skills</button>
+        <button data-mod="experience" type="button"><span class="os-nav-num">05</span>Experience</button>
+        <button data-mod="archive" type="button"><span class="os-nav-num">06</span>Archive</button>
+        <button data-mod="terminal" type="button"><span class="os-nav-num">07</span>Terminal</button>
+        <button data-mod="contact" type="button"><span class="os-nav-num">08</span>Contact</button>
+      </nav>
+
+      <main class="os-main" id="os-main">
+
+        <!-- SYSTEM -->
+        <section class="os-mod active" data-mod-panel="system">
+          <div class="os-system-grid">
+            <div>
+              <p class="os-welcome">WELCOME BACK,</p>
+              <h2 class="os-welcome-name">Muhammad<br>Aashir Abbas</h2>
+              <p class="os-welcome-role">Digital Creator • Technology • Security • Design</p>
+              <div class="os-init" id="os-init"></div>
+              <div class="os-panel">
+                <h3>Quick Info</h3>
+                <ul class="os-info-list">
+                  <li><span>Focus</span><span>Technology, Security &amp; Design</span></li>
+                  <li><span>Studying</span><span>Cyber Security — 3rd Semester</span></li>
+                  <li><span>Diploma</span><span>DAE, Information Technology</span></li>
+                  <li><span>Location</span><span id="os-location">Detecting…</span></li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <figure class="os-portrait">
+                <img src="./aashir-profile.jpeg" alt="Portrait of Muhammad Aashir Abbas">
+                <figcaption>No. 001 — Founder's Portrait</figcaption>
+              </figure>
+              <div class="os-panel">
+                <h3>System Status</h3>
+                <ul class="os-status-list" id="os-status-list">
+                  <li><span><span class="dot"></span>Portfolio</span><span class="ok">Online</span></li>
+                  <li><span><span class="dot"></span>Projects (6)</span><span class="ok">Linked</span></li>
+                  <li><span><span class="dot"></span>Theme Engine</span><span class="ok" id="os-theme-status">Synced</span></li>
+                  <li><span><span class="dot"></span>Motion</span><span class="ok" id="os-motion-status">Active</span></li>
+                </ul>
+              </div>
+              <div class="os-panel">
+                <h3>System Activity</h3>
+                <ul class="os-log-list" id="os-log-list"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- IDENTITY -->
+        <section class="os-mod" data-mod-panel="identity">
+          <span class="os-eyebrow">Module — 02</span>
+          <h2 class="os-h">Identity</h2>
+          <div class="os-identity-grid">
+            <div class="os-id-card"><span class="os-id-label">Full Name</span><span class="os-id-value">Muhammad Aashir Abbas</span></div>
+            <div class="os-id-card"><span class="os-id-label">Professional Name</span><span class="os-id-value">Aashir Rajpoot</span></div>
+            <div class="os-id-card"><span class="os-id-label">Focus</span><span class="os-id-value">Technology, Security &amp; Design</span></div>
+            <div class="os-id-card"><span class="os-id-label">Location</span><span class="os-id-value" id="os-id-location">Detecting…</span></div>
+          </div>
+          <div class="os-panel">
+            <h3>Education</h3>
+            <div class="os-edu-list">
+              <div class="os-edu-row"><span>Cyber Security</span><span class="os-edu-tag cur">3rd Semester · Current</span></div>
+              <div class="os-edu-row"><span>DAE — Information Technology (IT)</span><span class="os-edu-tag">3-Year Diploma · Completed</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section class="os-mod" data-mod-panel="projects">
+          <span class="os-eyebrow">Module — 03</span>
+          <h2 class="os-h">Projects — Installed Applications</h2>
+          <div class="os-app-grid" id="os-app-grid"></div>
+        </section>
+
+        <!-- SKILLS -->
+        <section class="os-mod" data-mod-panel="skills">
+          <span class="os-eyebrow">Module — 04</span>
+          <h2 class="os-h">Skills</h2>
+          <div id="os-skills-body"></div>
+        </section>
+
+        <!-- EXPERIENCE -->
+        <section class="os-mod" data-mod-panel="experience">
+          <span class="os-eyebrow">Module — 05</span>
+          <h2 class="os-h">Experience Log</h2>
+          <div class="os-timeline">
+            <div class="os-time-row">
+              <span class="os-time-tag">Current</span>
+              <div><p class="os-time-title">Cyber Security — 3rd Semester</p><p class="os-time-desc">Studying Cyber Security has sharpened how he approaches every project — spotting weak points, designing defensively, and never trusting input blindly.</p></div>
+            </div>
+            <div class="os-time-row">
+              <span class="os-time-tag">Completed</span>
+              <div><p class="os-time-title">DAE — Information Technology (3-Year Diploma)</p><p class="os-time-desc">A grounding in systems, networks and how they hold together — the foundation behind his infrastructure and security work.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ARCHIVE -->
+        <section class="os-mod" data-mod-panel="archive">
+          <span class="os-eyebrow">Module — 06</span>
+          <h2 class="os-h">Archive</h2>
+          <div class="os-panel">
+            <h3>Certificates &amp; Credentials</h3>
+            <div class="os-archive-grid">
+              <div class="os-archive-card">Certificate slot — ready for title, issuer &amp; document</div>
+              <div class="os-archive-card">Certificate slot — ready for title, issuer &amp; document</div>
+              <div class="os-archive-card">Certificate slot — ready for title, issuer &amp; document</div>
+            </div>
+          </div>
+          <div class="os-panel">
+            <h3>Why I Build</h3>
+            <ul class="os-why-list">
+              <li><span class="os-why-num">01</span><span>Learning by implementation — finishing a real project teaches more than any tutorial.</span></li>
+              <li><span class="os-why-num">02</span><span>Solving small, practical problems with something people can actually use.</span></li>
+              <li><span class="os-why-num">03</span><span>Experimenting with new tools and technology in a low-stakes, hands-on way.</span></li>
+              <li><span class="os-why-num">04</span><span>Combining design and function so a project looks right and works right.</span></li>
+              <li><span class="os-why-num">05</span><span>Improving with every project — each one a little better than the last.</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- TERMINAL -->
+        <section class="os-mod" data-mod-panel="terminal">
+          <span class="os-eyebrow">Module — 07</span>
+          <h2 class="os-h">Terminal</h2>
+          <div class="os-term">
+            <div class="os-term-out" id="os-term-out"></div>
+            <div class="os-term-in">
+              <span>aashir@os:~$</span>
+              <input id="os-term-input" type="text" autocomplete="off" spellcheck="false" aria-label="Terminal command input">
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="os-mod" data-mod-panel="contact">
+          <span class="os-eyebrow">Module — 08</span>
+          <h2 class="os-h">Contact</h2>
+          <div class="os-contact-grid">
+            <a class="os-contact-link" href="https://www.facebook.com/share/1DmQ7qDxAf/" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a class="os-contact-link" href="https://www.linkedin.com/in/muhammad-aashir-abbas-9679b0279" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="os-contact-link" href="https://www.instagram.com/aashirrajpoot757" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a class="os-contact-link" href="https://youtube.com/@aashirnovavax" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a class="os-contact-link" href="https://www.threads.com/@aashirrajpoot757" target="_blank" rel="noopener noreferrer">Threads</a>
+            <a class="os-contact-link" href="https://github.com/Aashir-Rajpoot" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="os-contact-link" href="https://www.fiverr.com/s/NeBWVEN" target="_blank" rel="noopener noreferrer">Fiverr</a>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+</div>
+
+<div class="os-window-layer" id="os-window-layer" aria-hidden="true">
+  <div class="os-window" id="os-window">
+    <div class="os-window-head">
+      <span id="os-window-id">PROJECT 001</span>
+      <button id="os-window-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="os-window-body">
+      <h4 id="os-window-name"></h4>
+      <div class="os-window-meta">
+        <span>Type<b id="os-window-type"></b></span>
+        <span>Status<b>Live</b></span>
+      </div>
+      <p id="os-window-desc"></p>
+      <a class="os-window-open" id="os-window-link" href="#" target="_blank" rel="noopener noreferrer">Open Live Project ↗</a>
+    </div>
+  </div>
 </div>
 
 <script src="app.js" defer></script>
