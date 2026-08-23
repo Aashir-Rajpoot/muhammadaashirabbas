@@ -148,7 +148,7 @@ const BootEngine = {
         el.style.opacity = '1';
         i++;
         if (i < this.messages.length) setTimeout(step, reduceMotion ? 40 : 380);
-        else setTimeout(finish, reduceMotion ? 40 : 420);
+        else setTimeout(finish, reduceMotion ? 40 : 1440);
       }, 40);
     };
     const finish = () => {
