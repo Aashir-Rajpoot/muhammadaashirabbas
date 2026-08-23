@@ -31,8 +31,6 @@
   --ease-theme: var(--ease);
   --dur-reveal: .7s;
   --marquee-dur: 34s;
-  --portrait-filter: grayscale(.25) contrast(1.05);
-  --portrait-filter-hover: grayscale(0) contrast(1.05);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
@@ -243,10 +241,11 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 }
 @keyframes glowPulse{ 0%,100%{ opacity:.6; } 50%{ opacity:1; } }
 .hero-portrait img{
-  position:relative; z-index:1; width:100%; height:100%; object-fit:cover; filter:var(--portrait-filter);
-  box-shadow:0 40px 80px -30px rgba(0,0,0,.8); transition:transform .6s var(--ease-theme,var(--ease)), filter .6s;
+  /* Portrait pixels are never touched by the daily theme — no filter, tint, or color-grade here. */
+  position:relative; z-index:1; width:100%; height:100%; object-fit:cover;
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.8); transition:transform .6s var(--ease-theme,var(--ease));
 }
-.hero-portrait:hover img{ transform:scale(1.02); filter:var(--portrait-filter-hover); }
+.hero-portrait:hover img{ transform:scale(1.02); }
 .hero-portrait.pulse img{ animation:identityPulse .9s var(--ease); }
 @keyframes identityPulse{ 0%{ box-shadow:0 0 0 0 rgba(var(--gold),.45);} 100%{ box-shadow:0 0 0 40px rgba(var(--gold),0);} }
 .portrait-corner{ position:absolute; width:18px; height:18px; border:1px solid rgb(var(--gold)); z-index:2; }
@@ -589,8 +588,6 @@ html[data-day="mon"]{
   --ease-theme: cubic-bezier(.2,.85,.28,1);
   --dur-reveal: .48s;
   --marquee-dur: 18s;
-  --portrait-filter: contrast(1.15) saturate(1.1) brightness(.96);
-  --portrait-filter-hover: contrast(1.2) saturate(1.2) brightness(1);
 }
 
 /* ---------- TUESDAY — Verdant Glass ---------- */
@@ -612,8 +609,6 @@ html[data-day="tue"]{
   --ease-theme: cubic-bezier(.4,0,.2,1);
   --dur-reveal: .7s;
   --marquee-dur: 30s;
-  --portrait-filter: contrast(1.05) saturate(1) brightness(1.02) hue-rotate(-6deg);
-  --portrait-filter-hover: contrast(1.1) saturate(1.1) brightness(1.06) hue-rotate(-6deg);
 }
 
 /* ---------- WEDNESDAY — Amber Editorial ---------- */
@@ -635,8 +630,6 @@ html[data-day="wed"]{
   --ease-theme: cubic-bezier(.16,.84,.44,1);
   --dur-reveal: .75s;
   --marquee-dur: 34s;
-  --portrait-filter: grayscale(.2) contrast(1.05);
-  --portrait-filter-hover: grayscale(0) contrast(1.05);
 }
 
 /* ---------- THURSDAY — Violet Circuit ---------- */
@@ -658,8 +651,6 @@ html[data-day="thu"]{
   --ease-theme: cubic-bezier(.65,0,.35,1);
   --dur-reveal: .6s;
   --marquee-dur: 24s;
-  --portrait-filter: contrast(1.08) saturate(1.05) hue-rotate(8deg);
-  --portrait-filter-hover: contrast(1.15) saturate(1.15) hue-rotate(8deg);
 }
 
 /* ---------- FRIDAY — Noir Gold ---------- */
@@ -681,8 +672,6 @@ html[data-day="fri"]{
   --ease-theme: cubic-bezier(.22,.9,.3,1);
   --dur-reveal: .5s;
   --marquee-dur: 20s;
-  --portrait-filter: contrast(1.1) saturate(1.15) brightness(1.02);
-  --portrait-filter-hover: contrast(1.18) saturate(1.25) brightness(1.06);
 }
 
 /* ---------- SATURDAY — Neon Nightlife ---------- */
@@ -704,8 +693,6 @@ html[data-day="sat"]{
   --ease-theme: cubic-bezier(.4,0,.2,1);
   --dur-reveal: .65s;
   --marquee-dur: 26s;
-  --portrait-filter: contrast(1.08) saturate(1.15) brightness(1.03) hue-rotate(4deg);
-  --portrait-filter-hover: contrast(1.15) saturate(1.25) brightness(1.08) hue-rotate(4deg);
 }
 
 /* ---------- SUNDAY — Quiet Ivory ---------- */
@@ -727,8 +714,6 @@ html[data-day="sun"]{
   --ease-theme: cubic-bezier(.16,.84,.44,1);
   --dur-reveal: .9s;
   --marquee-dur: 40s;
-  --portrait-filter: grayscale(.3) contrast(1.02) brightness(1.02);
-  --portrait-filter-hover: grayscale(.05) contrast(1.05) brightness(1.05);
 }
 
 /* ---------- SMOOTH, CINEMATIC PROPERTY TRANSITIONS ---------- */
