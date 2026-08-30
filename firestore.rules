@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Paste this into Firebase Console → Firestore Database → Rules.
+// Replace ADMIN_UID below with your admin account's UID
+// (Console → Authentication → Users → copy "User UID").
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == "TfEGfeTEyJZn1wiU4gaDOwby8sr1";
+    }
+
+    // Aggregated per-day analytics. Public can only increment counters,
+    // never read, delete, or overwrite existing values downward.
+    match /dailyStats/{date} {
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+      allow create: if request.resource.data.keys().hasOnly(
+        ['date','views','uniqueViews','pages','devices','browsers','os','referrers','lastUpdated']);
+      allow update: if isAdmin() ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['views','uniqueViews','pages','devices','browsers','os','referrers','lastUpdated']));
+    }
+
+    // All-time aggregated totals. Same write-only pattern for the public.
+    match /stats/totals {
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+      allow create: if request.resource.data.keys().hasOnly(
+        ['totalViews','uniqueVisitors','newVisitors','returningVisitors','pages','devices','browsers','os','referrers','lastUpdated']);
+      allow update: if isAdmin() ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+          ['totalViews','uniqueVisitors','newVisitors','returningVisitors','pages','devices','browsers','os','referrers','lastUpdated']));
+    }
+
+    // One doc per anonymous visitor ID (no PII). Public may only write
+    // their own doc's allowed fields; nobody but admin can read the list.
+    match /visitors/{visitorId} {
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+      allow create, update: if request.resource.data.keys().hasOnly(
+        ['firstSeen','lastSeen','visitCount','device','browser','os']);
+    }
+
+    // Deny everything else by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
