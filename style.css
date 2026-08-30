@@ -516,6 +516,11 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
   font-family:var(--font-mono); font-size:.64rem; letter-spacing:.06em; color:var(--ink-faint);
   border-top:1px solid var(--line);
 }
+#footer-admin-link{
+  color:var(--ink-faint); text-decoration:none; letter-spacing:.06em;
+  transition:color .25s;
+}
+#footer-admin-link:hover{ color:rgb(var(--gold)); }
 
 /* ========================================================================= LAUNCH OVERLAY */
 #launch-overlay{
