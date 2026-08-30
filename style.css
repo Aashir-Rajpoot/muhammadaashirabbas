@@ -425,8 +425,16 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
   background:rgba(var(--gold),0.05);
   box-shadow:0 22px 40px -22px rgba(0,0,0,.6), 0 0 0 1px rgba(var(--gold),.12);
 }
-.cert-thumb{ width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:2px; filter:grayscale(.1) contrast(1.02); transition:filter .35s var(--ease-soft); }
-.cert-card-filled:hover .cert-thumb, .cert-card-filled:focus-visible .cert-thumb{ filter:grayscale(0) contrast(1.05); }
+.cert-thumb-wrap{
+  position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:2px; flex-shrink:0;
+  background:rgba(var(--surface),0.6);
+}
+.cert-thumb-wrap.is-portrait{ aspect-ratio:3/4; }
+.cert-thumb{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top center;
+  filter:grayscale(.1) contrast(1.02); transition:filter .35s var(--ease-soft), transform .35s var(--ease-soft);
+}
+.cert-card-filled:hover .cert-thumb, .cert-card-filled:focus-visible .cert-thumb{ filter:grayscale(0) contrast(1.05); transform:scale(1.03); }
 .cert-title{ font-family:var(--font-display); font-size:1.05rem; color:rgb(var(--ink)); margin:0; }
 .cert-issuer{ font-family:var(--font-mono); font-size:.62rem; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase; }
 .cert-view{ display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:.64rem; color:rgb(var(--gold)); margin-top:4px; transition:gap .25s var(--ease), color .25s; }
