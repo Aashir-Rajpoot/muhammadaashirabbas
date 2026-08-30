@@ -187,20 +187,36 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 let chartsLoaded = false;
-function loadChartJs() {
+const CHART_JS_SOURCES = [
+  "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js",
+  "https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js",
+  "https://unpkg.com/chart.js@4.4.4/dist/chart.umd.min.js"
+];
+function loadScript(src) {
   return new Promise((resolve, reject) => {
-    if (window.Chart) return resolve();
     const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js";
+    s.src = src;
     s.onload = resolve;
-    // NOTE: a <script> onerror handler receives a plain DOM Event, not an
-    // Error — it has no .message property. Passing that straight to
-    // reject() is what produced "Could not load analytics: undefined"
-    // whenever the Chart.js CDN request failed (network block, ad-blocker,
-    // offline, etc). Wrap it in a real Error so it carries a message.
-    s.onerror = () => reject(new Error("Failed to load Chart.js from cdnjs.cloudflare.com (network/CDN request failed)"));
+    // A <script> onerror handler receives a plain DOM Event, not an Error —
+    // it has no .message property. Wrap it in a real Error so callers get a
+    // usable message instead of "undefined".
+    s.onerror = () => reject(new Error(`Failed to load script from ${src} (network/CDN request failed)`));
     document.head.appendChild(s);
   });
+}
+async function loadChartJs() {
+  if (window.Chart) return;
+  let lastErr;
+  for (const src of CHART_JS_SOURCES) {
+    try {
+      await loadScript(src);
+      if (window.Chart) return;
+    } catch (err) {
+      lastErr = err;
+      console.warn(err.message);
+    }
+  }
+  throw lastErr || new Error("Chart.js failed to load from all CDN sources");
 }
 
 function fmt(n) { return (n || 0).toLocaleString(); }
@@ -278,26 +294,41 @@ async function loadDashboard() {
       const key = d.toISOString().slice(0, 10);
       last14.push({ label: key.slice(5), views: byDate[key]?.views || 0 });
     }
-    await loadChartJs();
-    new Chart(document.getElementById("views-chart"), {
-      type: "line",
-      data: {
-        labels: last14.map(d => d.label),
-        datasets: [{ label: "Views", data: last14.map(d => d.views), borderColor: "#e0b060", backgroundColor: "rgba(224,176,96,.15)", fill: true, tension: .3 }]
-      },
-      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: "#9c9184" } }, x: { ticks: { color: "#9c9184" } } } }
-    });
+    // Charts are a nice-to-have on top of the Firestore data above. If the
+    // Chart.js CDN is unreachable (blocked network, ad-blocker, etc.) we
+    // still want the KPIs and bar lists — which already loaded fine — to
+    // show, instead of the whole dashboard failing on an unrelated
+    // third-party script.
+    try {
+      await loadChartJs();
+      new Chart(document.getElementById("views-chart"), {
+        type: "line",
+        data: {
+          labels: last14.map(d => d.label),
+          datasets: [{ label: "Views", data: last14.map(d => d.views), borderColor: "#e0b060", backgroundColor: "rgba(224,176,96,.15)", fill: true, tension: .3 }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: "#9c9184" } }, x: { ticks: { color: "#9c9184" } } } }
+      });
 
-    // Device pie
-    const devices = totals.devices || {};
-    new Chart(document.getElementById("device-chart"), {
-      type: "doughnut",
-      data: {
-        labels: Object.keys(devices),
-        datasets: [{ data: Object.values(devices), backgroundColor: ["#e0b060", "#6ac47a", "#e06060", "#7aa6e0"] }]
-      },
-      options: { plugins: { legend: { position: "bottom", labels: { color: "#f2ece3" } } } }
-    });
+      // Device pie
+      const devices = totals.devices || {};
+      new Chart(document.getElementById("device-chart"), {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(devices),
+          datasets: [{ data: Object.values(devices), backgroundColor: ["#e0b060", "#6ac47a", "#e06060", "#7aa6e0"] }]
+        },
+        options: { plugins: { legend: { position: "bottom", labels: { color: "#f2ece3" } } } }
+      });
+    } catch (chartErr) {
+      console.error("Charts unavailable:", chartErr);
+      console.error("Error name:", chartErr?.name);
+      console.error("Error code:", chartErr?.code);
+      console.error("Error message:", chartErr?.message);
+      const chartFallback = `<p style="color:var(--muted);font-size:.85rem">Chart unavailable (${chartErr?.message || "CDN blocked"}).</p>`;
+      document.getElementById("views-chart").insertAdjacentHTML("afterend", chartFallback);
+      document.getElementById("device-chart").insertAdjacentHTML("afterend", chartFallback);
+    }
 
     renderBars("pages-bars", totals.pages);
     renderBars("ref-bars", totals.referrers);
