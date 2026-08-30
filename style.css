@@ -516,11 +516,15 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
   font-family:var(--font-mono); font-size:.64rem; letter-spacing:.06em; color:var(--ink-faint);
   border-top:1px solid var(--line);
 }
-#footer-admin-link{
-  color:var(--ink-faint); text-decoration:none; letter-spacing:.06em;
-  transition:color .25s;
+#footer-admin-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase;
+  color:rgb(var(--ink)); background:rgba(var(--ink),0.04); border:1px solid var(--line-strong);
+  padding:8px 16px; text-decoration:none; cursor:pointer;
+  transition:background .3s var(--ease-theme), border-color .3s var(--ease-theme), transform .3s var(--ease-theme);
 }
-#footer-admin-link:hover{ color:rgb(var(--gold)); }
+#footer-admin-btn:hover{ background:rgba(var(--gold),0.12); border-color:rgba(var(--gold),0.5); transform:translateY(-1px); }
+#footer-admin-btn i{ width:5px; height:5px; border-radius:50%; background:rgb(var(--gold)); box-shadow:0 0 6px rgb(var(--gold)); }
 
 /* ========================================================================= LAUNCH OVERLAY */
 #launch-overlay{
