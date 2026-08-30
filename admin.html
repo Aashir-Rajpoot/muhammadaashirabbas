@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Muhammad Aashir Abbas</title>
+<link rel="icon" href="./aashir-profile.jpeg">
+<style>
+  :root{--bg:#0a0806;--panel:#15110d;--border:#2a231c;--text:#f2ece3;--muted:#9c9184;--accent:#e0b060;--danger:#e06060;--ok:#6ac47a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  a{color:var(--accent)}
+  /* Login */
+  #login-view{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:32px;width:100%;max-width:380px}
+  .card h1{font-size:1.3rem;margin:0 0 6px}
+  .card p.sub{color:var(--muted);font-size:.85rem;margin:0 0 20px}
+  label{display:block;font-size:.8rem;color:var(--muted);margin:14px 0 6px}
+  input{width:100%;padding:10px 12px;background:#000;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem}
+  button{cursor:pointer;border:none;border-radius:8px;font-weight:600;font-size:.9rem}
+  .btn-primary{width:100%;margin-top:20px;padding:11px;background:var(--accent);color:#20180c}
+  .btn-link{background:none;color:var(--accent);padding:0;font-size:.8rem;margin-top:14px}
+  #login-msg{margin-top:14px;font-size:.82rem;min-height:1em}
+  #login-msg.err{color:var(--danger)}
+  #login-msg.ok{color:var(--ok)}
+  /* Dashboard */
+  #dash-view{display:none}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+  .topbar h1{font-size:1.2rem;margin:0}
+  .topbar .who{color:var(--muted);font-size:.8rem}
+  #logout-btn{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .kpi .n{font-size:1.5rem;font-weight:700}
+  .kpi .l{color:var(--muted);font-size:.75rem;margin-top:4px}
+  .grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+  @media(max-width:800px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px}
+  .panel h2{font-size:.9rem;margin:0 0 14px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  td,th{padding:6px 4px;text-align:left;border-bottom:1px solid var(--border)}
+  th{color:var(--muted);font-weight:500}
+  .barrow{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.82rem}
+  .barrow .lbl{width:80px;flex-shrink:0;color:var(--muted)}
+  .barrow .track{flex:1;background:#000;border-radius:4px;height:8px;overflow:hidden}
+  .barrow .fill{height:100%;background:var(--accent)}
+  #loading,#error-box{text-align:center;padding:60px 20px;color:var(--muted)}
+  #error-box{color:var(--danger);display:none}
+</style>
+</head>
+<body>
+
+<div id="login-view">
+  <div class="card">
+    <h1>Admin Login</h1>
+    <p class="sub">Sign in to view portfolio analytics.</p>
+    <form id="login-form">
+      <label for="email">Email</label>
+      <input id="email" type="email" required autocomplete="username">
+      <label for="password">Password</label>
+      <input id="password" type="password" required autocomplete="current-password">
+      <button class="btn-primary" type="submit">Sign In</button>
+    </form>
+    <button class="btn-link" id="forgot-btn" type="button">Forgot password?</button>
+    <div id="login-msg"></div>
+  </div>
+</div>
+
+<div id="dash-view">
+  <div class="wrap">
+    <div class="topbar">
+      <h1>Portfolio Analytics</h1>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="who" id="who"></span>
+        <button id="logout-btn">Log out</button>
+      </div>
+    </div>
+
+    <div id="loading">Loading analytics…</div>
+    <div id="error-box"></div>
+
+    <div id="dash-content" style="display:none">
+      <div class="kpis" id="kpis"></div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Views — Last 14 Days</h2>
+          <canvas id="views-chart" height="90"></canvas>
+        </div>
+        <div class="panel">
+          <h2>Device Type</h2>
+          <canvas id="device-chart" height="90"></canvas>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Popular Pages</h2>
+          <div id="pages-bars"></div>
+        </div>
+        <div class="panel">
+          <h2>Traffic Sources</h2>
+          <div id="ref-bars"></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Browsers</h2>
+          <div id="browser-bars"></div>
+        </div>
+        <div class="panel">
+          <h2>Operating System</h2>
+          <div id="os-bars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { auth, db, ADMIN_UID } from "./firebase-config.js";
+import {
+  onAuthStateChanged, signInWithEmailAndPassword,
+  signOut, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  doc, getDoc, collection, query, orderBy, limit, getDocs
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const loginView = document.getElementById("login-view");
+const dashView = document.getElementById("dash-view");
+const loginMsg = document.getElementById("login-msg");
+
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  loginMsg.className = ""; loginMsg.textContent = "";
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    loginMsg.className = "err";
+    loginMsg.textContent = "Login failed: " + friendlyAuthError(err.code);
+  }
+});
+
+document.getElementById("forgot-btn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim() || prompt("Enter your admin email:");
+  if (!email) return;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    loginMsg.className = "ok";
+    loginMsg.textContent = "Password reset email sent — check your inbox.";
+  } catch (err) {
+    loginMsg.className = "err";
+    loginMsg.textContent = "Could not send reset email: " + friendlyAuthError(err.code);
+  }
+});
+
+document.getElementById("logout-btn").addEventListener("click", () => signOut(auth));
+
+function friendlyAuthError(code) {
+  const map = {
+    "auth/invalid-email": "invalid email address.",
+    "auth/user-not-found": "no account with that email.",
+    "auth/wrong-password": "incorrect password.",
+    "auth/invalid-credential": "incorrect email or password.",
+    "auth/too-many-requests": "too many attempts, try again later."
+  };
+  return map[code] || "please try again.";
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.uid === ADMIN_UID) {
+    loginView.style.display = "none";
+    dashView.style.display = "block";
+    document.getElementById("who").textContent = user.email;
+    loadDashboard();
+  } else {
+    if (user && user.uid !== ADMIN_UID) {
+      // Signed in but not the admin account — deny and sign out.
+      await signOut(auth);
+    }
+    dashView.style.display = "none";
+    loginView.style.display = "flex";
+  }
+});
+
+let chartsLoaded = false;
+function loadChartJs() {
+  return new Promise((resolve, reject) => {
+    if (window.Chart) return resolve();
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js";
+    s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+function fmt(n) { return (n || 0).toLocaleString(); }
+
+function renderBars(containerId, map, topN = 8) {
+  const el = document.getElementById(containerId);
+  const entries = Object.entries(map || {}).sort((a, b) => b[1] - a[1]).slice(0, topN);
+  const max = entries.length ? entries[0][1] : 1;
+  if (!entries.length) { el.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No data yet.</p>'; return; }
+  el.innerHTML = entries.map(([k, v]) => `
+    <div class="barrow">
+      <span class="lbl" title="${k}">${k}</span>
+      <div class="track"><div class="fill" style="width:${(v / max * 100).toFixed(0)}%"></div></div>
+      <span>${fmt(v)}</span>
+    </div>`).join("");
+}
+
+async function loadDashboard() {
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error-box");
+  const content = document.getElementById("dash-content");
+  loading.style.display = "block"; errorBox.style.display = "none"; content.style.display = "none";
+
+  try {
+    const totalsSnap = await getDoc(doc(db, "stats", "totals"));
+    const totals = totalsSnap.exists() ? totalsSnap.data() : {};
+
+    const todayId = new Date().toISOString().slice(0, 10);
+    const yestId = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const [todaySnap, yestSnap] = await Promise.all([
+      getDoc(doc(db, "dailyStats", todayId)),
+      getDoc(doc(db, "dailyStats", yestId))
+    ]);
+    const todayData = todaySnap.exists() ? todaySnap.data() : {};
+    const yestData = yestSnap.exists() ? yestSnap.data() : {};
+
+    // Last 14 days for the line chart + week/month/prev-month totals
+    const dailyQ = query(collection(db, "dailyStats"), orderBy("date", "desc"), limit(60));
+    const dailyDocs = (await getDocs(dailyQ)).docs.map(d => d.data());
+    const byDate = Object.fromEntries(dailyDocs.map(d => [d.date, d]));
+
+    const now = new Date();
+    const sumRange = (daysAgoStart, daysAgoEnd) => {
+      let sum = 0;
+      for (let i = daysAgoEnd; i <= daysAgoStart; i++) {
+        const d = new Date(now); d.setDate(d.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        sum += (byDate[key]?.views || 0);
+      }
+      return sum;
+    };
+    const thisWeek = sumRange(6, 0);
+    const thisMonthDocs = dailyDocs.filter(d => d.date.slice(0, 7) === now.toISOString().slice(0, 7));
+    const thisMonth = thisMonthDocs.reduce((s, d) => s + (d.views || 0), 0);
+    const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonthKey = prevMonthDate.toISOString().slice(0, 7);
+    const prevMonth = dailyDocs.filter(d => d.date.slice(0, 7) === prevMonthKey).reduce((s, d) => s + (d.views || 0), 0);
+
+    // KPI cards
+    document.getElementById("kpis").innerHTML = [
+      ["Total Views", totals.totalViews],
+      ["Unique Visitors", totals.uniqueVisitors],
+      ["Today", todayData.views],
+      ["Yesterday", yestData.views],
+      ["This Week", thisWeek],
+      ["This Month", thisMonth],
+      ["Previous Month", prevMonth],
+      ["Returning Visitors", totals.returningVisitors]
+    ].map(([l, n]) => `<div class="kpi"><div class="n">${fmt(n)}</div><div class="l">${l}</div></div>`).join("");
+
+    // Line chart: last 14 days
+    const last14 = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(now); d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      last14.push({ label: key.slice(5), views: byDate[key]?.views || 0 });
+    }
+    await loadChartJs();
+    new Chart(document.getElementById("views-chart"), {
+      type: "line",
+      data: {
+        labels: last14.map(d => d.label),
+        datasets: [{ label: "Views", data: last14.map(d => d.views), borderColor: "#e0b060", backgroundColor: "rgba(224,176,96,.15)", fill: true, tension: .3 }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: "#9c9184" } }, x: { ticks: { color: "#9c9184" } } } }
+    });
+
+    // Device pie
+    const devices = totals.devices || {};
+    new Chart(document.getElementById("device-chart"), {
+      type: "doughnut",
+      data: {
+        labels: Object.keys(devices),
+        datasets: [{ data: Object.values(devices), backgroundColor: ["#e0b060", "#6ac47a", "#e06060", "#7aa6e0"] }]
+      },
+      options: { plugins: { legend: { position: "bottom", labels: { color: "#f2ece3" } } } }
+    });
+
+    renderBars("pages-bars", totals.pages);
+    renderBars("ref-bars", totals.referrers);
+    renderBars("browser-bars", totals.browsers);
+    renderBars("os-bars", totals.os);
+
+    loading.style.display = "none";
+    content.style.display = "block";
+  } catch (err) {
+    loading.style.display = "none";
+    errorBox.style.display = "block";
+    errorBox.textContent = "Could not load analytics: " + err.message;
+    console.error(err);
+  }
+}
+</script>
+</body>
+</html>
