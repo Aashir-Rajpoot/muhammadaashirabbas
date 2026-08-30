@@ -192,7 +192,13 @@ function loadChartJs() {
     if (window.Chart) return resolve();
     const s = document.createElement("script");
     s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js";
-    s.onload = resolve; s.onerror = reject;
+    s.onload = resolve;
+    // NOTE: a <script> onerror handler receives a plain DOM Event, not an
+    // Error — it has no .message property. Passing that straight to
+    // reject() is what produced "Could not load analytics: undefined"
+    // whenever the Chart.js CDN request failed (network block, ad-blocker,
+    // offline, etc). Wrap it in a real Error so it carries a message.
+    s.onerror = () => reject(new Error("Failed to load Chart.js from cdnjs.cloudflare.com (network/CDN request failed)"));
     document.head.appendChild(s);
   });
 }
@@ -303,8 +309,15 @@ async function loadDashboard() {
   } catch (err) {
     loading.style.display = "none";
     errorBox.style.display = "block";
-    errorBox.textContent = "Could not load analytics: " + err.message;
+    // Log full diagnostics — err.message can be undefined (e.g. a raw DOM
+    // Event thrown by a failed <script> load, not a FirebaseError), so
+    // never trust err.message alone for either logging or display.
     console.error(err);
+    console.error("Error name:", err?.name);
+    console.error("Error code:", err?.code);
+    console.error("Error message:", err?.message);
+    const reason = err?.message || err?.code || (err?.name ? `${err.name} (see console)` : "Unknown error — see console for details");
+    errorBox.textContent = "Could not load analytics: " + reason;
   }
 }
 </script>
