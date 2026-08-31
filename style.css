@@ -1039,3 +1039,152 @@ body.theme-switching #env-ribbon{
   margin-top:18px; padding:14px 18px; border-left:2px solid rgb(var(--gold));
   background:rgba(var(--gold),0.06); font-size:.88rem; color:var(--ink-dim); max-width:60ch; line-height:1.6;
 }
+
+/* =========================================================================
+   GITHUB DEMO ACCESS POPUP — frontend-only demo, no backend
+   Uses existing design tokens (gold accent, fonts, easing) — theme untouched.
+   ========================================================================= */
+.gdemo-overlay{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  background:rgba(6,5,4,0.72);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  opacity:0; visibility:hidden;
+  transition:opacity .45s var(--ease-soft), visibility 0s linear .45s;
+}
+.gdemo-overlay.is-open{
+  opacity:1; visibility:visible;
+  transition:opacity .45s var(--ease-soft), visibility 0s linear 0s;
+}
+.gdemo-modal{
+  position:relative;
+  width:100%; max-width:440px;
+  max-height:88vh; overflow-y:auto;
+  padding:32px 28px 28px;
+  border-radius:18px;
+  border:1px solid rgba(var(--gold),0.28);
+  background:linear-gradient(180deg, rgba(24,20,15,0.82), rgba(12,10,8,0.88));
+  box-shadow:0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(240,236,228,0.04) inset, 0 0 60px -10px rgba(var(--gold),0.18);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  transform:translateY(18px) scale(.96);
+  opacity:0;
+  transition:transform .5s var(--ease), opacity .5s var(--ease-soft);
+}
+.gdemo-overlay.is-open .gdemo-modal{
+  transform:translateY(0) scale(1);
+  opacity:1;
+}
+.gdemo-close{
+  position:absolute; top:14px; right:14px;
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; line-height:1;
+  color:var(--ink-dim);
+  border:1px solid var(--line-strong);
+  background:rgba(240,236,228,0.04);
+  transition:color .25s var(--ease-soft), border-color .25s var(--ease-soft), transform .25s var(--ease-soft), background .25s var(--ease-soft);
+}
+.gdemo-close:hover{
+  color:rgb(var(--gold)); border-color:rgba(var(--gold),.55);
+  background:rgba(var(--gold),0.08); transform:rotate(90deg);
+}
+.gdemo-eyebrow{
+  display:block; font-family:var(--font-mono); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase;
+  color:rgb(var(--gold-soft)); margin-bottom:8px;
+}
+.gdemo-title{
+  font-family:var(--font-display); font-size:1.7rem; letter-spacing:.02em;
+  background:linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)) 45%, rgb(var(--gold-soft)));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin:0 0 2px;
+}
+.gdemo-subtitle{
+  font-family:var(--font-body); font-size:.92rem; color:var(--ink-dim); margin:0 0 18px;
+}
+.gdemo-price-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-radius:10px;
+  border:1px solid var(--line-strong);
+  background:rgba(var(--gold),0.06);
+  margin-bottom:18px;
+}
+.gdemo-price-label{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.08em; color:var(--ink-faint); text-transform:uppercase; }
+.gdemo-price-value{ font-family:var(--font-display); font-size:1.3rem; color:rgb(var(--gold)); }
+
+.gdemo-payment-box{
+  border:1px dashed var(--line-strong); border-radius:10px;
+  padding:14px 16px; margin-bottom:16px;
+  background:rgba(240,236,228,0.03);
+}
+.gdemo-section-label{
+  display:block; font-family:var(--font-mono); font-size:.64rem; letter-spacing:.1em; text-transform:uppercase;
+  color:rgb(var(--gold-soft)); margin-bottom:10px;
+}
+.gdemo-payment-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px 14px;
+}
+.gdemo-payment-grid div{ display:flex; flex-direction:column; gap:3px; }
+.gdemo-payment-grid span{ font-family:var(--font-mono); font-size:.62rem; letter-spacing:.05em; color:var(--ink-faint); text-transform:uppercase; }
+.gdemo-payment-grid b{ font-family:var(--font-mono); font-size:.86rem; font-weight:500; color:var(--ink-dim); letter-spacing:.03em; }
+
+.gdemo-note{
+  font-size:.78rem; line-height:1.55; color:var(--ink-faint);
+  border-left:2px solid rgb(var(--gold)); padding:10px 14px;
+  background:rgba(var(--gold),0.05); border-radius:0 8px 8px 0;
+  margin-bottom:20px;
+}
+.gdemo-note strong{ color:rgb(var(--gold-soft)); }
+
+.gdemo-input-label{
+  display:block; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-faint); margin-bottom:8px;
+}
+.gdemo-input-row{ display:flex; gap:10px; }
+.gdemo-input{
+  flex:1; min-width:0;
+  padding:12px 14px; border-radius:8px;
+  border:1px solid var(--line-strong);
+  background:rgba(240,236,228,0.04);
+  color:rgb(var(--ink)); font-family:var(--font-mono); font-size:.88rem; letter-spacing:.03em;
+  outline:none;
+  transition:border-color .25s var(--ease-soft), box-shadow .25s var(--ease-soft);
+}
+.gdemo-input::placeholder{ color:var(--ink-faint); }
+.gdemo-input:focus{ border-color:rgba(var(--gold),.6); box-shadow:0 0 0 3px rgba(var(--gold),0.12); }
+
+.gdemo-submit{
+  padding:12px 18px; border-radius:8px;
+  font-family:var(--font-mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase;
+  color:rgb(10,8,6);
+  background:linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)));
+  border:1px solid rgba(var(--gold),.6);
+  white-space:nowrap;
+  transition:transform .25s var(--ease-soft), box-shadow .25s var(--ease-soft), filter .25s var(--ease-soft);
+}
+.gdemo-submit:hover{ transform:translateY(-2px); box-shadow:0 10px 26px -10px rgba(var(--gold),0.6); filter:brightness(1.06); }
+.gdemo-submit:active{ transform:translateY(0); }
+
+.gdemo-message{
+  min-height:1.2em; margin:14px 0 0; font-size:.82rem; letter-spacing:.02em;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity .3s var(--ease-soft), transform .3s var(--ease-soft);
+}
+.gdemo-message.is-visible{ opacity:1; transform:translateY(0); }
+.gdemo-message.is-success{ color:#8fe3b0; }
+.gdemo-message.is-error{ color:#e38f8f; }
+
+@media (max-width:520px){
+  .gdemo-overlay{ padding:14px; }
+  .gdemo-modal{ padding:26px 20px 22px; border-radius:14px; max-width:100%; }
+  .gdemo-title{ font-size:1.4rem; }
+  .gdemo-payment-grid{ grid-template-columns:1fr; }
+  .gdemo-input-row{ flex-direction:column; }
+  .gdemo-submit{ width:100%; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .gdemo-overlay, .gdemo-modal, .gdemo-close, .gdemo-message{ transition-duration:.001ms !important; }
+}
