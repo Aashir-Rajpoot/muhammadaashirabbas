@@ -1046,7 +1046,36 @@ document.addEventListener('DOMContentLoaded', () => {
   WeatherEngine.init();
   OSEngine.init();
   registerServiceWorker();
+  initFAQ();
 });
+
+/* ========================================================================= FAQ ACCORDION (scoped) */
+function initFAQ() {
+  const list = document.getElementById('faq-list');
+  if (!list) return;
+  const items = Array.from(list.querySelectorAll('.faq-item'));
+
+  items.forEach((item) => {
+    const btn = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    if (!btn || !answer) return;
+
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+      items.forEach((other) => {
+        if (other === item) return;
+        const otherBtn = other.querySelector('.faq-question');
+        const otherAnswer = other.querySelector('.faq-answer');
+        if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+        if (otherAnswer) otherAnswer.classList.remove('is-open');
+      });
+
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      answer.classList.toggle('is-open', !isOpen);
+    });
+  });
+}
 
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
