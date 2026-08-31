@@ -720,6 +720,116 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="app.js" defer></script>
 <script type="module" src="./analytics.js"></script>
-<script src="github-access-popup.js" defer></script>
+
+<!-- ============ GITHUB DEMO ACCESS POPUP SCRIPT (frontend-only) ============ -->
+<script>
+(function () {
+  'use strict';
+
+  var DEMO_CODE = 'Aashirrajpoot121';
+
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  ready(function () {
+    var overlay = document.getElementById('gdemoOverlay');
+    var closeBtn = document.getElementById('gdemoClose');
+    var submitBtn = document.getElementById('gdemoSubmit');
+    var input = document.getElementById('gdemoCodeInput');
+    var message = document.getElementById('gdemoMessage');
+
+    if (!overlay || !closeBtn || !submitBtn || !input || !message) {
+      return; // Popup markup missing — fail silently, don't break the site.
+    }
+
+    var lastFocused = null;
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.classList.remove('is-success', 'is-error');
+      if (type) message.classList.add(type);
+      message.classList.add('is-visible');
+    }
+
+    function clearMessage() {
+      message.textContent = '';
+      message.classList.remove('is-visible', 'is-success', 'is-error');
+    }
+
+    function openPopup() {
+      lastFocused = document.activeElement;
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      window.setTimeout(function () { input.focus(); }, 250);
+      document.addEventListener('keydown', onKeydown);
+    }
+
+    function closePopup() {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      input.value = '';
+      clearMessage();
+      document.removeEventListener('keydown', onKeydown);
+      if (lastFocused && typeof lastFocused.focus === 'function') {
+        lastFocused.focus();
+      }
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') closePopup();
+    }
+
+    function checkCode() {
+      var value = input.value.trim();
+      if (!value) {
+        showMessage('Please enter an access code.', 'is-error');
+        return;
+      }
+      if (value === DEMO_CODE) {
+        showMessage('Access granted. Opening GitHub...', 'is-success');
+        window.setTimeout(function () {
+          var link = document.getElementById('github-demo-card');
+          var url = link ? link.getAttribute('href') : 'https://github.com/Aashir-Rajpoot';
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }, 500);
+      } else {
+        showMessage('Invalid access code. Please check your code.', 'is-error');
+      }
+    }
+
+    // Event delegation (capture phase) on the whole document: this fires
+    // reliably no matter when/where the GitHub card renders, and always
+    // wins over the anchor's default "open in new tab" navigation.
+    document.addEventListener('click', function (e) {
+      var card = e.target.closest && e.target.closest('#github-demo-card');
+      if (card) {
+        e.preventDefault();
+        e.stopPropagation();
+        openPopup();
+      }
+    }, true);
+
+    closeBtn.addEventListener('click', closePopup);
+
+    // Click outside the modal (on the dark overlay itself) closes the popup.
+    overlay.addEventListener('mousedown', function (e) {
+      if (e.target === overlay) closePopup();
+    });
+
+    submitBtn.addEventListener('click', checkCode);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') checkCode();
+    });
+    input.addEventListener('input', clearMessage);
+  });
+})();
+</script>
 </body>
 </html>
