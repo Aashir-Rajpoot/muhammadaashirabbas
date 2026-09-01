@@ -1,8 +1,8 @@
 /* offline-fighter-integration.js
  * Glue code that connects this site to the embedded Offline Fighter game
- * (in /offline-fighter/). This file is the ONLY thing that knows about
+ * (files at repo root: characters.js, stages.js, audio.js, controls.js, effects.js, ai.js, combat.js, ui.js, game.js). This file is the ONLY thing that knows about
  * both the host page and the game — the game itself stays fully isolated
- * (see /offline-fighter/style.css and game.js), and this file never
+ * (see the game CSS merged into style.css, and game.js), and this file never
  * touches the game's internals beyond its documented public API:
  *   window.launchOfflineGame()
  *   window.closeOfflineGame()
@@ -89,6 +89,21 @@
   // In case this script runs after DOMContentLoaded already fired
   // (e.g. it's placed at the very end of <body>, which is the normal case).
   updateOfflineScreen();
+
+  // ---- 3b. GAME module "PLAY GAME" button (AASHIR OS -> Game panel) ----
+  // Separate from the offline-mode-screen's START GAME button above: this
+  // one is always visible (not just when offline) so online visitors have
+  // a normal, discoverable way to launch the game too.
+  var playGameBtn = document.getElementById("os-btn-play-game");
+  if (playGameBtn) {
+    playGameBtn.addEventListener("click", function () {
+      if (typeof window.launchOfflineGame === "function") {
+        window.launchOfflineGame();
+      } else {
+        setNote("The game couldn't load. Please reconnect once and reload this page so it can be cached for offline use.", true);
+      }
+    });
+  }
 
   // ---- 3. START GAME ----
   if (startBtn) {
