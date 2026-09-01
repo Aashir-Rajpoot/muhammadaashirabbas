@@ -630,6 +630,18 @@ const NavigationEngine = {
       panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false');
       menu.classList.remove('open'); orb.setAttribute('aria-expanded', 'false');
     });
+    // GAME nav item: opens the AASHIR OS shell directly (same as the
+    // "Enter Aashir OS" button in the hero) and jumps straight to the
+    // Game module tab — this is the one-click "Portfolio -> GAME" entry
+    // point requested, reusing the OS shell as the Game section/panel.
+    const gameNavBtn = $('#game-nav-open');
+    if (gameNavBtn) {
+      gameNavBtn.addEventListener('click', () => {
+        menu.classList.remove('open'); orb.setAttribute('aria-expanded', 'false');
+        OSEngine.open();
+        OSEngine.showModule('game');
+      });
+    }
     $('#system-close').addEventListener('click', () => this.closeSystem());
     panel.addEventListener('click', (e) => { if (e.target === panel) this.closeSystem(); });
 
