@@ -1234,3 +1234,340 @@ body.theme-switching #env-ribbon{
   .faq-question:hover, .faq-question:focus-visible{ padding-left:2px; }
   .faq-answer-inner p{ padding-bottom:20px; }
 }
+
+/* =========================================================================
+   OFFLINE FIGHTER — merged in below. Everything from here to the end of
+   this file is scoped under #offline-fighter-app (the embedded game) or
+   #offline-mode-screen (the site's own "OFFLINE MODE" screen) and does
+   not affect any other part of this site. See offline-fighter-integration.js
+   for the logic that shows/hides these.
+   ========================================================================= */
+
+/* ---- offline-fighter/style.css (game itself, unmodified) ---- */
+/* style.css
+ * Everything is scoped under #offline-fighter-app so this can be dropped
+ * into an existing website without leaking styles onto its pages.
+ */
+
+#offline-fighter-app {
+  --ofg-bg: #0b0818;
+  --ofg-panel: #150f28;
+  --ofg-accent-a: #ff3cac;
+  --ofg-accent-b: #38f7ff;
+  --ofg-text: #f2eefc;
+  --ofg-muted: #9c92c2;
+
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: none;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: var(--ofg-text);
+  background: radial-gradient(circle at 50% 20%, #1b1236 0%, var(--ofg-bg) 65%);
+  overflow: hidden;
+}
+
+#offline-fighter-app.ofg-visible { display: block; }
+body.ofg-no-scroll { overflow: hidden; }
+
+#offline-fighter-app * { box-sizing: border-box; }
+
+#offline-fighter-app .ofg-screen {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+}
+#offline-fighter-app .ofg-screen.active { display: flex; }
+
+#offline-fighter-app .ofg-menu-wrap { text-align: center; max-width: 480px; }
+
+#offline-fighter-app .ofg-logo {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0 0 6px;
+  text-shadow: 0 0 24px rgba(255, 60, 172, 0.5);
+}
+#offline-fighter-app .ofg-logo span { color: var(--ofg-accent-b); text-shadow: 0 0 24px rgba(56, 247, 255, 0.6); }
+#offline-fighter-app .ofg-tagline { color: var(--ofg-muted); margin-bottom: 28px; }
+
+#offline-fighter-app .ofg-menu-list { display: flex; flex-direction: column; gap: 10px; }
+
+#offline-fighter-app .ofg-menu-btn {
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 0.95rem;
+  padding: 14px 22px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ofg-text);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+#offline-fighter-app .ofg-menu-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+#offline-fighter-app .ofg-menu-btn:active { transform: translateY(0); }
+#offline-fighter-app .ofg-menu-btn.primary {
+  background: linear-gradient(90deg, var(--ofg-accent-a), var(--ofg-accent-b));
+  border: none;
+  color: #0b0818;
+}
+#offline-fighter-app .ofg-menu-btn.ghost { background: transparent; color: var(--ofg-muted); border-color: transparent; }
+#offline-fighter-app .ofg-menu-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#offline-fighter-app .ofg-panel {
+  background: var(--ofg-panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 460px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+#offline-fighter-app .ofg-panel.wide { max-width: 920px; }
+#offline-fighter-app .ofg-panel h2 { margin-top: 0; letter-spacing: 1px; }
+
+/* Controls screen */
+#offline-fighter-app .ofg-controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+#offline-fighter-app .ofg-controls-grid ul { list-style: none; padding: 0; margin: 8px 0; }
+#offline-fighter-app .ofg-controls-grid li { padding: 4px 0; color: var(--ofg-muted); font-size: 0.9rem; }
+#offline-fighter-app .ofg-controls-grid b { color: var(--ofg-text); }
+@media (max-width: 560px) { #offline-fighter-app .ofg-controls-grid { grid-template-columns: 1fr; } }
+
+/* Settings */
+#offline-fighter-app .ofg-setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+#offline-fighter-app select { background: var(--ofg-bg); color: var(--ofg-text); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 8px; }
+
+/* Character select */
+#offline-fighter-app .ofg-select-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; align-items: start; }
+@media (max-width: 720px) { #offline-fighter-app .ofg-select-layout { grid-template-columns: 1fr; } }
+#offline-fighter-app .ofg-char-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 560px) { #offline-fighter-app .ofg-char-grid { grid-template-columns: repeat(2, 1fr); } }
+#offline-fighter-app .ofg-char-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--ofg-text);
+  font: inherit;
+  text-align: center;
+}
+#offline-fighter-app .ofg-char-card:hover { background: rgba(255,255,255,0.08); }
+#offline-fighter-app .ofg-char-card.p1 { border-color: var(--ofg-accent-b); }
+#offline-fighter-app .ofg-char-card.p2 { border-color: var(--ofg-accent-a); }
+#offline-fighter-app .ofg-char-swatch { width: 100%; height: 54px; border-radius: 8px; margin-bottom: 8px; }
+#offline-fighter-app .ofg-char-name { font-weight: 800; font-size: 0.9rem; }
+#offline-fighter-app .ofg-char-title { font-size: 0.72rem; color: var(--ofg-muted); }
+
+#offline-fighter-app .ofg-char-detail { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 16px; font-size: 0.88rem; }
+#offline-fighter-app .ofg-char-detail h3 small { color: var(--ofg-muted); font-weight: 400; }
+#offline-fighter-app .ofg-char-style { color: var(--ofg-muted); margin: 4px 0 10px; }
+#offline-fighter-app .ofg-char-bio { color: var(--ofg-muted); font-size: 0.82rem; margin-bottom: 12px; }
+#offline-fighter-app .ofg-stat-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+#offline-fighter-app .ofg-stat-row span { width: 60px; font-size: 0.76rem; color: var(--ofg-muted); }
+#offline-fighter-app .ofg-stat-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+#offline-fighter-app .ofg-stat-bar div { height: 100%; }
+#offline-fighter-app .ofg-hint { color: var(--ofg-muted); }
+
+#offline-fighter-app .ofg-row-buttons { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; }
+
+/* Stage select */
+#offline-fighter-app .ofg-stage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 560px) { #offline-fighter-app .ofg-stage-grid { grid-template-columns: 1fr 1fr; } }
+#offline-fighter-app .ofg-stage-card { background: rgba(255,255,255,0.04); border: 2px solid transparent; border-radius: 10px; padding: 10px; cursor: pointer; color: var(--ofg-text); font: inherit; text-align: left; }
+#offline-fighter-app .ofg-stage-card.selected { border-color: var(--ofg-accent-b); }
+#offline-fighter-app .ofg-stage-swatch { width: 100%; height: 60px; border-radius: 8px; margin-bottom: 8px; }
+#offline-fighter-app .ofg-stage-name { font-weight: 700; font-size: 0.88rem; }
+#offline-fighter-app .ofg-stage-desc { font-size: 0.74rem; color: var(--ofg-muted); }
+
+/* Fight screen */
+#offline-fighter-app #ofg-canvas-wrap { position: relative; width: 100%; height: 100%; max-height: 100vh; display: flex; align-items: center; justify-content: center; }
+#offline-fighter-app #ofg-canvas { background: #000; border-radius: 4px; touch-action: none; }
+#offline-fighter-app #ofg-banner {
+  position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+  font-size: clamp(1.6rem, 6vw, 3rem); font-weight: 900; letter-spacing: 3px;
+  color: #fff; text-shadow: 0 0 20px rgba(255,60,172,0.8); opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#offline-fighter-app #ofg-banner.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+#offline-fighter-app #ofg-combo-text {
+  position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 1.4rem; font-weight: 800; color: var(--ofg-accent-b); text-shadow: 0 0 14px rgba(56,247,255,0.8);
+  opacity: 0; pointer-events: none;
+}
+#offline-fighter-app #ofg-combo-text.pop { animation: ofgComboPop 0.6s ease forwards; }
+@keyframes ofgComboPop {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(0.7); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+}
+
+#offline-fighter-app #ofg-mobile-pause {
+  position: absolute; top: 10px; right: 10px; width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+  font-weight: 800; display: none; z-index: 5;
+}
+
+#offline-fighter-app #ofg-net-badge {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%) translateY(-140%);
+  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
+  padding: 6px 16px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; z-index: 30;
+  transition: transform 0.25s ease; color: #ff9a9a;
+}
+#offline-fighter-app #ofg-net-badge.show { transform: translateX(-50%) translateY(0); }
+#offline-fighter-app #ofg-net-badge.online { color: #8dffb0; }
+
+/* Result screen accent */
+#offline-fighter-app #ofg-screen-result.win #ofg-result-title { color: var(--ofg-accent-b); text-shadow: 0 0 20px rgba(56,247,255,0.6); }
+#offline-fighter-app #ofg-screen-result.lose #ofg-result-title { color: var(--ofg-accent-a); text-shadow: 0 0 20px rgba(255,60,172,0.6); }
+#offline-fighter-app .ofg-result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 0.85rem; color: var(--ofg-muted); margin-bottom: 18px; }
+
+/* Touch controls */
+#offline-fighter-app #ofg-touchpad-wrap { position: absolute; inset: 0; display: none; pointer-events: none; }
+#offline-fighter-app .ofg-touchpad { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: flex-end; padding: 14px; pointer-events: none; }
+#offline-fighter-app .ofg-dpad, #offline-fighter-app .ofg-actionpad { pointer-events: auto; display: grid; gap: 8px; }
+#offline-fighter-app .ofg-dpad { grid-template-columns: repeat(2, 56px); grid-template-rows: repeat(2, 56px); }
+#offline-fighter-app .ofg-actionpad { grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 56px); }
+#offline-fighter-app .ofg-btn {
+  width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1); color: #fff; font-size: 1.3rem; display: flex; align-items: center;
+  justify-content: center; user-select: none; -webkit-user-select: none;
+}
+#offline-fighter-app .ofg-btn.active { background: rgba(56,247,255,0.4); }
+#offline-fighter-app .ofg-action-btn.ultimate { background: rgba(255,60,172,0.25); }
+
+/* Small screens: shrink panel padding */
+@media (max-width: 420px) {
+  #offline-fighter-app .ofg-panel { padding: 18px; }
+  #offline-fighter-app .ofg-btn { width: 48px; height: 48px; font-size: 1.1rem; }
+  #offline-fighter-app .ofg-dpad { grid-template-columns: repeat(2, 48px); grid-template-rows: repeat(2, 48px); }
+  #offline-fighter-app .ofg-actionpad { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 48px); }
+}
+
+/* ---- offline-fighter-menu.css (site's OFFLINE MODE screen) ---- */
+/* offline-fighter-menu.css
+ * Styling for the site's own "OFFLINE MODE" screen — shown when the
+ * visitor loses their internet connection. This is NOT part of the
+ * fighting game itself (that lives in /offline-fighter/style.css,
+ * scoped under #offline-fighter-app). Everything here is scoped under
+ * #offline-mode-screen and reuses the portfolio's existing design
+ * tokens (--gold, --ink, --surface, --font-display, --font-mono, --ease)
+ * from style.css, so it automatically matches whatever look the rest
+ * of the site has — no colors or fonts are hardcoded here.
+ */
+
+#offline-mode-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99998; /* below the game (#offline-fighter-app is 999999), above normal page content */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 5, 4, 0.86);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+#offline-mode-screen.is-visible { display: flex; }
+
+#offline-mode-screen * { box-sizing: border-box; }
+
+#offline-mode-screen .ofm-panel {
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  padding: 40px 32px 34px;
+  border-radius: 18px;
+  background: rgb(var(--surface));
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+}
+
+#offline-mode-screen .ofm-icon {
+  width: 56px; height: 56px; margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)));
+  color: rgb(10,8,6);
+}
+#offline-mode-screen .ofm-icon svg { width: 28px; height: 28px; }
+
+#offline-mode-screen .ofm-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  color: rgb(var(--ink));
+  margin-bottom: 8px;
+}
+
+#offline-mode-screen .ofm-sub {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+  margin-bottom: 26px;
+}
+
+#offline-mode-screen .ofm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#offline-mode-screen .ofm-btn {
+  padding: 13px 18px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .25s var(--ease-soft), box-shadow .25s var(--ease-soft), filter .25s var(--ease-soft);
+  border: 1px solid var(--line-strong);
+  background: rgba(240,236,228,0.04);
+  color: rgb(var(--ink));
+  text-decoration: none;
+  display: inline-block;
+}
+#offline-mode-screen .ofm-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+#offline-mode-screen .ofm-btn:active { transform: translateY(0); }
+
+#offline-mode-screen .ofm-btn.primary {
+  color: rgb(10,8,6);
+  background: linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)));
+  border: 1px solid rgba(var(--gold),.6);
+}
+#offline-mode-screen .ofm-btn.primary:hover { box-shadow: 0 10px 26px -10px rgba(var(--gold),0.6); }
+
+#offline-mode-screen .ofm-note {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  min-height: 1.2em;
+}
+#offline-mode-screen .ofm-note.is-error { color: #e2836f; }
+
+/* Small "back online" badge that appears briefly while the fighting game
+   is open and connectivity is restored — the game itself is left running
+   (see offline-fighter-integration.js), this is just a courtesy notice
+   the host site can show/hide independently if ever needed. Currently
+   unused by default since the game already shows its own badge, but kept
+   scoped + harmless in case a future integration wants it. */
+#offline-mode-screen .ofm-net-note { display: none; }
+
+@media (max-width: 480px) {
+  #offline-mode-screen .ofm-panel { padding: 32px 22px 26px; }
+  #offline-mode-screen .ofm-title { font-size: 1.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #offline-mode-screen .ofm-btn { transition-duration: .001ms; }
+}
