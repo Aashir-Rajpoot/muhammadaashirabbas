@@ -724,6 +724,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button data-mod="archive" type="button"><span class="os-nav-num">06</span>Archive</button>
         <button data-mod="terminal" type="button"><span class="os-nav-num">07</span>Terminal</button>
         <button data-mod="contact" type="button"><span class="os-nav-num">08</span>Contact</button>
+        <button data-mod="game" type="button"><span class="os-nav-num">09</span>Game</button>
       </nav>
 
       <main class="os-main" id="os-main">
@@ -870,6 +871,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </section>
 
+        <!-- GAME -->
+        <section class="os-mod" data-mod-panel="game">
+          <span class="os-eyebrow">Module — 09</span>
+          <h2 class="os-h">Game</h2>
+          <div class="os-panel">
+            <h3>Offline Fighter</h3>
+            <p>Play my original offline fighting game — 8 original characters, unique fighting styles and stats, combos, special and ultimate moves, blocking, dashing, CPU AI with difficulty levels, and full keyboard/touch controls. Runs entirely in this browser, online or offline, with no download, login, or server required.</p>
+            <button type="button" id="os-btn-play-game" class="about-cta-btn">Play Game <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
@@ -936,16 +948,16 @@ Please send the payment screenshot to **[aashirrajpoot757@gmail.com](mailto:aash
 
 <script src="app.js" defer></script>
 
-<!-- ============ OFFLINE FIGHTER — embedded offline game (see offline-fighter/) ============ -->
-<script src="offline-fighter/characters.js"></script>
-<script src="offline-fighter/stages.js"></script>
-<script src="offline-fighter/audio.js"></script>
-<script src="offline-fighter/controls.js"></script>
-<script src="offline-fighter/effects.js"></script>
-<script src="offline-fighter/ai.js"></script>
-<script src="offline-fighter/combat.js"></script>
-<script src="offline-fighter/ui.js"></script>
-<script src="offline-fighter/game.js"></script>
+<!-- ============ OFFLINE FIGHTER — embedded offline game (files live at repo root, not in an offline-fighter/ folder) ============ -->
+<script src="characters.js"></script>
+<script src="stages.js"></script>
+<script src="audio.js"></script>
+<script src="controls.js"></script>
+<script src="effects.js"></script>
+<script src="ai.js"></script>
+<script src="combat.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
 <script src="offline-fighter-integration.js"></script>
 <script type="module" src="./analytics.js"></script>
 
