@@ -1,0 +1,118 @@
+/* offline-fighter-menu.css
+ * Styling for the site's own "OFFLINE MODE" screen — shown when the
+ * visitor loses their internet connection. This is NOT part of the
+ * fighting game itself (that lives in /offline-fighter/style.css,
+ * scoped under #offline-fighter-app). Everything here is scoped under
+ * #offline-mode-screen and reuses the portfolio's existing design
+ * tokens (--gold, --ink, --surface, --font-display, --font-mono, --ease)
+ * from style.css, so it automatically matches whatever look the rest
+ * of the site has — no colors or fonts are hardcoded here.
+ */
+
+#offline-mode-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99998; /* below the game (#offline-fighter-app is 999999), above normal page content */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 5, 4, 0.86);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+#offline-mode-screen.is-visible { display: flex; }
+
+#offline-mode-screen * { box-sizing: border-box; }
+
+#offline-mode-screen .ofm-panel {
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  padding: 40px 32px 34px;
+  border-radius: 18px;
+  background: rgb(var(--surface));
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+}
+
+#offline-mode-screen .ofm-icon {
+  width: 56px; height: 56px; margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)));
+  color: rgb(10,8,6);
+}
+#offline-mode-screen .ofm-icon svg { width: 28px; height: 28px; }
+
+#offline-mode-screen .ofm-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  color: rgb(var(--ink));
+  margin-bottom: 8px;
+}
+
+#offline-mode-screen .ofm-sub {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+  margin-bottom: 26px;
+}
+
+#offline-mode-screen .ofm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#offline-mode-screen .ofm-btn {
+  padding: 13px 18px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .25s var(--ease-soft), box-shadow .25s var(--ease-soft), filter .25s var(--ease-soft);
+  border: 1px solid var(--line-strong);
+  background: rgba(240,236,228,0.04);
+  color: rgb(var(--ink));
+  text-decoration: none;
+  display: inline-block;
+}
+#offline-mode-screen .ofm-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+#offline-mode-screen .ofm-btn:active { transform: translateY(0); }
+
+#offline-mode-screen .ofm-btn.primary {
+  color: rgb(10,8,6);
+  background: linear-gradient(120deg, rgb(var(--gold-soft)), rgb(var(--gold)));
+  border: 1px solid rgba(var(--gold),.6);
+}
+#offline-mode-screen .ofm-btn.primary:hover { box-shadow: 0 10px 26px -10px rgba(var(--gold),0.6); }
+
+#offline-mode-screen .ofm-note {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  min-height: 1.2em;
+}
+#offline-mode-screen .ofm-note.is-error { color: #e2836f; }
+
+/* Small "back online" badge that appears briefly while the fighting game
+   is open and connectivity is restored — the game itself is left running
+   (see offline-fighter-integration.js), this is just a courtesy notice
+   the host site can show/hide independently if ever needed. Currently
+   unused by default since the game already shows its own badge, but kept
+   scoped + harmless in case a future integration wants it. */
+#offline-mode-screen .ofm-net-note { display: none; }
+
+@media (max-width: 480px) {
+  #offline-mode-screen .ofm-panel { padding: 32px 22px 26px; }
+  #offline-mode-screen .ofm-title { font-size: 1.35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #offline-mode-screen .ofm-btn { transition-duration: .001ms; }
+}
