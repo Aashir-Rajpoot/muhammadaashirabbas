@@ -1,4 +1,4 @@
-const CACHE = 'aashir-x-v6';
+const CACHE = 'aashir-x-v7';
 const SHELL = [
   './',
   './aboutus',
@@ -11,6 +11,22 @@ const SHELL = [
   './story-01.jpeg',
   './story-02.jpeg',
   './story-03.jpeg',
+  // --- Offline Fighter game (added for the offline-mode integration) ---
+  // Precached here so the whole game is available the moment the visitor
+  // goes offline, even on their very first visit's install step, not just
+  // after the generic fetch handler below has had a chance to cache it.
+  './offline-fighter-menu.css',
+  './offline-fighter-integration.js',
+  './offline-fighter/style.css',
+  './offline-fighter/characters.js',
+  './offline-fighter/stages.js',
+  './offline-fighter/audio.js',
+  './offline-fighter/controls.js',
+  './offline-fighter/effects.js',
+  './offline-fighter/ai.js',
+  './offline-fighter/combat.js',
+  './offline-fighter/ui.js',
+  './offline-fighter/game.js',
 ];
 self.addEventListener('install', (event) => {
   event.waitUntil(
