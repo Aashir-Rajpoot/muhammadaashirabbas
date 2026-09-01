@@ -15,9 +15,9 @@ const SHELL = [
   // Precached here so the whole game is available the moment the visitor
   // goes offline, even on their very first visit's install step, not just
   // after the generic fetch handler below has had a chance to cache it.
-  './offline-fighter-menu.css',
+  // (The game's CSS is merged into style.css above, so it's covered by
+  // that entry already and doesn't need its own line here.)
   './offline-fighter-integration.js',
-  './offline-fighter/style.css',
   './offline-fighter/characters.js',
   './offline-fighter/stages.js',
   './offline-fighter/audio.js',
