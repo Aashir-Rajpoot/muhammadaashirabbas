@@ -1,4 +1,4 @@
-const CACHE = 'aashir-x-v7';
+const CACHE = 'aashir-x-v8';
 const SHELL = [
   './',
   './aboutus',
@@ -17,16 +17,20 @@ const SHELL = [
   // after the generic fetch handler below has had a chance to cache it.
   // (The game's CSS is merged into style.css above, so it's covered by
   // that entry already and doesn't need its own line here.)
+  // NOTE: these files live at the repo root (same level as index.html),
+  // not in an "offline-fighter/" subfolder — the paths below match the
+  // actual GitHub Pages layout. A wrong path here would make cache.addAll()
+  // reject as a whole, silently caching NOTHING (not even the shell above).
   './offline-fighter-integration.js',
-  './offline-fighter/characters.js',
-  './offline-fighter/stages.js',
-  './offline-fighter/audio.js',
-  './offline-fighter/controls.js',
-  './offline-fighter/effects.js',
-  './offline-fighter/ai.js',
-  './offline-fighter/combat.js',
-  './offline-fighter/ui.js',
-  './offline-fighter/game.js',
+  './characters.js',
+  './stages.js',
+  './audio.js',
+  './controls.js',
+  './effects.js',
+  './ai.js',
+  './combat.js',
+  './ui.js',
+  './game.js',
 ];
 self.addEventListener('install', (event) => {
   event.waitUntil(
