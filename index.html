@@ -280,6 +280,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css">
+  <!-- Offline Fighter integration stylesheets (scoped; do not affect the rest of the site) -->
+  <link rel="stylesheet" href="offline-fighter/style.css">
+  <link rel="stylesheet" href="offline-fighter-menu.css">
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -935,6 +938,18 @@ Please send the payment screenshot to **[aashirrajpoot757@gmail.com](mailto:aash
 </div>
 
 <script src="app.js" defer></script>
+
+<!-- ============ OFFLINE FIGHTER — embedded offline game (see offline-fighter/) ============ -->
+<script src="offline-fighter/characters.js"></script>
+<script src="offline-fighter/stages.js"></script>
+<script src="offline-fighter/audio.js"></script>
+<script src="offline-fighter/controls.js"></script>
+<script src="offline-fighter/effects.js"></script>
+<script src="offline-fighter/ai.js"></script>
+<script src="offline-fighter/combat.js"></script>
+<script src="offline-fighter/ui.js"></script>
+<script src="offline-fighter/game.js"></script>
+<script src="offline-fighter-integration.js"></script>
 <script type="module" src="./analytics.js"></script>
 
 <!-- ============ GITHUB DEMO ACCESS POPUP SCRIPT (frontend-only) ============ -->
@@ -1047,5 +1062,175 @@ Please send the payment screenshot to **[aashirrajpoot757@gmail.com](mailto:aash
   });
 })();
 </script>
+<!-- ============ OFFLINE MODE SCREEN (shown automatically when the visitor loses their internet connection) ============ -->
+<div id="offline-mode-screen" role="dialog" aria-modal="true" aria-labelledby="ofm-title">
+  <div class="ofm-panel">
+    <div class="ofm-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 18.5h.01M8.5 15.4a5 5 0 0 1 7 0M5.6 12.5a9 9 0 0 1 12.8 0M2.8 9.6a13 13 0 0 1 18.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M3 3l18 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h2 class="ofm-title" id="ofm-title">OFFLINE MODE</h2>
+    <p class="ofm-sub">Internet connection lost</p>
+    <div class="ofm-actions">
+      <button type="button" class="ofm-btn primary" id="ofm-btn-start">START GAME</button>
+      <button type="button" class="ofm-btn" id="ofm-btn-download"><span id="ofm-download-label">DOWNLOAD GAME</span></button>
+    </div>
+    <p class="ofm-note" id="ofm-note" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+  <div id="offline-fighter-app">
+    <div id="ofg-net-badge"></div>
+
+    <!-- MAIN MENU -->
+    <section id="ofg-screen-main" class="ofg-screen active">
+      <div class="ofg-menu-wrap">
+        <h1 class="ofg-logo">OFFLINE <span>FIGHTER</span></h1>
+        <p class="ofg-tagline">An original arcade fighting game — no internet required.</p>
+        <nav class="ofg-menu-list">
+          <button id="ofg-btn-play" class="ofg-menu-btn primary">PLAY (VS CPU)</button>
+          <button id="ofg-btn-arcade" class="ofg-menu-btn">ARCADE</button>
+          <button id="ofg-btn-localvs" class="ofg-menu-btn">LOCAL VS (2P)</button>
+          <button id="ofg-btn-training" class="ofg-menu-btn">TRAINING</button>
+          <button id="ofg-btn-controls" class="ofg-menu-btn">CONTROLS</button>
+          <button id="ofg-btn-settings" class="ofg-menu-btn">SETTINGS</button>
+          <button id="ofg-btn-close" class="ofg-menu-btn ghost">CLOSE GAME</button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- CONTROLS INFO -->
+    <section id="ofg-screen-controls" class="ofg-screen">
+      <div class="ofg-panel">
+        <h2>Controls</h2>
+        <div class="ofg-controls-grid">
+          <div>
+            <h3>Keyboard — Player 1</h3>
+            <ul>
+              <li><b>A / D</b> — Move left / right</li>
+              <li><b>W</b> — Jump</li>
+              <li><b>S</b> (hold) — Crouch / crouch-block</li>
+              <li><b>J</b> — Punch <small>(hold S for heavy)</small></li>
+              <li><b>K</b> — Kick <small>(hold S for heavy)</small></li>
+              <li><b>L</b> (hold) — Block</li>
+              <li><b>U</b> — Special</li>
+              <li><b>I</b> — Ultimate <small>(meter full)</small></li>
+              <li><b>Space</b> — Dash</li>
+              <li><b>Esc</b> — Pause</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Keyboard — Player 2 (Local VS)</h3>
+            <ul>
+              <li><b>Arrow keys</b> — Move / jump / crouch</li>
+              <li><b>Numpad 1</b> — Punch</li>
+              <li><b>Numpad 2</b> — Kick</li>
+              <li><b>Numpad 3</b> — Block</li>
+              <li><b>Numpad 4</b> — Special</li>
+              <li><b>Numpad 5</b> — Ultimate</li>
+              <li><b>Numpad 0</b> — Dash</li>
+            </ul>
+            <h3>Touch (mobile)</h3>
+            <p>On-screen d-pad on the left, action buttons on the right. Landscape is recommended.</p>
+          </div>
+        </div>
+        <button id="ofg-controlsinfo-back" class="ofg-menu-btn">BACK</button>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="ofg-screen-settings" class="ofg-screen">
+      <div class="ofg-panel">
+        <h2>Settings</h2>
+        <label class="ofg-setting-row">
+          <span>Mute audio</span>
+          <input type="checkbox" id="ofg-mute" />
+        </label>
+        <label class="ofg-setting-row">
+          <span>Volume</span>
+          <input type="range" id="ofg-volume" min="0" max="100" value="70" />
+        </label>
+        <label class="ofg-setting-row">
+          <span>CPU difficulty</span>
+          <select id="ofg-diff-select">
+            <option>Easy</option>
+            <option selected>Normal</option>
+            <option>Hard</option>
+            <option>Expert</option>
+          </select>
+        </label>
+        <button id="ofg-settings-back" class="ofg-menu-btn">BACK</button>
+      </div>
+    </section>
+
+    <!-- CHARACTER SELECT -->
+    <section id="ofg-screen-select" class="ofg-screen">
+      <div class="ofg-panel wide">
+        <h2>Choose Your Fighter</h2>
+        <div class="ofg-select-layout">
+          <div id="ofg-char-grid" class="ofg-char-grid"></div>
+          <div id="ofg-char-detail" class="ofg-char-detail"></div>
+        </div>
+        <div class="ofg-row-buttons">
+          <button id="ofg-select-back" class="ofg-menu-btn">BACK</button>
+          <button id="ofg-select-confirm" class="ofg-menu-btn primary" disabled>CONFIRM</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAGE SELECT -->
+    <section id="ofg-screen-stage" class="ofg-screen">
+      <div class="ofg-panel wide">
+        <h2>Choose Your Stage</h2>
+        <div id="ofg-stage-grid" class="ofg-stage-grid"></div>
+        <div class="ofg-row-buttons">
+          <button id="ofg-stage-back" class="ofg-menu-btn">BACK</button>
+          <button id="ofg-stage-confirm" class="ofg-menu-btn primary">FIGHT!</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIGHT SCREEN -->
+    <section id="ofg-screen-fight" class="ofg-screen">
+      <div id="ofg-canvas-wrap">
+        <canvas id="ofg-canvas"></canvas>
+        <div id="ofg-banner"></div>
+        <div id="ofg-combo-text"></div>
+        <button id="ofg-mobile-pause" aria-label="Pause">II</button>
+      </div>
+      <div id="ofg-touchpad-wrap"></div>
+    </section>
+
+    <!-- PAUSE -->
+    <section id="ofg-screen-pause" class="ofg-screen">
+      <div class="ofg-panel">
+        <h2>PAUSED</h2>
+        <nav class="ofg-menu-list">
+          <button id="ofg-pause-resume" class="ofg-menu-btn primary">RESUME</button>
+          <button id="ofg-pause-restart" class="ofg-menu-btn">RESTART ROUND</button>
+          <button id="ofg-pause-controls" class="ofg-menu-btn">CONTROLS</button>
+          <button id="ofg-pause-menu" class="ofg-menu-btn ghost">MAIN MENU</button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- VICTORY / DEFEAT -->
+    <section id="ofg-screen-result" class="ofg-screen">
+      <div class="ofg-panel">
+        <h2 id="ofg-result-title">VICTORY</h2>
+        <p id="ofg-result-sub"></p>
+        <div id="ofg-result-stats" class="ofg-result-stats"></div>
+        <nav class="ofg-menu-list">
+          <button id="ofg-result-rematch" class="ofg-menu-btn primary">REMATCH</button>
+          <button id="ofg-result-select" class="ofg-menu-btn">CHARACTER SELECT</button>
+          <button id="ofg-result-menu" class="ofg-menu-btn ghost">MAIN MENU</button>
+        </nav>
+      </div>
+    </section>
+
+  </div>
+
 </body>
 </html>
