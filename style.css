@@ -215,8 +215,8 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 }
 .kicker-line{ width:34px; height:1px; background:rgb(var(--gold)); }
 .hero-name{
-  font-weight:400; line-height:.92; letter-spacing:-0.01em;
-  font-size:clamp(3.2rem,9.5vw,8rem);
+  font-weight:400; line-height:1.05; letter-spacing:-0.01em;
+  font-size:clamp(1.9rem,4.6vw,3.6rem);
 }
 .name-line{ display:block; transform:translateY(30px); opacity:0; animation:lineUp .95s var(--ease) forwards; }
 .name-line:nth-child(1){ animation-delay:.5s; }
@@ -272,7 +272,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
   .hero-grid{ grid-template-columns:1fr; align-items:center; row-gap:0; }
   .hero-copy{ text-align:center; }
   .hero-kicker{ justify-content:center; flex-wrap:wrap; row-gap:6px; }
-  .hero-name{ font-size:clamp(2.6rem,13vw,5.5rem); }
+  .hero-name{ font-size:clamp(1.7rem,6.4vw,2.5rem); }
   .hero-role{ margin-left:auto; margin-right:auto; }
   .hero-portrait{
     justify-self:center; width:min(82vw,320px); aspect-ratio:3/4;
@@ -285,7 +285,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 
 @media (max-width:420px){
   .hero{ padding-top:88px; }
-  .hero-name{ font-size:clamp(2.3rem,14vw,3.4rem); }
+  .hero-name{ font-size:clamp(1.5rem,7.2vw,2rem); }
   .hero-portrait{ width:min(84vw,300px); margin:26px auto 50px; }
 }
 
@@ -940,6 +940,8 @@ body.theme-switching #env-ribbon{
 /* ---------- ARCHIVE ---------- */
 .os-archive-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:26px; }
 .os-archive-card{ border:1px dashed var(--line-strong); padding:16px; font-family:var(--font-mono); font-size:.68rem; color:var(--ink-dim); line-height:1.5; }
+.os-archive-note{ font-size:.85rem; color:var(--ink-dim); line-height:1.6; margin:0; }
+.os-archive-link{ color:rgb(var(--gold)); }
 .os-why-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .os-why-list li{ display:flex; gap:12px; font-size:.85rem; color:var(--ink-dim); }
 .os-why-num{ font-family:var(--font-mono); font-size:.62rem; color:rgb(var(--gold)); flex:0 0 auto; }
