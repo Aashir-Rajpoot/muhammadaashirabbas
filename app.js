@@ -869,7 +869,7 @@ const OSEngine = {
     { cat: 'Security', items: ['Cyber Security', 'Ethical Hacking Fundamentals'] },
     { cat: 'Systems & Cloud', items: ['Networking & IT Infrastructure', 'Cloud'] },
     { cat: 'Web & Design', items: ['Web & Frontend', 'Design & UI/UX'] },
-    { cat: 'Commerce & Data', items: ['E-Commerce', 'Digital Marketing', 'Data Analytics'] },
+    { cat: 'Commerce & Data', items: ['E-Commerce', 'Digital Marketing', 'Data Analytics', 'Amazon Virtual Assistant'] },
     { cat: 'Craft', items: ['Content Creation & Photography', 'Problem Solving & Project Management'] },
   ],
   booted: false,
