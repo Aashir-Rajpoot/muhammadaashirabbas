@@ -1,35 +1,57 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 # AI assistants / answer engines — explicitly welcome to crawl and cite this site
 User-agent: GPTBot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: Claude-Web
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 User-agent: CCBot
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 Sitemap: https://muhammadaashirabbas.aashirrajpoot757.workers.dev/sitemap.xml
