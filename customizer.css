@@ -41,19 +41,32 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-backdrop{ position:absolute; inset:0; background:rgba(4,3,2,0.75); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
 
 .cz-inner{
-  position:relative; width:min(420px,92vw); max-height:min(84vh,720px); overflow-y:auto;
+  position:relative; width:min(440px,92vw); max-height:min(86vh,760px); overflow-y:auto;
   background:rgba(var(--surface),0.97); border:1px solid var(--line-strong);
   padding:26px; transform:scale(.95) translateY(8px); transition:transform .35s var(--ease,cubic-bezier(.16,.84,.44,1));
   font-family:var(--font-body,'Manrope',sans-serif); color:var(--ink-dim);
 }
 #cz-panel.open .cz-inner{ transform:scale(1) translateY(0); }
 
-.cz-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.cz-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 #cz-title{ font-family:var(--font-mono,monospace); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint); }
 #cz-close{ font-size:1.4rem; line-height:1; color:var(--ink-dim); }
 #cz-close:hover{ color:rgb(var(--gold)); }
 
+/* ---------- tabs ---------- */
+.cz-tabs{ display:flex; gap:2px; border-bottom:1px solid var(--line); margin-bottom:20px; overflow-x:auto; }
+.cz-tab{
+  flex:1 0 auto; padding:9px 10px; font-family:var(--font-mono,monospace); font-size:.62rem;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); white-space:nowrap;
+  border-bottom:2px solid transparent; transition:color .25s, border-color .25s;
+}
+.cz-tab:hover{ color:var(--ink-dim); }
+.cz-tab.active{ color:rgb(var(--gold)); border-bottom-color:rgb(var(--gold)); }
+.cz-panel-tab{ display:none; }
+.cz-panel-tab.active{ display:block; }
+
 .cz-group{ margin-bottom:24px; }
+.cz-group:last-child{ margin-bottom:4px; }
 .cz-group h3{ font-family:var(--font-mono,monospace); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:rgb(var(--gold)); margin-bottom:12px; font-weight:500; }
 .cz-hint{ font-size:.76rem; color:var(--ink-faint); margin:-4px 0 12px; }
 
@@ -75,9 +88,15 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-radio{ display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--ink-dim); cursor:pointer; }
 .cz-radio input{ accent-color:rgb(var(--gold)); width:14px; height:14px; }
 
+/* ---------- section rows (drag-and-drop) ---------- */
 .cz-rows{ display:flex; flex-direction:column; gap:6px; }
-.cz-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); }
-.cz-row-label{ font-size:.82rem; color:var(--ink-dim); }
+.cz-row{
+  display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--line);
+  background:rgba(255,255,255,0.02); cursor:grab; transition:opacity .2s, border-color .2s;
+}
+.cz-row.dragging{ opacity:.35; border-color:rgb(var(--gold)); cursor:grabbing; }
+.cz-drag-handle{ color:var(--ink-faint); font-size:.7rem; line-height:1; letter-spacing:-2px; flex-shrink:0; user-select:none; }
+.cz-row-label{ font-size:.82rem; color:var(--ink-dim); flex:1; }
 .cz-row-actions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
 .cz-icon-btn{
   width:26px; height:26px; border:1px solid var(--line-strong); color:var(--ink-dim);
@@ -93,6 +112,45 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-toggle input:checked + .cz-toggle-track{ background:rgba(var(--gold),.35); }
 .cz-toggle input:checked + .cz-toggle-track .cz-toggle-thumb{ transform:translateX(16px); background:rgb(var(--gold)); }
 
+/* ---------- cursor style picker ---------- */
+.cz-cursor-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cz-cursor-opt{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line);
+  background:rgba(255,255,255,0.02); font-size:.76rem; color:var(--ink-dim); text-align:left;
+  transition:border-color .2s, color .2s;
+}
+.cz-cursor-opt:hover{ border-color:var(--line-strong); color:var(--ink); }
+.cz-cursor-opt.active{ border-color:rgb(var(--gold)); color:rgb(var(--gold)); }
+.cz-cursor-dotpreview{ width:14px; height:14px; border-radius:50%; border:1.5px solid rgb(var(--gold)); flex-shrink:0; }
+.cz-cursor-dotpreview[data-preview="dot"]{ border:none; background:rgb(var(--gold)); width:8px; height:8px; }
+.cz-cursor-dotpreview[data-preview="circle"]{ border:none; background:rgb(var(--gold)); }
+.cz-cursor-dotpreview[data-preview="crosshair"]{ border-radius:0; border:none; background:
+  linear-gradient(rgb(var(--gold)),rgb(var(--gold))) center/2px 100% no-repeat,
+  linear-gradient(90deg,rgb(var(--gold)),rgb(var(--gold))) center/100% 2px no-repeat; }
+.cz-cursor-dotpreview[data-preview="glow"]{ border:none; background:rgb(var(--gold)); box-shadow:0 0 8px 3px rgba(var(--gold),.6); }
+.cz-cursor-dotpreview[data-preview="pointer"]{ border-radius:2px; border:none; background:var(--ink-faint); clip-path:polygon(0 0,0 100%,35% 70%,55% 100%,70% 90%,50% 60%,100% 60%); width:12px; height:12px; }
+.cz-cursor-dotpreview[data-preview="comet"]{ border:none; background:rgb(var(--gold)); box-shadow:-6px 2px 6px -2px rgba(var(--gold),.7); }
+
+/* ---------- Make It Mine ---------- */
+.cz-field-label{ display:block; font-size:.72rem; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:6px; }
+.cz-text-input{
+  width:100%; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--line-strong);
+  color:var(--ink); font-family:inherit; font-size:.85rem; margin-bottom:18px;
+}
+.cz-text-input:focus{ outline:none; border-color:rgb(var(--gold)); }
+.cz-avatar-row{ display:flex; align-items:center; gap:16px; }
+.cz-avatar-preview{ width:64px; height:64px; border-radius:50%; object-fit:cover; border:1px solid var(--line-strong); flex-shrink:0; }
+.cz-avatar-controls{ display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
+.cz-upload-btn{
+  display:inline-block; padding:9px 14px; font-size:.74rem; letter-spacing:.03em; color:rgb(var(--surface));
+  background:rgb(var(--gold)); cursor:pointer; transition:opacity .2s;
+}
+.cz-upload-btn:hover{ opacity:.9; }
+.cz-link-btn{ font-size:.74rem; color:var(--ink-faint); text-decoration:underline; text-underline-offset:2px; }
+.cz-link-btn:hover:not(:disabled){ color:rgb(var(--gold)); }
+.cz-link-btn:disabled{ opacity:.35; text-decoration:none; cursor:default; }
+.cz-avatar-status{ font-size:.72rem; color:var(--ink-faint); margin-top:10px; min-height:1em; }
+
 .cz-foot{ display:flex; gap:10px; margin-top:6px; padding-top:16px; border-top:1px solid var(--line); }
 .cz-foot button{ flex:1; padding:11px 14px; font-size:.76rem; letter-spacing:.04em; border:1px solid var(--line-strong); transition:border-color .25s, color .25s, background .25s; }
 #cz-reset{ color:var(--ink-dim); }
@@ -102,4 +160,61 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 
 @media (max-width:480px){
   .cz-inner{ padding:20px; }
+  .cz-cursor-grid{ grid-template-columns:1fr; }
+}
+
+/* =========================================================================
+   Cursor style overrides — restyle the site's existing #cursor-dot /
+   #cursor-ring elements (already tracked/positioned by app.js's
+   CursorEngine). No JS position logic is duplicated here, CSS only.
+   Every rule is scoped to ":not(.no-fine-pointer)" so touch devices — which
+   already get the custom cursor hidden by the site's own logic — are never
+   affected, regardless of stylesheet load order.
+   ========================================================================= */
+
+/* Minimal Dot: dot only, no ring */
+body:not(.no-fine-pointer)[data-cz-cursor="dot"] #cursor-ring{ display:none; }
+body:not(.no-fine-pointer)[data-cz-cursor="dot"] #cursor-dot{ width:8px; height:8px; }
+
+/* Circle: solid filled circle, no separate dot */
+body:not(.no-fine-pointer)[data-cz-cursor="circle"] #cursor-dot{ display:none; }
+body:not(.no-fine-pointer)[data-cz-cursor="circle"] #cursor-ring{ width:20px; height:20px; border:none; background:rgb(var(--gold)); opacity:.85; }
+body:not(.no-fine-pointer)[data-cz-cursor="circle"] #cursor-ring.ring-hover{ width:34px; height:34px; }
+body:not(.no-fine-pointer)[data-cz-cursor="circle"] #cursor-ring.ring-row{ width:46px; height:46px; opacity:.55; }
+
+/* Ring: hollow ring only, no dot */
+body:not(.no-fine-pointer)[data-cz-cursor="ring"] #cursor-dot{ display:none; }
+body:not(.no-fine-pointer)[data-cz-cursor="ring"] #cursor-ring{ width:28px; height:28px; border:1.5px solid rgb(var(--gold)); background:transparent; }
+body:not(.no-fine-pointer)[data-cz-cursor="ring"] #cursor-ring.ring-hover{ width:56px; height:56px; }
+body:not(.no-fine-pointer)[data-cz-cursor="ring"] #cursor-ring.ring-row{ width:78px; height:78px; background:rgba(var(--gold),.08); }
+
+/* Crosshair: native browser crosshair, custom overlay hidden */
+body:not(.no-fine-pointer)[data-cz-cursor="crosshair"] #cursor-dot,
+body:not(.no-fine-pointer)[data-cz-cursor="crosshair"] #cursor-ring{ display:none; }
+body[data-cz-cursor="crosshair"], body[data-cz-cursor="crosshair"] a, body[data-cz-cursor="crosshair"] button{ cursor:crosshair; }
+
+/* Glow: dot with a soft blurred halo, no ring */
+body:not(.no-fine-pointer)[data-cz-cursor="glow"] #cursor-ring{ display:none; }
+body:not(.no-fine-pointer)[data-cz-cursor="glow"] #cursor-dot{
+  width:12px; height:12px; background:rgb(var(--gold));
+  box-shadow:0 0 16px 6px rgba(var(--gold),.55), 0 0 36px 14px rgba(var(--gold),.22);
+}
+
+/* Pointer: native system cursor, custom overlay hidden entirely */
+body:not(.no-fine-pointer)[data-cz-cursor="pointer"] #cursor-dot,
+body:not(.no-fine-pointer)[data-cz-cursor="pointer"] #cursor-ring{ display:none; }
+
+/* Comet (creative): small glowing dot with a soft pulsing trail ring */
+body:not(.no-fine-pointer)[data-cz-cursor="comet"] #cursor-dot{
+  width:9px; height:9px; background:rgb(var(--gold)); box-shadow:0 0 10px 3px rgba(var(--gold),.55);
+}
+body:not(.no-fine-pointer)[data-cz-cursor="comet"] #cursor-ring{
+  border-color:rgba(var(--gold),.5); animation:cz-comet-pulse 1.6s ease-in-out infinite;
+}
+@keyframes cz-comet-pulse{
+  0%, 100%{ transform:translate(-50%,-50%) scale(1); opacity:.55; }
+  50%{ transform:translate(-50%,-50%) scale(1.3); opacity:.12; }
+}
+@media (prefers-reduced-motion: reduce){
+  body:not(.no-fine-pointer)[data-cz-cursor="comet"] #cursor-ring{ animation:none; }
 }
