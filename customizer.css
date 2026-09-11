@@ -1,0 +1,105 @@
+/* =========================================================================
+   AASHIR X — Visitor Portfolio Customizer styles
+   Self-contained: reuses the site's existing CSS variables (--gold,
+   --surface, --ink, --line, --font-*) so the panel matches the site,
+   without editing style.css.
+   ========================================================================= */
+
+.cz-hidden{ display:none !important; }
+
+/* spacing density — only affects the three optional content sections */
+body[data-cz-spacing="compact"] #worlds,
+body[data-cz-spacing="compact"] #about,
+body[data-cz-spacing="compact"] #closing{ padding-top:56px; padding-bottom:56px; }
+
+body[data-cz-spacing="spacious"] #worlds,
+body[data-cz-spacing="spacious"] #about,
+body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160px; }
+
+/* ---------- toggle button ---------- */
+#cz-toggle{
+  position:fixed; top:80px; right:28px; z-index:650;
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid var(--line-strong); background:rgba(var(--surface),0.55);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--ink-dim); transition:border-color .3s, color .3s, transform .3s;
+}
+#cz-toggle:hover, #cz-toggle:focus-visible{ border-color:rgb(var(--gold)); color:rgb(var(--gold)); }
+#cz-toggle[aria-expanded="true"]{ color:rgb(var(--gold)); border-color:rgb(var(--gold)); }
+
+@media (max-width:640px){
+  #cz-toggle{ top:auto; bottom:22px; right:16px; }
+}
+
+/* ---------- panel ---------- */
+#cz-panel{
+  position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .3s var(--ease,cubic-bezier(.16,.84,.44,1));
+}
+#cz-panel.open{ opacity:1; pointer-events:auto; }
+.cz-backdrop{ position:absolute; inset:0; background:rgba(4,3,2,0.75); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+
+.cz-inner{
+  position:relative; width:min(420px,92vw); max-height:min(84vh,720px); overflow-y:auto;
+  background:rgba(var(--surface),0.97); border:1px solid var(--line-strong);
+  padding:26px; transform:scale(.95) translateY(8px); transition:transform .35s var(--ease,cubic-bezier(.16,.84,.44,1));
+  font-family:var(--font-body,'Manrope',sans-serif); color:var(--ink-dim);
+}
+#cz-panel.open .cz-inner{ transform:scale(1) translateY(0); }
+
+.cz-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+#cz-title{ font-family:var(--font-mono,monospace); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-faint); }
+#cz-close{ font-size:1.4rem; line-height:1; color:var(--ink-dim); }
+#cz-close:hover{ color:rgb(var(--gold)); }
+
+.cz-group{ margin-bottom:24px; }
+.cz-group h3{ font-family:var(--font-mono,monospace); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:rgb(var(--gold)); margin-bottom:12px; font-weight:500; }
+.cz-hint{ font-size:.76rem; color:var(--ink-faint); margin:-4px 0 12px; }
+
+.cz-swatches{ display:flex; flex-wrap:wrap; gap:10px; }
+.cz-swatch, .cz-bg-swatch{
+  width:30px; height:30px; border-radius:50%; border:2px solid var(--line-strong);
+  background:var(--sw); cursor:pointer; transition:transform .2s, border-color .2s; padding:0;
+}
+.cz-swatch:hover, .cz-bg-swatch:hover{ transform:scale(1.08); }
+.cz-swatch.active, .cz-bg-swatch.active{ border-color:rgb(var(--gold)); box-shadow:0 0 0 2px rgba(var(--gold),.25); }
+.cz-custom-swatch{
+  width:30px; height:30px; border-radius:50%; border:2px dashed var(--line-strong);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; overflow:hidden;
+}
+.cz-custom-swatch::after{ content:'+'; color:var(--ink-faint); font-size:.95rem; pointer-events:none; }
+.cz-custom-swatch input[type="color"]{ position:absolute; inset:0; opacity:0; cursor:pointer; border:none; padding:0; }
+
+.cz-radio-row{ display:flex; flex-wrap:wrap; gap:14px; }
+.cz-radio{ display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--ink-dim); cursor:pointer; }
+.cz-radio input{ accent-color:rgb(var(--gold)); width:14px; height:14px; }
+
+.cz-rows{ display:flex; flex-direction:column; gap:6px; }
+.cz-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); }
+.cz-row-label{ font-size:.82rem; color:var(--ink-dim); }
+.cz-row-actions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.cz-icon-btn{
+  width:26px; height:26px; border:1px solid var(--line-strong); color:var(--ink-dim);
+  display:flex; align-items:center; justify-content:center; font-size:.75rem; transition:border-color .2s, color .2s, opacity .2s;
+}
+.cz-icon-btn:hover:not(:disabled){ border-color:rgb(var(--gold)); color:rgb(var(--gold)); }
+.cz-icon-btn:disabled{ opacity:.28; cursor:default; }
+
+.cz-toggle{ position:relative; display:inline-flex; align-items:center; cursor:pointer; margin-left:2px; }
+.cz-toggle input{ position:absolute; opacity:0; width:1px; height:1px; }
+.cz-toggle-track{ width:34px; height:18px; border-radius:999px; background:var(--line-strong); display:block; position:relative; transition:background .25s; }
+.cz-toggle-thumb{ position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--ink-dim); transition:transform .25s, background .25s; }
+.cz-toggle input:checked + .cz-toggle-track{ background:rgba(var(--gold),.35); }
+.cz-toggle input:checked + .cz-toggle-track .cz-toggle-thumb{ transform:translateX(16px); background:rgb(var(--gold)); }
+
+.cz-foot{ display:flex; gap:10px; margin-top:6px; padding-top:16px; border-top:1px solid var(--line); }
+.cz-foot button{ flex:1; padding:11px 14px; font-size:.76rem; letter-spacing:.04em; border:1px solid var(--line-strong); transition:border-color .25s, color .25s, background .25s; }
+#cz-reset{ color:var(--ink-dim); }
+#cz-reset:hover{ border-color:rgba(200,90,90,.6); color:#d98787; }
+#cz-save{ background:rgb(var(--gold)); border-color:rgb(var(--gold)); color:rgb(var(--surface)); font-weight:600; }
+#cz-save:hover{ opacity:.9; }
+
+@media (max-width:480px){
+  .cz-inner{ padding:20px; }
+}
