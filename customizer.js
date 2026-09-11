@@ -2,12 +2,16 @@
 /* =========================================================================
    AASHIR X — Visitor Portfolio Customizer
    Browser-only (localStorage) visual customization layer.
-   Does NOT modify the default design for other visitors — every effect
-   here is applied client-side, on top of the existing stylesheet, and is
-   fully reversible via "Reset to Default".
+   Nothing here is sent to a server; every effect is applied client-side on
+   top of the existing stylesheet/markup and is fully reversible via
+   "Reset to Default". Other visitors always see the untouched original.
    ========================================================================= */
 (function () {
   var STORAGE_KEY = 'aashirx-customizer-v1'; // versioned: bump to migrate/reset safely later
+  var DEFAULT_NAME = 'Muhammad Aashir Abbas';
+  var DEFAULT_AVATAR_SRC = './aashir-profile.jpeg';
+  var AVATAR_MAX_DIM = 900;
+  var AVATAR_QUALITY = 0.85;
 
   var SECTION_META = [
     { id: 'worlds',  label: 'Digital Worlds (Projects)' },
@@ -38,6 +42,17 @@
     { key: 'spacious',    name: 'Spacious' }
   ];
 
+  var CURSORS = [
+    { key: 'default',   name: 'Default' },
+    { key: 'dot',        name: 'Minimal Dot' },
+    { key: 'circle',     name: 'Circle' },
+    { key: 'ring',        name: 'Ring' },
+    { key: 'crosshair',  name: 'Crosshair' },
+    { key: 'glow',        name: 'Glow' },
+    { key: 'pointer',     name: 'Pointer (System)' },
+    { key: 'comet',       name: 'Comet (Creative)' }
+  ];
+
   function defaults() {
     return {
       v: 1,
@@ -45,7 +60,10 @@
       bg: null,                   // BACKGROUNDS key or null = default
       spacing: 'comfortable',
       order: SECTION_META.map(function (s) { return s.id; }),
-      hidden: {}
+      hidden: {},
+      cursor: 'default',
+      name: '',                   // '' = default owner name
+      avatar: ''                  // '' = default portrait, else a compressed data URL
     };
   }
 
@@ -62,7 +80,10 @@
         bg: parsed.bg || d.bg,
         spacing: parsed.spacing || d.spacing,
         order: Array.isArray(parsed.order) && parsed.order.length === SECTION_META.length ? parsed.order : d.order,
-        hidden: parsed.hidden && typeof parsed.hidden === 'object' ? parsed.hidden : d.hidden
+        hidden: parsed.hidden && typeof parsed.hidden === 'object' ? parsed.hidden : d.hidden,
+        cursor: parsed.cursor || d.cursor,
+        name: typeof parsed.name === 'string' ? parsed.name : d.name,
+        avatar: typeof parsed.avatar === 'string' ? parsed.avatar : d.avatar
       };
     } catch (e) {
       return defaults();
@@ -70,7 +91,12 @@
   }
 
   function save(state) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable — customization simply won't persist */ }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return true;
+    } catch (e) {
+      return false; // e.g. quota exceeded — customization just won't persist
+    }
   }
 
   function hexToRgbString(hex) {
@@ -88,7 +114,7 @@
   var state = load();
   var root = document.documentElement;
 
-  /* ---------- apply: visual (colors + spacing) ---------- */
+  /* ---------- apply: visual (colors + spacing + cursor) ---------- */
   function applyVisual() {
     if (state.accent) {
       var rgb = hexToRgbString(state.accent);
@@ -117,6 +143,7 @@
     }
 
     document.body.setAttribute('data-cz-spacing', state.spacing || 'comfortable');
+    document.body.setAttribute('data-cz-cursor', state.cursor || 'default');
   }
 
   /* ---------- apply: section order + visibility ---------- */
@@ -136,7 +163,19 @@
     });
   }
 
-  function applyAll() { applyVisual(); applyLayout(); }
+  /* ---------- apply: personalization (name + avatar) ---------- */
+  var IDENTITY_NAME_IDS = ['cz-name-hero', 'cz-name-closing', 'cz-name-footer'];
+  function applyIdentity() {
+    var displayName = state.name && state.name.trim() ? state.name.trim() : DEFAULT_NAME;
+    IDENTITY_NAME_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = displayName;
+    });
+    var img = document.getElementById('portrait-img');
+    if (img) img.src = state.avatar ? state.avatar : DEFAULT_AVATAR_SRC;
+  }
+
+  function applyAll() { applyVisual(); applyLayout(); applyIdentity(); }
   applyAll();
 
   /* app.js's own ThemeEngine periodically rewrites --environment-void (living
@@ -152,6 +191,33 @@
       root.style.setProperty('--environment-void', preset.void);
     }
   }, 500);
+
+  /* ---------- image compression helper (canvas, client-side only) ---------- */
+  function readAndCompressImage(file, maxDim, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file || !/^image\//.test(file.type)) { reject(new Error('not an image')); return; }
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          var scale = Math.min(1, maxDim / Math.max(w, h));
+          var cw = Math.max(1, Math.round(w * scale));
+          var ch = Math.max(1, Math.round(h * scale));
+          var canvas = document.createElement('canvas');
+          canvas.width = cw; canvas.height = ch;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, cw, ch);
+          try { resolve(canvas.toDataURL('image/jpeg', quality)); }
+          catch (err) { reject(err); }
+        };
+        img.onerror = function () { reject(new Error('could not read image')); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function () { reject(new Error('could not read file')); };
+      reader.readAsDataURL(file);
+    });
+  }
 
   /* ---------- UI (built once DOM/content is ready) ---------- */
   function buildUI() {
@@ -175,13 +241,19 @@
       return '<label class="cz-radio"><input type="radio" name="cz-spacing" value="' + s.key + '"' + (checked ? ' checked' : '') + '><span>' + s.name + '</span></label>';
     }).join('');
 
+    var cursorOpts = CURSORS.map(function (c) {
+      var active = (state.cursor || 'default') === c.key;
+      return '<button type="button" class="cz-cursor-opt' + (active ? ' active' : '') + '" data-cursor="' + c.key + '"><span class="cz-cursor-dotpreview" data-preview="' + c.key + '"></span>' + c.name + '</button>';
+    }).join('');
+
     var order = (state.order && state.order.length === SECTION_META.length) ? state.order : SECTION_META.map(function (s) { return s.id; });
     var rows = order.map(function (id, idx) {
       var meta = SECTION_META.filter(function (s) { return s.id === id; })[0];
       if (!meta) return '';
       var hidden = !!(state.hidden && state.hidden[id]);
       return '' +
-        '<li class="cz-row" data-id="' + id + '">' +
+        '<li class="cz-row" draggable="true" data-id="' + id + '">' +
+          '<span class="cz-drag-handle" aria-hidden="true">&#8942;&#8942;</span>' +
           '<span class="cz-row-label">' + meta.label + '</span>' +
           '<span class="cz-row-actions">' +
             '<button type="button" class="cz-icon-btn" data-move="up" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Move up">&#8593;</button>' +
@@ -205,24 +277,63 @@
             '<span id="cz-title">Customize</span>' +
             '<button type="button" id="cz-close" aria-label="Close customizer">&times;</button>' +
           '</div>' +
+          '<div class="cz-tabs" role="tablist">' +
+            '<button type="button" class="cz-tab active" data-tab="design" role="tab" aria-selected="true">Design</button>' +
+            '<button type="button" class="cz-tab" data-tab="layout" role="tab" aria-selected="false">Layout</button>' +
+            '<button type="button" class="cz-tab" data-tab="cursor" role="tab" aria-selected="false">Cursor</button>' +
+            '<button type="button" class="cz-tab" data-tab="mine" role="tab" aria-selected="false">Make It Mine</button>' +
+          '</div>' +
           '<div class="cz-body">' +
-            '<section class="cz-group">' +
-              '<h3>Accent Color</h3>' +
-              '<div class="cz-swatches">' + swatches + '<label class="cz-custom-swatch" title="Custom color"><input type="color" id="cz-accent-custom" value="' + (state.accent || '#c5a46c') + '"></label></div>' +
-            '</section>' +
-            '<section class="cz-group">' +
-              '<h3>Background Tone</h3>' +
-              '<div class="cz-swatches">' + bgSwatches + '</div>' +
-            '</section>' +
-            '<section class="cz-group">' +
-              '<h3>Section Spacing</h3>' +
-              '<div class="cz-radio-row">' + spacingOpts + '</div>' +
-            '</section>' +
-            '<section class="cz-group">' +
-              '<h3>Sections</h3>' +
-              '<p class="cz-hint">Reorder or hide sections. Hero and footer are always shown.</p>' +
-              '<ul class="cz-rows" id="cz-rows">' + rows + '</ul>' +
-            '</section>' +
+
+            '<div class="cz-panel-tab active" data-tab-panel="design">' +
+              '<section class="cz-group">' +
+                '<h3>Accent Color</h3>' +
+                '<div class="cz-swatches">' + swatches + '<label class="cz-custom-swatch" title="Custom color"><input type="color" id="cz-accent-custom" value="' + (state.accent || '#c5a46c') + '"></label></div>' +
+              '</section>' +
+              '<section class="cz-group">' +
+                '<h3>Background Tone</h3>' +
+                '<div class="cz-swatches">' + bgSwatches + '</div>' +
+              '</section>' +
+            '</div>' +
+
+            '<div class="cz-panel-tab" data-tab-panel="layout">' +
+              '<section class="cz-group">' +
+                '<h3>Section Spacing</h3>' +
+                '<div class="cz-radio-row">' + spacingOpts + '</div>' +
+              '</section>' +
+              '<section class="cz-group">' +
+                '<h3>Sections</h3>' +
+                '<p class="cz-hint">Drag to reorder (or use the arrows), toggle to show/hide. Hero and footer are always shown.</p>' +
+                '<ul class="cz-rows" id="cz-rows">' + rows + '</ul>' +
+              '</section>' +
+            '</div>' +
+
+            '<div class="cz-panel-tab" data-tab-panel="cursor">' +
+              '<section class="cz-group">' +
+                '<h3>Cursor Style</h3>' +
+                '<p class="cz-hint">Custom cursors only apply on devices with a mouse/trackpad; touchscreens keep the native cursor automatically.</p>' +
+                '<div class="cz-cursor-grid">' + cursorOpts + '</div>' +
+              '</section>' +
+            '</div>' +
+
+            '<div class="cz-panel-tab" data-tab-panel="mine">' +
+              '<section class="cz-group">' +
+                '<h3>Make It Mine</h3>' +
+                '<p class="cz-hint">Personalize the name and profile photo shown across the page — only visible in your browser.</p>' +
+                '<label class="cz-field-label" for="cz-name-input">Your Name</label>' +
+                '<input type="text" id="cz-name-input" class="cz-text-input" placeholder="Enter your name" value="' + (state.name || '').replace(/"/g, '&quot;') + '" maxlength="60">' +
+                '<div class="cz-avatar-row">' +
+                  '<img id="cz-avatar-preview" class="cz-avatar-preview" src="' + (state.avatar || DEFAULT_AVATAR_SRC) + '" alt="">' +
+                  '<div class="cz-avatar-controls">' +
+                    '<label class="cz-upload-btn" for="cz-avatar-input">Upload Profile Picture</label>' +
+                    '<input type="file" id="cz-avatar-input" accept="image/*" hidden>' +
+                    '<button type="button" id="cz-avatar-remove" class="cz-link-btn"' + (state.avatar ? '' : ' disabled') + '>Remove photo</button>' +
+                  '</div>' +
+                '</div>' +
+                '<p class="cz-avatar-status" id="cz-avatar-status" role="status"></p>' +
+              '</section>' +
+            '</div>' +
+
           '</div>' +
           '<div class="cz-foot">' +
             '<button type="button" id="cz-reset">Reset to Default</button>' +
@@ -263,6 +374,21 @@
     wrap.querySelector('#cz-save').addEventListener('click', closePanel);
     wrap.querySelectorAll('[data-cz-close]').forEach(function (el) { el.addEventListener('click', closePanel); });
 
+    // Tabs
+    wrap.querySelectorAll('.cz-tab').forEach(function (tabBtn) {
+      tabBtn.addEventListener('click', function () {
+        var target = tabBtn.getAttribute('data-tab');
+        wrap.querySelectorAll('.cz-tab').forEach(function (b) {
+          var on = b === tabBtn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        wrap.querySelectorAll('.cz-panel-tab').forEach(function (p) {
+          p.classList.toggle('active', p.getAttribute('data-tab-panel') === target);
+        });
+      });
+    });
+
     // Accent swatches
     wrap.querySelectorAll('.cz-swatch').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -295,8 +421,21 @@
       });
     });
 
-    // Section rows: reorder + visibility
+    // Cursor style
+    wrap.querySelectorAll('.cz-cursor-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state.cursor = btn.getAttribute('data-cursor');
+        wrap.querySelectorAll('.cz-cursor-opt').forEach(function (b) { b.classList.toggle('active', b === btn); });
+        save(state); applyVisual();
+      });
+    });
+
+    // Section rows: drag-and-drop + up/down + visibility
     var rowsEl = wrap.querySelector('#cz-rows');
+    function persistOrderFromDOM() {
+      state.order = Array.prototype.map.call(rowsEl.querySelectorAll('.cz-row'), function (r) { return r.getAttribute('data-id'); });
+      save(state); applyLayout();
+    }
     function refreshRows() {
       var lis = Array.prototype.slice.call(rowsEl.querySelectorAll('.cz-row'));
       lis.forEach(function (li, idx) {
@@ -311,8 +450,7 @@
       var dir = btn.getAttribute('data-move');
       if (dir === 'up' && li.previousElementSibling) rowsEl.insertBefore(li, li.previousElementSibling);
       else if (dir === 'down' && li.nextElementSibling) rowsEl.insertBefore(li.nextElementSibling, li);
-      state.order = Array.prototype.map.call(rowsEl.querySelectorAll('.cz-row'), function (r) { return r.getAttribute('data-id'); });
-      save(state); applyLayout(); refreshRows();
+      persistOrderFromDOM(); refreshRows();
     });
     rowsEl.addEventListener('change', function (e) {
       if (!e.target.matches('[data-visible]')) return;
@@ -321,6 +459,72 @@
       state.hidden = state.hidden || {};
       state.hidden[id] = !e.target.checked;
       save(state); applyLayout();
+    });
+
+    // Native HTML5 drag-and-drop (desktop). Up/down buttons remain the
+    // touch/keyboard-friendly fallback for mobile.
+    var dragEl = null;
+    rowsEl.addEventListener('dragstart', function (e) {
+      var li = e.target.closest('.cz-row');
+      if (!li) return;
+      dragEl = li;
+      li.classList.add('dragging');
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', li.getAttribute('data-id')); } catch (err) { /* Firefox needs this set, ignore failures elsewhere */ }
+      }
+    });
+    rowsEl.addEventListener('dragover', function (e) {
+      if (!dragEl) return;
+      e.preventDefault();
+      var li = e.target.closest('.cz-row');
+      if (!li || li === dragEl) return;
+      var rect = li.getBoundingClientRect();
+      var before = (e.clientY - rect.top) < rect.height / 2;
+      rowsEl.insertBefore(dragEl, before ? li : li.nextSibling);
+    });
+    rowsEl.addEventListener('drop', function (e) { if (dragEl) e.preventDefault(); });
+    rowsEl.addEventListener('dragend', function () {
+      if (!dragEl) return;
+      dragEl.classList.remove('dragging');
+      dragEl = null;
+      persistOrderFromDOM(); refreshRows();
+    });
+
+    // Make It Mine — name
+    var nameInput = wrap.querySelector('#cz-name-input');
+    nameInput.addEventListener('input', function () {
+      state.name = nameInput.value;
+      save(state); applyIdentity();
+    });
+
+    // Make It Mine — avatar upload
+    var avatarInput = wrap.querySelector('#cz-avatar-input');
+    var avatarPreview = wrap.querySelector('#cz-avatar-preview');
+    var avatarRemove = wrap.querySelector('#cz-avatar-remove');
+    var avatarStatus = wrap.querySelector('#cz-avatar-status');
+    avatarInput.addEventListener('change', function () {
+      var file = avatarInput.files && avatarInput.files[0];
+      if (!file) return;
+      avatarStatus.textContent = 'Processing photo…';
+      readAndCompressImage(file, AVATAR_MAX_DIM, AVATAR_QUALITY).then(function (dataUrl) {
+        state.avatar = dataUrl;
+        var ok = save(state);
+        applyIdentity();
+        avatarPreview.src = dataUrl;
+        avatarRemove.disabled = false;
+        avatarStatus.textContent = ok ? 'Photo updated.' : 'Photo applied, but could not be saved (storage full) — it will reset on reload.';
+      }).catch(function () {
+        avatarStatus.textContent = 'Could not read that image — please try a different file.';
+      });
+      avatarInput.value = '';
+    });
+    avatarRemove.addEventListener('click', function () {
+      state.avatar = '';
+      save(state); applyIdentity();
+      avatarPreview.src = DEFAULT_AVATAR_SRC;
+      avatarRemove.disabled = true;
+      avatarStatus.textContent = 'Photo removed.';
     });
 
     // Reset
