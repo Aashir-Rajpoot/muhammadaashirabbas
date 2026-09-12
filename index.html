@@ -1316,5 +1316,157 @@ Please send the payment screenshot to **[aashirrajpoot757@gmail.com](mailto:aash
 
   </div>
 
+<!-- ============ SOCIAL FOLLOW REMINDER (client-side only, honest confirmation) ============ -->
+<div class="sfr-overlay" id="sfrOverlay" aria-hidden="true">
+  <div class="sfr-modal" id="sfrModal" role="dialog" aria-modal="true" aria-labelledby="sfrTitle">
+    <p class="sfr-eyebrow">Stay Connected</p>
+    <h3 id="sfrTitle" class="sfr-title">Stay Connected</h3>
+    <p class="sfr-body" id="sfrBody"></p>
+    <div class="sfr-actions">
+      <button type="button" class="sfr-btn sfr-primary" id="sfrFollowed">FOLLOWED ✓</button>
+      <button type="button" class="sfr-btn sfr-ghost" id="sfrNotYet">NOT YET</button>
+    </div>
+  </div>
+</div>
+<style>
+  .sfr-overlay{ position:fixed; inset:0; z-index:10000; display:flex; align-items:flex-end; justify-content:flex-end; padding:24px;
+    background:transparent; pointer-events:none; opacity:0; visibility:hidden; transition:opacity .4s var(--ease-soft), visibility 0s linear .4s; }
+  .sfr-overlay.is-open{ opacity:1; visibility:visible; pointer-events:auto; transition:opacity .4s var(--ease-soft), visibility 0s linear 0s; }
+  .sfr-modal{ position:relative; width:100%; max-width:360px; padding:22px 22px 20px; border-radius:16px;
+    border:1px solid rgba(var(--gold),0.28); background:linear-gradient(180deg, rgba(24,20,15,0.94), rgba(12,10,8,0.97));
+    box-shadow:0 24px 60px -18px rgba(0,0,0,0.7), 0 0 0 1px rgba(240,236,228,0.04) inset, 0 0 40px -10px rgba(var(--gold),0.16);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    transform:translateY(16px) scale(.97); opacity:0; transition:transform .45s var(--ease), opacity .45s var(--ease-soft); }
+  .sfr-overlay.is-open .sfr-modal{ transform:translateY(0) scale(1); opacity:1; }
+  .sfr-eyebrow{ font-family:var(--font-mono); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:rgb(var(--gold-soft)); margin:0 0 8px; }
+  .sfr-title{ display:none; }
+  .sfr-body{ font-family:var(--font-body); font-size:.9rem; line-height:1.6; color:var(--ink-dim); margin:0 0 18px; }
+  .sfr-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+  .sfr-btn{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; padding:10px 16px;
+    border-radius:999px; cursor:pointer; border:1px solid var(--line-strong); background:rgba(240,236,228,0.04); color:var(--ink-dim);
+    transition:color .25s var(--ease-soft), border-color .25s var(--ease-soft), background .25s var(--ease-soft), transform .2s var(--ease-soft); }
+  .sfr-btn:hover, .sfr-btn:focus-visible{ transform:translateY(-2px); }
+  .sfr-primary{ border-color:rgba(var(--gold),.55); color:rgb(var(--gold)); }
+  .sfr-primary:hover, .sfr-primary:focus-visible{ background:rgba(var(--gold),0.12); border-color:rgb(var(--gold)); }
+  .sfr-ghost:hover, .sfr-ghost:focus-visible{ color:rgb(var(--ink)); background:rgba(240,236,228,0.08); }
+  .sfr-btn:focus-visible{ outline:2px solid rgb(var(--gold)); outline-offset:3px; }
+  @media(max-width:480px){ .sfr-overlay{ padding:14px; align-items:flex-end; justify-content:center; } .sfr-modal{ max-width:100%; padding:20px 18px 18px; } }
+  @media (prefers-reduced-motion:reduce){ .sfr-overlay, .sfr-modal, .sfr-btn{ transition-duration:.001ms !important; } }
+</style>
+<script>
+(function(){
+  'use strict';
+  var mem = {};
+  function safeGet(k){ try{ return localStorage.getItem(k); }catch(e){ return Object.prototype.hasOwnProperty.call(mem,k) ? mem[k] : null; } }
+  function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k] = v; } }
+  function safeRemove(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+
+  function getFollowStatus(){
+    var raw = safeGet('socialFollowStatus'), obj = {};
+    try{ obj = raw ? JSON.parse(raw) : {}; if(!obj || typeof obj !== 'object') obj = {}; }catch(e){ obj = {}; }
+    return obj;
+  }
+  function isFollowed(p){ return !!getFollowStatus()[p]; }
+  function setFollowed(p){ var o = getFollowStatus(); o[p] = true; safeSet('socialFollowStatus', JSON.stringify(o)); }
+
+  function getPending(){
+    var raw = safeGet('socialPendingReminder');
+    try{ var p = raw ? JSON.parse(raw) : null; return (p && p.platform) ? p : null; }catch(e){ return null; }
+  }
+  function setPending(p){ safeSet('socialPendingReminder', JSON.stringify({ platform:p, shown:false, ts:Date.now() })); }
+  function clearPending(){ safeRemove('socialPendingReminder'); }
+  function markPendingShown(){ var p = getPending(); if(p){ p.shown = true; safeSet('socialPendingReminder', JSON.stringify(p)); } }
+
+  var PLATFORM_META = {
+    facebook:{ name:'Facebook', verb:'following my Facebook profile' },
+    instagram:{ name:'Instagram', verb:'following my Instagram' },
+    linkedin:{ name:'LinkedIn', verb:'connecting with me on LinkedIn' },
+    youtube:{ name:'YouTube', verb:'subscribing to my YouTube channel' },
+    github:{ name:'GitHub', verb:'following/exploring my GitHub' },
+    fiverr:{ name:'Fiverr', verb:'checking out my Fiverr services' },
+    upwork:{ name:'Upwork', verb:'connecting with me on Upwork' },
+    threads:{ name:'Threads', verb:'following my Threads' },
+    portfolio:{ name:'Portfolio', verb:'exploring my portfolio' }
+  };
+
+  function platformFromHref(href){
+    try{
+      var h = new URL(href, window.location.href).hostname.replace(/^www\./,'');
+      if(h.indexOf('facebook.com') > -1) return 'facebook';
+      if(h.indexOf('linkedin.com') > -1) return 'linkedin';
+      if(h.indexOf('instagram.com') > -1) return 'instagram';
+      if(h.indexOf('youtube.com') > -1) return 'youtube';
+      if(h.indexOf('threads.com') > -1 || h.indexOf('threads.net') > -1) return 'threads';
+      if(h.indexOf('github.com') > -1) return 'github';
+      if(h.indexOf('fiverr.com') > -1) return 'fiverr';
+      if(h.indexOf('upwork.com') > -1) return 'upwork';
+      if(h.indexOf('workers.dev') > -1) return 'portfolio';
+    }catch(e){}
+    return null;
+  }
+
+  function ready(fn){ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+
+  ready(function(){
+    var overlay = document.getElementById('sfrOverlay');
+    var body = document.getElementById('sfrBody');
+    var followedBtn = document.getElementById('sfrFollowed');
+    var notYetBtn = document.getElementById('sfrNotYet');
+    if(!overlay || !body || !followedBtn || !notYetBtn) return; // fail silently, never break the portfolio
+
+    var activePlatform = null;
+
+    function closeReminder(){
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden','true');
+      activePlatform = null;
+    }
+    function showReminder(platform){
+      var meta = PLATFORM_META[platform];
+      if(!meta) return;
+      activePlatform = platform;
+      body.textContent = 'You visited my ' + meta.name + '. If you found my work useful, consider ' + meta.verb + '.';
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden','false');
+      markPendingShown();
+      setTimeout(function(){ followedBtn.focus(); }, 200);
+    }
+    function maybeShowReminder(){
+      if(overlay.classList.contains('is-open')) return; // never stack popups
+      var p = getPending();
+      if(!p) return;
+      if(isFollowed(p.platform)){ clearPending(); return; }
+      if(p.shown) return; // already shown for this click — avoid repeated popping
+      showReminder(p.platform);
+    }
+
+    // Reuse existing social links as-is — only observe clicks, never alter href/navigation.
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if(!a) return;
+      var platform = platformFromHref(a.getAttribute('href'));
+      if(!platform || isFollowed(platform)) return;
+      setPending(platform);
+    }, true);
+
+    followedBtn.addEventListener('click', function(){
+      if(activePlatform) setFollowed(activePlatform);
+      clearPending();
+      closeReminder();
+    });
+    notYetBtn.addEventListener('click', function(){
+      closeReminder(); // reminder can resurface on the visitor's next visit/click to this platform
+    });
+    overlay.addEventListener('mousedown', function(e){ if(e.target === overlay) closeReminder(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('is-open')) closeReminder(); });
+
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') maybeShowReminder(); });
+    window.addEventListener('pageshow', function(){ maybeShowReminder(); });
+    window.addEventListener('focus', function(){ maybeShowReminder(); });
+    maybeShowReminder();
+  });
+})();
+</script>
+
 </body>
 </html>
