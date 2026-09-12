@@ -106,6 +106,26 @@
     80%{transform:translate(3px,2px);}
   }
 
+  /* Hacked warning modal */
+  #hm-hackmodal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,0,0,.72);backdrop-filter:blur(4px);opacity:0;transition:opacity .25s ease;}
+  #hm-hackmodal.hm-show{display:flex;opacity:1;}
+  .hm-hm-card{position:relative;width:100%;max-width:440px;background:linear-gradient(180deg,rgba(18,4,4,.94),rgba(6,2,2,.97));border:1px solid rgba(255,59,59,.55);border-radius:16px;padding:38px 30px 32px;text-align:center;box-shadow:0 0 0 1px rgba(255,59,59,.15),0 0 60px rgba(255,59,59,.35),0 30px 90px rgba(0,0,0,.7);overflow:hidden;transform:scale(.9) translateY(10px);opacity:0;animation:hm-hm-in .45s cubic-bezier(.2,.9,.25,1) forwards;}
+  @keyframes hm-hm-in{to{transform:scale(1) translateY(0);opacity:1;}}
+  .hm-hm-card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;background:repeating-linear-gradient(to bottom, rgba(255,59,59,.06) 0px, rgba(255,59,59,.06) 1px, transparent 1px, transparent 3px);animation:hm-hm-scan 6s linear infinite;}
+  @keyframes hm-hm-scan{0%{background-position-y:0;}100%{background-position-y:200px;}}
+  .hm-hm-icon{font-size:3.4rem;line-height:1;color:var(--red);text-shadow:0 0 10px rgba(255,59,59,.9),0 0 40px rgba(255,59,59,.6);margin-bottom:14px;animation:hm-hm-pulse 1.4s ease-in-out infinite;}
+  @keyframes hm-hm-pulse{0%,100%{text-shadow:0 0 10px rgba(255,59,59,.9),0 0 30px rgba(255,59,59,.5);}50%{text-shadow:0 0 16px rgba(255,59,59,1),0 0 55px rgba(255,59,59,.85);}}
+  .hm-hm-title{font-family:var(--font-display);font-weight:900;font-size:clamp(1.3rem,5vw,1.9rem);letter-spacing:.05em;color:#fff;margin:0 0 8px;text-shadow:0 0 18px rgba(255,59,59,.6);}
+  .hm-hm-sub{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;color:#ffb3b3;text-transform:uppercase;margin:0 0 26px;}
+  .hm-hm-btnrow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2;}
+  .hm-hm-btn{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;padding:13px 26px;border-radius:9px;cursor:pointer;transition:.2s;border:1px solid;}
+  .hm-hm-btn.safe{border-color:var(--green-dim);background:rgba(0,255,140,.1);color:var(--green);}
+  .hm-hm-btn.safe:hover,.hm-hm-btn.safe:focus-visible{background:rgba(0,255,140,.2);box-shadow:0 0 20px rgba(0,255,140,.3);}
+  .hm-hm-btn.notsafe{border-color:rgba(255,59,59,.55);background:rgba(255,59,59,.1);color:#ff8a8a;}
+  .hm-hm-btn.notsafe:hover,.hm-hm-btn.notsafe:focus-visible{background:rgba(255,59,59,.2);box-shadow:0 0 20px rgba(255,59,59,.35);}
+  .hm-hm-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  .hm-modal-distort{filter:blur(1.5px) contrast(1.06) saturate(1.1);}
+
   #hm-report table{width:100%;border-collapse:collapse;margin:18px 0;font-family:var(--font-mono);font-size:.78rem;}
   #hm-report td{padding:9px 4px;border-bottom:1px solid var(--line);color:var(--ink-dim);}
   #hm-report td.ok{color:var(--green);}
@@ -240,6 +260,19 @@
   </div>
 </div>
 
+<!-- Cinematic "hacked" warning modal -->
+<div id="hm-hackmodal" role="dialog" aria-modal="true" aria-labelledby="hm-hm-title" aria-hidden="true">
+  <div class="hm-hm-card">
+    <div class="hm-hm-icon" aria-hidden="true">⚠️</div>
+    <h2 class="hm-hm-title" id="hm-hm-title">WE HACK YOUR SYSTEM</h2>
+    <p class="hm-hm-sub">Simulated breach — choose how to proceed</p>
+    <div class="hm-hm-btnrow">
+      <button class="hm-hm-btn safe" id="hm-safe-btn" type="button">SAFE</button>
+      <button class="hm-hm-btn notsafe" id="hm-notsafe-btn" type="button">NOT SAFE</button>
+    </div>
+  </div>
+</div>
+
 <span class="hm-sr-only" aria-live="polite" id="hm-live"></span>
 
 <script>
@@ -332,6 +365,9 @@
   function restartSimulation(){
     alphaInput.value = '';
     alphaErr.textContent = '';
+    stopAlarm();
+    if(hackModal){ hackModal.classList.remove('hm-show'); hackModal.setAttribute('aria-hidden','true'); }
+    if(termOverlay){ termOverlay.classList.remove('hm-active'); }
     state = { verified:false, sawAlarm:false, ranTerminal:false, typedCommand:false, sawBreach:false, clickedYes:false, clickedNo:false };
     show('hm-screen-verify');
   }
@@ -355,30 +391,56 @@
   }
 
   function startAlarm(){
-    if(muted) return;
+    if(muted || alarmNodes) return; // never stack overlapping instances
     var ctx = ensureAudio();
     if(!ctx) return;
+    if(ctx.state === 'suspended'){ try{ ctx.resume(); }catch(e){} }
     try{
+      var comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.knee.value = 6; comp.ratio.value = 10;
+      comp.attack.value = 0.003; comp.release.value = 0.18;
+      var gain = ctx.createGain();
+      gain.gain.value = 0;
       var osc1 = ctx.createOscillator();
       var osc2 = ctx.createOscillator();
-      var gain = ctx.createGain();
-      gain.gain.value = 0.05; // deliberately quiet/safe level
-      osc1.type = 'sine'; osc2.type = 'sine';
-      osc1.frequency.value = 440; osc2.frequency.value = 554;
-      osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+      osc1.type = 'sawtooth'; osc2.type = 'square';
+      osc1.frequency.value = 440; osc2.frequency.value = 660;
+      osc1.connect(gain); osc2.connect(gain);
+      gain.connect(comp); comp.connect(ctx.destination);
       osc1.start(); osc2.start();
-      var toggle = setInterval(function(){
-        if(!alarmNodes) { clearInterval(toggle); return; }
-        gain.gain.value = gain.gain.value > 0.02 ? 0.0 : 0.05;
+
+      var peak = 0.32; // clearly audible, cinematic, still hearing-safe
+      var now = ctx.currentTime;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(peak, now + 0.08);
+
+      var high = false;
+      var sweep = setInterval(function(){
+        if(!alarmNodes){ clearInterval(sweep); return; }
+        high = !high;
+        var t = ctx.currentTime;
+        osc1.frequency.cancelScheduledValues(t);
+        osc2.frequency.cancelScheduledValues(t);
+        osc1.frequency.linearRampToValueAtTime(high ? 660 : 440, t + 0.24);
+        osc2.frequency.linearRampToValueAtTime(high ? 880 : 660, t + 0.24);
+        gain.gain.cancelScheduledValues(t);
+        gain.gain.linearRampToValueAtTime(high ? peak : peak * 0.82, t + 0.24);
       }, 260);
-      alarmNodes = { osc1:osc1, osc2:osc2, gain:gain, toggle:toggle };
+
+      alarmNodes = { osc1:osc1, osc2:osc2, gain:gain, comp:comp, sweep:sweep };
     }catch(e){}
   }
   function stopAlarm(){
     if(alarmNodes){
       try{
-        clearInterval(alarmNodes.toggle);
-        alarmNodes.osc1.stop(); alarmNodes.osc2.stop();
+        clearInterval(alarmNodes.sweep);
+        var ctx = audioCtx, t = ctx ? ctx.currentTime : 0;
+        if(ctx){
+          alarmNodes.gain.gain.cancelScheduledValues(t);
+          alarmNodes.gain.gain.linearRampToValueAtTime(0.0001, t + 0.12);
+        }
+        var o1 = alarmNodes.osc1, o2 = alarmNodes.osc2;
+        setTimeout(function(){ try{ o1.stop(); o2.stop(); }catch(e){} }, 160);
       }catch(e){}
       alarmNodes = null;
     }
@@ -509,13 +571,39 @@
     await addLine('RESTORING SYSTEM...', 'ln-ok', 200);
     await progressBar('Restoring');
     await addLine('✓ SYSTEM RESTORED', 'ln-ok', 300);
-    await wait(1200);
+    await wait(700);
 
+    openHackModal();
+  }
+
+  /* ---------- Cinematic hacked modal (SAFE / NOT SAFE) ---------- */
+  var hackModal = document.getElementById('hm-hackmodal');
+  var safeBtn = document.getElementById('hm-safe-btn');
+  var notSafeBtn = document.getElementById('hm-notsafe-btn');
+
+  function openHackModal(){
+    hackModal.classList.add('hm-show');
+    hackModal.setAttribute('aria-hidden','false');
+    termContent.classList.add('hm-modal-distort');
+    safeBtn.focus();
+  }
+  function closeHackModal(){
+    hackModal.classList.remove('hm-show');
+    hackModal.setAttribute('aria-hidden','true');
+    termContent.classList.remove('hm-modal-distort');
+  }
+
+  safeBtn.addEventListener('click', function(){
+    closeHackModal();
+    window.location.href = 'SocialMedia.html';
+  });
+  notSafeBtn.addEventListener('click', function(){
+    closeHackModal();
     termOverlay.classList.remove('hm-active');
     termOverlay.setAttribute('aria-hidden','true');
     buildReport();
     show('hm-screen-report');
-  }
+  });
 
   async function phase(text, cls, ms, shake){
     await addLine(text, cls, 100);
