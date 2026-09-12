@@ -846,14 +846,16 @@ body.theme-switching #env-ribbon{
 .os-nav{
   flex:0 0 200px; display:flex; flex-direction:column; gap:2px; padding:18px 10px; border-right:1px solid var(--line); overflow-y:auto;
 }
-.os-nav button{
+.os-nav button, .os-nav a{
   display:flex; align-items:center; gap:10px; text-align:left; background:transparent; border:none; cursor:pointer;
   font-family:var(--font-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim);
   padding:11px 12px; border-left:2px solid transparent; transition:color .25s, background .25s, border-color .25s;
 }
 .os-nav-num{ font-size:.58rem; color:var(--ink-faint); }
-.os-nav button:hover{ color:rgb(var(--ink)); background:rgba(var(--ink),0.03); }
+.os-nav button:hover, .os-nav a:hover{ color:rgb(var(--ink)); background:rgba(var(--ink),0.03); }
 .os-nav button.active{ color:rgb(var(--gold)); border-left-color:rgb(var(--gold)); background:rgba(var(--gold),.06); }
+.os-nav-login-link{ margin-top:8px; border-top:1px solid var(--line); padding-top:14px !important; color:rgb(var(--gold-soft)) !important; }
+.os-nav-login-link:hover{ color:rgb(var(--gold)) !important; border-left-color:rgb(var(--gold)); background:rgba(var(--gold),.06) !important; }
 
 .os-main{ flex:1 1 auto; min-width:0; overflow-y:auto; padding:clamp(20px,3vw,40px); }
 .os-mod{ display:none; animation:os-fade .45s var(--ease-theme); }
