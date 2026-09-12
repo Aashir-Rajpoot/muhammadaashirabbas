@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Simulation Complete — Connect with Aashir</title>
+<meta name="description" content="Cybersecurity awareness simulation complete. Connect with Muhammad Aashir Abbas (Aashir Rajpoot) across professional platforms.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="./aashir-profile.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050608; --panel:#0a0d12; --line:rgba(120,180,255,.16);
+    --blue:#4da3ff; --blue-dim:#2f7fd6; --red:#ff3b3b; --green:#00ff8c;
+    --ink:#e6f0fb; --ink-dim:#8496ad; --font-mono:'JetBrains Mono',monospace;
+    --font-display:'Orbitron',sans-serif; --font-ui:'Rajdhani',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font-ui);overflow-x:hidden;}
+  #sm-root{position:relative;min-height:100vh;padding:48px 20px 64px;}
+  #sm-root::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(120,180,255,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(120,180,255,.05) 1px, transparent 1px);
+    background-size:34px 34px;
+  }
+  #sm-root::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse at 50% 0%, rgba(77,163,255,.08), transparent 55%),radial-gradient(ellipse at 50% 100%, rgba(255,59,59,.06), transparent 55%);
+  }
+  .sm-wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;}
+  .sm-header{text-align:center;margin-bottom:42px;animation:sm-fadein .6s ease both;}
+  .sm-eyebrow{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.3em;color:var(--green);text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .sm-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:sm-pulse 1.6s infinite;}
+  @keyframes sm-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .sm-title{font-family:var(--font-display);font-weight:900;font-size:clamp(1.5rem,5vw,2.3rem);letter-spacing:.03em;color:#fff;margin:0 0 12px;text-shadow:0 0 22px rgba(77,163,255,.35);}
+  .sm-sub{font-family:var(--font-mono);font-size:.82rem;line-height:1.7;color:var(--ink-dim);max-width:520px;margin:0 auto;}
+  @keyframes sm-fadein{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .sm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  @media(max-width:620px){ .sm-grid{grid-template-columns:1fr;} }
+
+  .sm-card{position:relative;display:flex;align-items:center;gap:16px;padding:18px 20px;background:linear-gradient(180deg,rgba(14,20,28,.85),rgba(6,8,11,.9));border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);backdrop-filter:blur(6px);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;animation:sm-fadein .6s ease both;outline:none;}
+  .sm-card:nth-child(1){animation-delay:.05s;} .sm-card:nth-child(2){animation-delay:.1s;}
+  .sm-card:nth-child(3){animation-delay:.15s;} .sm-card:nth-child(4){animation-delay:.2s;}
+  .sm-card:nth-child(5){animation-delay:.25s;} .sm-card:nth-child(6){animation-delay:.3s;}
+  .sm-card:hover, .sm-card:focus-visible{transform:translateY(-3px);border-color:var(--card-accent, var(--blue));box-shadow:0 10px 34px rgba(0,0,0,.45),0 0 24px var(--card-glow, rgba(77,163,255,.25));background:linear-gradient(180deg,rgba(18,26,36,.92),rgba(7,9,13,.92));}
+  .sm-card:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+  .sm-icon{flex:0 0 auto;width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--card-accent, var(--blue));box-shadow:0 0 18px var(--card-glow, rgba(77,163,255,.35));}
+  .sm-icon svg{width:24px;height:24px;fill:#0a0d12;}
+  .sm-body{flex:1;min-width:0;}
+  .sm-platform{font-family:var(--font-display);font-weight:800;font-size:.92rem;letter-spacing:.02em;color:#fff;margin:0 0 3px;}
+  .sm-cta{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;color:var(--ink-dim);text-transform:uppercase;margin:0;}
+  .sm-arrow{flex:0 0 auto;font-family:var(--font-mono);color:var(--ink-dim);font-size:1rem;transition:transform .22s ease,color .22s ease;}
+  .sm-card:hover .sm-arrow, .sm-card:focus-visible .sm-arrow{transform:translateX(3px);color:var(--card-accent, var(--blue));}
+
+  .sm-footer{text-align:center;margin-top:44px;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.1em;color:var(--ink-dim);}
+  .sm-footer a{color:var(--blue);text-decoration:none;}
+  .sm-footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div id="sm-root">
+  <div class="sm-wrap">
+    <header class="sm-header">
+      <div class="sm-eyebrow"><span class="dot"></span> Simulation Complete</div>
+      <h1 class="sm-title">SIMULATION COMPLETE — YOU'RE SAFE</h1>
+      <p class="sm-sub">The cybersecurity awareness simulation has ended. Nothing on your device was accessed. Let's connect on the platforms below.</p>
+    </header>
+
+    <div class="sm-grid" role="list">
+
+      <a class="sm-card" role="listitem" href="https://www.linkedin.com/in/muhammad-aashir-abbas-9679b0279/" target="_blank" rel="noopener noreferrer" style="--card-accent:#0a66c2;--card-glow:rgba(10,102,194,.45);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.4 8.65 22 11.1 22 14.3V21h-4v-6.1c0-1.45-.03-3.3-2-3.3-2 0-2.3 1.6-2.3 3.2V21h-4V9Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">LinkedIn</p><p class="sm-cta">Let's Connect</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://github.com/" target="_blank" rel="noopener noreferrer" style="--card-accent:#e6edf3;--card-glow:rgba(230,237,243,.35);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.07.78 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">GitHub</p><p class="sm-cta">Follow / Explore</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://www.facebook.com/muhammadaashirabbas" target="_blank" rel="noopener noreferrer" style="--card-accent:#1877f2;--card-glow:rgba(24,119,242,.45);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">Facebook</p><p class="sm-cta">Please Follow</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://www.youtube.com/channel/UC3yUITdVY-GaPzGG5NqLcDw" target="_blank" rel="noopener noreferrer" style="--card-accent:#ff0000;--card-glow:rgba(255,0,0,.4);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.4A3 3 0 0 0 .5 6.5 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.5 3 3 0 0 0 2.1 2.1C4.5 20 12 20 12 20s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.5ZM9.6 15.5v-7L15.8 12l-6.2 3.5Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">YouTube</p><p class="sm-cta">Please Subscribe</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://www.fiverr.com/aashir_abbas757/" target="_blank" rel="noopener noreferrer" style="--card-accent:#1dbf73;--card-glow:rgba(29,191,115,.45);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M14.5 3c-2.7 0-4.5 1.7-4.5 4.5V9H8v3h2v9h3v-9h3.2l.5-3H13V7.6c0-.9.4-1.3 1.3-1.3H17V3h-2.5ZM6 9v3h1v9h3v-9h1.2L11.5 9H6Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">Fiverr</p><p class="sm-cta">View My Services</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://www.upwork.com/freelancers/~018bdc44e14897a153?mp_source=share" target="_blank" rel="noopener noreferrer" style="--card-accent:#14a800;--card-glow:rgba(20,168,0,.4);">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M18.6 8.6c-1.9 0-3.4 1.2-4 3-1-1.5-1.8-3.3-2.2-4.8H9.8v6.3c0 1.3-1 2.3-2.3 2.3S5.2 14.4 5.2 13.1V6.8H2.6v6.3c0 2.7 2.2 4.9 4.9 4.9 2.6 0 4.7-2 4.9-4.6.4.9.9 1.8 1.5 2.7l-1.4 6.5h2.7l1-4.7c.8.5 1.8.9 2.9.9 2.7 0 4.9-2.2 4.9-4.9 0-2.7-2-4.9-4.7-4.9Zm.1 7.2c-1.1 0-2.1-.6-2.7-1.6.1-1.7.9-2.9 2.6-2.9 1.3 0 2.3 1.1 2.3 2.3 0 1.2-1 2.2-2.2 2.2Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">Upwork</p><p class="sm-cta">Hire Me</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+      <a class="sm-card" role="listitem" href="https://muhammadaashirabbas.aashirrajpoot757.workers.dev/" target="_blank" rel="noopener noreferrer" style="--card-accent:#00ff8c;--card-glow:rgba(0,255,140,.4);grid-column:1/-1;">
+        <span class="sm-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v3H4V4Zm0 5h16v11H4V9Zm3 3v2h4v-2H7Z"/></svg></span>
+        <span class="sm-body"><p class="sm-platform">Portfolio</p><p class="sm-cta">Visit My Portfolio</p></span>
+        <span class="sm-arrow">→</span>
+      </a>
+
+    </div>
+
+    <p class="sm-footer">This simulation was entirely safe and local to your browser. <a href="/">← Back to Portfolio</a></p>
+  </div>
+</div>
+</body>
+</html>
