@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>AASHIR OS — Login</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="AASHIR OS — interactive simulated desktop environment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="os-desktop.css">
+</head>
+<body class="os2-body">
+
+<div id="os2-root">
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div id="os2-login-screen" data-visible="true">
+    <div class="os2-login-brand">
+      <span class="t1">AASHIR OS</span>
+      <span class="t2">Secure Access Terminal</span>
+    </div>
+
+    <div id="os2-login-modal">
+      <div class="os2-login-icon">AA</div>
+      <h2>Sign in to AASHIR OS</h2>
+      <p class="os2-login-sub">Authentication Required</p>
+
+      <form id="os2-login-form" autocomplete="off">
+        <div class="os2-field">
+          <label for="os2-login-user">Username</label>
+          <input type="text" id="os2-login-user" name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+        </div>
+        <div class="os2-field">
+          <label for="os2-login-pass">Password</label>
+          <input type="password" id="os2-login-pass" name="password" autocomplete="current-password" required>
+        </div>
+        <p id="os2-login-error" hidden></p>
+        <button type="submit" class="os2-login-submit">Login</button>
+      </form>
+
+      <p class="os2-login-hint">Demo access — username: admin · password: admin</p>
+    </div>
+  </div>
+
+  <!-- ============ BOOT OVERLAY ============ -->
+  <div id="os2-boot" hidden aria-hidden="true">
+    <span class="os2-boot-title">AASHIR OS</span>
+    <span class="os2-boot-status" id="os2-boot-status">INITIALIZING…</span>
+    <div class="os2-boot-bar"><span id="os2-boot-fill"></span></div>
+  </div>
+
+  <!-- ============ DESKTOP ============ -->
+  <div id="os2-desktop" data-visible="false">
+
+    <div id="os2-desktop-area">
+      <div id="os2-icons"></div>
+    </div>
+
+    <div id="os2-start-menu">
+      <button type="button" data-start="start-mycomputer">🖥️ My Computer</button>
+      <button type="button" data-start="start-explorer">🗂️ File Explorer</button>
+      <button type="button" data-start="start-browser">🌐 Aashir Browser</button>
+      <button type="button" data-start="start-terminal">⌁ Terminal</button>
+      <button type="button" data-start="start-recyclebin">🗑️ Recycle Bin</button>
+      <div class="os2-start-sep"></div>
+      <button type="button" onclick="window.location.href='index.html'">↩ Back to Portfolio</button>
+      <button type="button" data-start="start-logout">⏻ Logout</button>
+    </div>
+
+    <div id="os2-taskbar">
+      <button type="button" id="os2-start-btn">AASHIR OS</button>
+      <div id="os2-taskbar-quick">
+        <div class="os2-taskbar-icon" data-taskbar-launch="explorer" title="File Explorer">🗂️</div>
+        <div class="os2-taskbar-icon" data-taskbar-launch="browser" title="Aashir Browser">🌐</div>
+        <div class="os2-taskbar-icon" data-taskbar-launch="terminal" title="Terminal">⌁</div>
+      </div>
+      <div id="os2-taskbar-apps"></div>
+      <div id="os2-clock">
+        <span id="os2-clock-date">—</span>
+        <span id="os2-clock-time">--:--:--</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="os-vfs.js" defer></script>
+<script src="os-window.js" defer></script>
+<script src="os-apps.js" defer></script>
+<script src="os-terminal.js" defer></script>
+<script src="os-desktop.js" defer></script>
+<script src="os-auth.js" defer></script>
+</body>
+</html>
