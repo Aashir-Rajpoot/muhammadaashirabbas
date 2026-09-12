@@ -1,0 +1,135 @@
+/* =========================================================================
+   AASHIR X — REALITY ENGINE (Break Physics / Rotate World)
+   Additive only. Reuses existing design tokens (--gold, --font-mono, etc.)
+   defined in style.css. Does not alter any existing selectors.
+   ========================================================================= */
+
+/* ---- Shared scroll-lock (used while either mode is active) ---- */
+html.reality-scroll-lock{ overflow:hidden; }
+html.reality-scroll-lock body{ overflow:hidden; }
+
+/* ---- Control dock ---- */
+#reality-controls{
+  position:fixed;
+  inset:0;
+  z-index:900000;
+  pointer-events:none;
+}
+.reality-btn{
+  position:fixed;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 18px;
+  font-family:var(--font-mono);
+  font-size:.64rem;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  background:rgba(20,17,13,0.55);
+  border:1px solid var(--line-strong);
+  border-radius:999px;
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  cursor:pointer;
+  pointer-events:auto;
+  white-space:nowrap;
+  transition:border-color .25s var(--ease-soft), color .25s var(--ease-soft),
+             background .25s var(--ease-soft), transform .2s var(--ease-soft),
+             box-shadow .25s var(--ease-soft);
+}
+.reality-btn:hover, .reality-btn:focus-visible{
+  border-color:rgb(var(--gold));
+  color:rgb(var(--gold));
+  background:rgba(var(--gold),0.08);
+  transform:translateY(-2px);
+}
+.reality-btn:focus-visible{ outline:2px solid rgb(var(--gold)); outline-offset:3px; }
+.reality-btn.is-active{
+  border-color:rgb(var(--gold));
+  color:rgb(var(--gold));
+  box-shadow:0 0 22px -4px rgba(var(--gold),0.55);
+}
+
+#rw-toggle-btn{ top:28px; right:28px; }
+#gb-toggle-btn{ left:28px; bottom:24px; }
+
+@media (max-width:640px){
+  #rw-toggle-btn{ top:12px; right:12px; padding:8px 12px; font-size:.56rem; }
+  #gb-toggle-btn{ left:12px; bottom:14px; padding:8px 12px; font-size:.56rem; }
+}
+
+/* =========================================================================
+   BREAK PHYSICS
+   ========================================================================= */
+body.gb-active{ cursor:grab; }
+.gb-object{
+  will-change:transform;
+  touch-action:none;
+  -webkit-user-select:none; user-select:none;
+  box-shadow:0 18px 40px -14px rgba(0,0,0,0.55);
+}
+.gb-object *{ pointer-events:none; }
+.gb-object.gb-held{
+  cursor:grabbing;
+  z-index:870000 !important;
+  box-shadow:0 26px 60px -12px rgba(0,0,0,0.65), 0 0 0 1px rgba(var(--gold),0.4);
+}
+
+/* =========================================================================
+   ROTATE WORLD
+   ========================================================================= */
+html.rw-active{ perspective:2200px; }
+
+#rw-wrap{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  transition:transform 1.15s cubic-bezier(.65,0,.35,1);
+  transform-origin:50% 50%;
+  will-change:transform;
+  background:rgb(var(--environment-void));
+}
+#rw-wrap.rw-flipped{ transform:rotateY(180deg); }
+
+.rw-face{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  overflow:hidden;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  background:rgb(var(--environment-void));
+}
+.rw-back{ transform:rotateY(180deg); }
+
+.rw-back-inner{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:18px; text-align:center; padding:8vw;
+  background:
+    radial-gradient(700px circle at 50% 30%, rgba(var(--gold),0.08), transparent 60%),
+    rgb(var(--environment-void));
+}
+.rw-back-eyebrow{
+  font-family:var(--font-mono); font-size:.66rem; letter-spacing:.24em; text-transform:uppercase;
+  color:rgb(var(--gold-soft));
+}
+.rw-back-title{
+  font-family:var(--font-display); font-weight:400; font-size:clamp(2rem,7vw,4rem); color:rgb(var(--ink)); margin:0;
+}
+.rw-back-title em{ font-style:italic; color:rgb(var(--gold)); }
+.rw-back-line{ color:var(--ink-dim); max-width:44ch; font-size:.98rem; }
+.rw-back-nav{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:6px; }
+.rw-back-nav a{
+  font-family:var(--font-mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:10px 20px; border:1px solid var(--line-strong); border-radius:2px; color:var(--ink-dim);
+  transition:border-color .25s, color .25s, background .25s;
+}
+.rw-back-nav a:hover, .rw-back-nav a:focus-visible{
+  border-color:rgb(var(--gold)); color:rgb(var(--gold)); background:rgba(var(--gold),0.06);
+}
+.rw-back-hint{ color:var(--ink-faint); font-size:.72rem; font-family:var(--font-mono); letter-spacing:.06em; margin-top:8px; }
+
+@media (prefers-reduced-motion:reduce){
+  #rw-wrap{ transition-duration:.001ms !important; }
+}
