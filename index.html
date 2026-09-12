@@ -907,6 +907,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<!-- ============ HACK JOIN PROMPT (shown before normal portfolio experience) ============ -->
+<div class="hjoin-overlay" id="hjoinOverlay" aria-hidden="true">
+  <div class="hjoin-modal" id="hjoinModal" role="dialog" aria-modal="true" aria-labelledby="hjoinTitle">
+    <p class="hjoin-eyebrow">Security Notice</p>
+    <h3 id="hjoinTitle" class="hjoin-title" lang="ur" dir="rtl">کیا آپ Hacking System میں Join کرنا چاہتے ہیں؟</h3>
+    <div class="hjoin-actions">
+      <button type="button" class="hjoin-btn hjoin-yes" id="hjoinYes">YES</button>
+      <button type="button" class="hjoin-btn hjoin-no" id="hjoinNo">NO</button>
+    </div>
+  </div>
+</div>
+<style>
+  .hjoin-overlay{ position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; padding:24px;
+    background:rgba(6,5,4,0.72); backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%);
+    opacity:0; visibility:hidden; transition:opacity .45s var(--ease-soft), visibility 0s linear .45s; }
+  .hjoin-overlay.is-open{ opacity:1; visibility:visible; transition:opacity .45s var(--ease-soft), visibility 0s linear 0s; }
+  .hjoin-modal{ position:relative; width:100%; max-width:420px; padding:30px 26px 26px; border-radius:18px;
+    border:1px solid rgba(var(--gold),0.28); background:linear-gradient(180deg, rgba(24,20,15,0.9), rgba(12,10,8,0.94));
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(240,236,228,0.04) inset, 0 0 60px -10px rgba(var(--gold),0.18);
+    backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); text-align:center;
+    transform:translateY(18px) scale(.96); opacity:0; transition:transform .5s var(--ease), opacity .5s var(--ease-soft); }
+  .hjoin-overlay.is-open .hjoin-modal{ transform:translateY(0) scale(1); opacity:1; }
+  .hjoin-eyebrow{ font-family:var(--font-mono); font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; color:rgb(var(--gold-soft)); margin:0 0 12px; }
+  .hjoin-title{ font-family:var(--font-display); font-weight:400; font-size:1.25rem; line-height:1.6; color:rgb(var(--ink)); margin:0 0 24px; }
+  .hjoin-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .hjoin-btn{ font-family:var(--font-mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; padding:12px 26px;
+    border-radius:999px; cursor:pointer; border:1px solid var(--line-strong); background:rgba(240,236,228,0.04); color:var(--ink-dim);
+    transition:color .25s var(--ease-soft), border-color .25s var(--ease-soft), background .25s var(--ease-soft), transform .2s var(--ease-soft); }
+  .hjoin-btn:hover, .hjoin-btn:focus-visible{ transform:translateY(-2px); }
+  .hjoin-yes{ border-color:rgba(var(--gold),.55); color:rgb(var(--gold)); }
+  .hjoin-yes:hover, .hjoin-yes:focus-visible{ background:rgba(var(--gold),0.12); border-color:rgb(var(--gold)); }
+  .hjoin-no:hover, .hjoin-no:focus-visible{ color:rgb(var(--ink)); border-color:var(--line-strong); background:rgba(240,236,228,0.08); }
+  .hjoin-btn:focus-visible{ outline:2px solid rgb(var(--gold)); outline-offset:3px; }
+  @media(max-width:480px){ .hjoin-overlay{ padding:14px; } .hjoin-modal{ padding:24px 18px 20px; border-radius:14px; } }
+  @media (prefers-reduced-motion:reduce){ .hjoin-overlay, .hjoin-modal, .hjoin-btn{ transition-duration:.001ms !important; } }
+</style>
+<script>
+(function(){
+  'use strict';
+  if (sessionStorage.getItem('hjoinDismissed') === '1') return;
+  function ready(fn){ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+  ready(function(){
+    var overlay = document.getElementById('hjoinOverlay');
+    var yesBtn = document.getElementById('hjoinYes');
+    var noBtn = document.getElementById('hjoinNo');
+    if(!overlay || !yesBtn || !noBtn) return;
+    var lastFocused = document.activeElement;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ yesBtn.focus(); }, 250);
+    function close(){
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('hjoinDismissed','1');
+      document.removeEventListener('keydown', onKeydown);
+      if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    }
+    function onKeydown(e){ if(e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKeydown);
+    yesBtn.addEventListener('click', function(){
+      sessionStorage.setItem('hjoinDismissed','1');
+      window.location.href = '/HackMe.html';
+    });
+    noBtn.addEventListener('click', close);
+    overlay.addEventListener('mousedown', function(e){ if(e.target === overlay) close(); });
+  });
+})();
+</script>
+
 <!-- ============ GITHUB DEMO ACCESS POPUP (frontend-only, no backend) ============ -->
 <div class="gdemo-overlay" id="gdemoOverlay" aria-hidden="true">
   <div class="gdemo-modal" id="gdemoModal" role="dialog" aria-modal="true" aria-labelledby="gdemoTitle">
