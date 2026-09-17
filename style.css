@@ -215,12 +215,12 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 }
 .kicker-line{ width:34px; height:1px; background:rgb(var(--gold)); }
 .hero-name{
-  font-weight:400; line-height:1.05; letter-spacing:-0.01em;
+  font-weight:500; line-height:1.05; letter-spacing:-0.01em;
   font-size:clamp(1.9rem,4.6vw,3.6rem);
 }
 .name-line{ display:block; transform:translateY(30px); opacity:0; animation:lineUp .95s var(--ease) forwards; }
 .name-line:nth-child(1){ animation-delay:.5s; }
-.name-line-em{ font-style:italic; color:rgb(var(--gold-soft)); animation-delay:.66s; }
+.name-line-em{ font-style:italic; font-weight:500; color:rgb(var(--gold-soft)); animation-delay:.66s; }
 @keyframes lineUp{ to{ transform:translateY(0); opacity:1; } }
 .hero-role{
   margin-top:24px; font-family:var(--font-mono); font-size:.76rem; letter-spacing:.06em; color:var(--ink-dim);
@@ -304,7 +304,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 
 /* ========================================================================= WORLDS / INDEX LIST */
 .worlds-head{ max-width:640px; margin:0 auto 30px; text-align:left; }
-.worlds-head h2{ font-size:clamp(2rem,5vw,3.2rem); font-weight:400; margin-bottom:14px; }
+.worlds-head h2{ font-size:clamp(2rem,5vw,3.2rem); font-weight:500; margin-bottom:14px; }
 .worlds-head p{ color:var(--ink-dim); font-size:.96rem; max-width:44ch; }
 #shuffle-btn{
   margin-top:24px; display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
@@ -324,7 +324,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 .index-row.in-view{ opacity:1; transform:translateY(0); }
 .row-index{ font-family:var(--font-mono); font-size:.72rem; color:var(--ink-faint); transition:color .3s; }
 .row-title{
-  font-family:var(--font-display); font-weight:400; font-size:clamp(1.8rem,4.4vw,3.4rem); line-height:1;
+  font-family:var(--font-display); font-weight:500; font-size:clamp(1.8rem,4.4vw,3.4rem); line-height:1;
   transition:color .35s, transform .35s var(--ease); color:rgb(var(--ink));
 }
 .row-tag{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.05em; color:var(--ink-faint); white-space:nowrap; transition:color .3s; }
@@ -357,7 +357,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 .about-page{ max-width:1180px; margin:0 auto; padding-top:0; padding-bottom:0; }
 .about-block{ padding:min(11vh,86px) 0; border-top:1px solid var(--line); }
 .about-block:first-child{ border-top:none; padding-top:0; }
-.about-block h2{ font-size:clamp(2rem,5vw,3rem); font-weight:400; margin-bottom:18px; }
+.about-block h2{ font-size:clamp(2rem,5vw,3rem); font-weight:500; margin-bottom:18px; }
 .about-lede{ color:var(--ink-dim); font-size:1.02rem; max-width:52ch; line-height:1.7; margin-bottom:16px; }
 .about-body{ color:var(--ink-dim); font-size:.98rem; max-width:64ch; line-height:1.75; }
 
@@ -401,7 +401,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 .sk-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .sk-num{ font-family:var(--font-mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.1em; }
 .sk-badge{ font-family:var(--font-mono); font-size:.56rem; letter-spacing:.08em; text-transform:uppercase; color:rgb(var(--gold)); border:1px solid rgba(var(--gold),.4); border-radius:999px; padding:2px 8px; }
-.sk-name{ font-family:var(--font-display); font-weight:400; font-size:1.15rem; color:rgb(var(--ink)); margin:0; }
+.sk-name{ font-family:var(--font-display); font-weight:500; font-size:1.15rem; color:rgb(var(--ink)); margin:0; }
 .sk-desc{ font-size:.84rem; color:var(--ink-dim); line-height:1.55; flex:1; }
 @media (max-width:900px){ .skills-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:600px){ .skills-grid{ grid-template-columns:1fr; } }
@@ -451,7 +451,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 }
 .skill-index li:first-child{ border-top:1px solid var(--line); }
 .skill-num{ font-family:var(--font-mono); font-size:.7rem; color:var(--ink-faint); transition:color .3s; }
-.skill-name{ font-family:var(--font-display); font-size:clamp(1.15rem,2.4vw,1.6rem); font-weight:400; transition:color .3s, transform .3s var(--ease); }
+.skill-name{ font-family:var(--font-display); font-size:clamp(1.15rem,2.4vw,1.6rem); font-weight:500; transition:color .3s, transform .3s var(--ease); }
 .skill-index li:hover, .skill-index li.active{ padding-left:10px; }
 .skill-index li:hover .skill-num, .skill-index li.active .skill-num{ color:rgb(var(--gold)); }
 .skill-index li:hover .skill-name, .skill-index li.active .skill-name{ color:rgb(var(--gold-soft)); }
@@ -466,7 +466,7 @@ section{ padding:min(15vh,120px) clamp(22px,6vw,80px); position:relative; }
 }
 .project-card:hover{ background:rgba(var(--gold),0.05); }
 .pc-num{ font-family:var(--font-mono); font-size:.68rem; color:var(--ink-faint); letter-spacing:.1em; }
-.pc-title{ font-family:var(--font-display); font-weight:400; font-size:1.3rem; color:rgb(var(--ink)); margin:0; }
+.pc-title{ font-family:var(--font-display); font-weight:500; font-size:1.3rem; color:rgb(var(--ink)); margin:0; }
 .pc-desc{ font-size:.86rem; color:var(--ink-dim); line-height:1.55; flex:1; }
 .pc-cat{ font-family:var(--font-mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
 .pc-link{
@@ -1000,7 +1000,7 @@ body.theme-switching #env-ribbon{
 }
 .app-card-icon svg{ width:26px; height:26px; }
 
-.app-card h3{ font-size:clamp(1.4rem,3vw,1.8rem); font-weight:400; margin:0; }
+.app-card h3{ font-size:clamp(1.4rem,3vw,1.8rem); font-weight:500; margin:0; }
 .app-card .about-lede{ margin-bottom:0; }
 
 .app-card .info-grid{ grid-template-columns:repeat(2,1fr); max-width:none; margin-top:6px; }
@@ -1199,7 +1199,7 @@ body.theme-switching #env-ribbon{
 .faq-q-wrap{ margin:0; }
 .faq-question{
   width:100%; display:flex; align-items:center; justify-content:space-between; gap:20px;
-  padding:22px 4px; text-align:left; font-family:var(--font-display); font-weight:400;
+  padding:22px 4px; text-align:left; font-family:var(--font-display); font-weight:500;
   font-size:clamp(1rem,2.4vw,1.18rem); color:rgb(var(--ink)); letter-spacing:-0.005em;
   background:transparent; border:none; cursor:pointer;
   transition:color .3s var(--ease-soft), padding-left .3s var(--ease-soft);
