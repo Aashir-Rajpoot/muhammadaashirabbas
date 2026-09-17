@@ -7,7 +7,7 @@
 <title>Admin · Muhammad Aashir Abbas</title>
 <link rel="icon" href="./aashir-profile.jpeg">
 <style>
-  :root{--bg:#0a0806;--panel:#15110d;--border:#2a231c;--text:#f2ece3;--muted:#9c9184;--accent:#e0b060;--danger:#e06060;--ok:#6ac47a}
+  :root{--bg:#faf9f6;--panel:#ffffff;--border:rgba(26,24,20,0.14);--text:#1a1814;--muted:#6b6358;--accent:#98763d;--danger:#c0453f;--ok:#1f9d5c}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,sans-serif}
   .wrap{max-width:1200px;margin:0 auto;padding:24px}
@@ -18,7 +18,7 @@
   .card h1{font-size:1.3rem;margin:0 0 6px}
   .card p.sub{color:var(--muted);font-size:.85rem;margin:0 0 20px}
   label{display:block;font-size:.8rem;color:var(--muted);margin:14px 0 6px}
-  input{width:100%;padding:10px 12px;background:#000;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem}
+  input{width:100%;padding:10px 12px;background:#f2f0ec;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem}
   button{cursor:pointer;border:none;border-radius:8px;font-weight:600;font-size:.9rem}
   .btn-primary{width:100%;margin-top:20px;padding:11px;background:var(--accent);color:#20180c}
   .btn-link{background:none;color:var(--accent);padding:0;font-size:.8rem;margin-top:14px}
@@ -44,7 +44,7 @@
   th{color:var(--muted);font-weight:500}
   .barrow{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.82rem}
   .barrow .lbl{width:80px;flex-shrink:0;color:var(--muted)}
-  .barrow .track{flex:1;background:#000;border-radius:4px;height:8px;overflow:hidden}
+  .barrow .track{flex:1;background:#eeece6;border-radius:4px;height:8px;overflow:hidden}
   .barrow .fill{height:100%;background:var(--accent)}
   #loading,#error-box{text-align:center;padding:60px 20px;color:var(--muted)}
   #error-box{color:var(--danger);display:none}
@@ -305,9 +305,9 @@ async function loadDashboard() {
         type: "line",
         data: {
           labels: last14.map(d => d.label),
-          datasets: [{ label: "Views", data: last14.map(d => d.views), borderColor: "#e0b060", backgroundColor: "rgba(224,176,96,.15)", fill: true, tension: .3 }]
+          datasets: [{ label: "Views", data: last14.map(d => d.views), borderColor: "#98763d", backgroundColor: "rgba(152,118,61,.15)", fill: true, tension: .3 }]
         },
-        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: "#9c9184" } }, x: { ticks: { color: "#9c9184" } } } }
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: "#6b6358" } }, x: { ticks: { color: "#6b6358" } } } }
       });
 
       // Device pie
@@ -316,9 +316,9 @@ async function loadDashboard() {
         type: "doughnut",
         data: {
           labels: Object.keys(devices),
-          datasets: [{ data: Object.values(devices), backgroundColor: ["#e0b060", "#6ac47a", "#e06060", "#7aa6e0"] }]
+          datasets: [{ data: Object.values(devices), backgroundColor: ["#98763d", "#1f9d5c", "#c0453f", "#3f7fc2"] }]
         },
-        options: { plugins: { legend: { position: "bottom", labels: { color: "#f2ece3" } } } }
+        options: { plugins: { legend: { position: "bottom", labels: { color: "#1a1814" } } } }
       });
     } catch (chartErr) {
       console.error("Charts unavailable:", chartErr);
