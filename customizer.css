@@ -92,7 +92,7 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-rows{ display:flex; flex-direction:column; gap:6px; }
 .cz-row{
   display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid var(--line);
-  background:rgba(255,255,255,0.02); cursor:grab; transition:opacity .2s, border-color .2s;
+  background:rgba(20,18,14,0.025); cursor:grab; transition:opacity .2s, border-color .2s;
 }
 .cz-row.dragging{ opacity:.35; border-color:rgb(var(--gold)); cursor:grabbing; }
 .cz-drag-handle{ color:var(--ink-faint); font-size:.7rem; line-height:1; letter-spacing:-2px; flex-shrink:0; user-select:none; }
@@ -116,7 +116,7 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-cursor-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .cz-cursor-opt{
   display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line);
-  background:rgba(255,255,255,0.02); font-size:.76rem; color:var(--ink-dim); text-align:left;
+  background:rgba(20,18,14,0.025); font-size:.76rem; color:var(--ink-dim); text-align:left;
   transition:border-color .2s, color .2s;
 }
 .cz-cursor-opt:hover{ border-color:var(--line-strong); color:var(--ink); }
@@ -134,7 +134,7 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 /* ---------- Make It Mine ---------- */
 .cz-field-label{ display:block; font-size:.72rem; letter-spacing:.04em; color:var(--ink-faint); margin-bottom:6px; }
 .cz-text-input{
-  width:100%; padding:10px 12px; background:rgba(255,255,255,0.03); border:1px solid var(--line-strong);
+  width:100%; padding:10px 12px; background:rgba(20,18,14,0.03); border:1px solid var(--line-strong);
   color:var(--ink); font-family:inherit; font-size:.85rem; margin-bottom:18px;
 }
 .cz-text-input:focus{ outline:none; border-color:rgb(var(--gold)); }
@@ -142,7 +142,7 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-avatar-preview{ width:64px; height:64px; border-radius:50%; object-fit:cover; border:1px solid var(--line-strong); flex-shrink:0; }
 .cz-avatar-controls{ display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
 .cz-upload-btn{
-  display:inline-block; padding:9px 14px; font-size:.74rem; letter-spacing:.03em; color:rgb(var(--surface));
+  display:inline-block; padding:9px 14px; font-size:.74rem; letter-spacing:.03em; color:#fff;
   background:rgb(var(--gold)); cursor:pointer; transition:opacity .2s;
 }
 .cz-upload-btn:hover{ opacity:.9; }
@@ -154,8 +154,8 @@ body[data-cz-spacing="spacious"] #closing{ padding-top:160px; padding-bottom:160
 .cz-foot{ display:flex; gap:10px; margin-top:6px; padding-top:16px; border-top:1px solid var(--line); }
 .cz-foot button{ flex:1; padding:11px 14px; font-size:.76rem; letter-spacing:.04em; border:1px solid var(--line-strong); transition:border-color .25s, color .25s, background .25s; }
 #cz-reset{ color:var(--ink-dim); }
-#cz-reset:hover{ border-color:rgba(200,90,90,.6); color:#d98787; }
-#cz-save{ background:rgb(var(--gold)); border-color:rgb(var(--gold)); color:rgb(var(--surface)); font-weight:600; }
+#cz-reset:hover{ border-color:rgba(200,90,90,.6); color:#c0453f; }
+#cz-save{ background:rgb(var(--gold)); border-color:rgb(var(--gold)); color:#fff; font-weight:600; }
 #cz-save:hover{ opacity:.9; }
 
 @media (max-width:480px){
