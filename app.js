@@ -44,13 +44,13 @@ const Reality = {
    stays reactive while the day still owns the primary color identity. */
 const ThemeEngine = {
   palettes: {
-    mon: { primary: '198,90,58',   secondary: '122,46,46',   glow: '217,116,82',  void: '18,11,9'  },
-    tue: { primary: '47,169,140',  secondary: '30,110,134',  glow: '79,203,168',  void: '7,15,13'  },
-    wed: { primary: '192,138,62',  secondary: '138,90,42',   glow: '217,168,92',  void: '18,14,8'  },
-    thu: { primary: '123,108,240', secondary: '179,108,240', glow: '154,140,255', void: '10,8,20'  },
-    fri: { primary: '212,175,55',  secondary: '139,30,63',   glow: '232,196,104', void: '13,9,6'   },
-    sat: { primary: '51,198,224',  secondary: '224,51,155',  glow: '95,224,240',  void: '7,10,18'  },
-    sun: { primary: '143,169,138', secondary: '183,160,140', glow: '169,194,160', void: '12,14,11' },
+    mon: { primary: '198,90,58',   secondary: '122,46,46',   glow: '217,116,82',  void: '251,246,244'  },
+    tue: { primary: '47,169,140',  secondary: '30,110,134',  glow: '79,203,168',  void: '244,249,247'  },
+    wed: { primary: '192,138,62',  secondary: '138,90,42',   glow: '217,168,92',  void: '251,248,242'  },
+    thu: { primary: '123,108,240', secondary: '179,108,240', glow: '154,140,255', void: '247,246,252'  },
+    fri: { primary: '212,175,55',  secondary: '139,30,63',   glow: '232,196,104', void: '251,249,242'   },
+    sat: { primary: '51,198,224',  secondary: '224,51,155',  glow: '95,224,240',  void: '244,250,251'  },
+    sun: { primary: '143,169,138', secondary: '183,160,140', glow: '169,194,160', void: '248,249,246' },
   },
   weatherOverride: {
     rain: { glow: '127,184,232' },
@@ -168,7 +168,7 @@ const BootEngine = {
       pts.forEach((p) => {
         p.a += 0.01;
         ctx.globalAlpha = 0.25 + Math.sin(p.a) * 0.2;
-        ctx.fillStyle = '#e7e6ed';
+        ctx.fillStyle = '#cdbfa0';
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
       });
       ctx.globalAlpha = 1;
@@ -464,7 +464,7 @@ const ParticleEngine = {
     }
 
     if (Reality.weather === 'rain') {
-      ctx.strokeStyle = 'rgba(200,220,240,0.5)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(120,140,165,0.45)'; ctx.lineWidth = 1;
       this.particles.forEach((p) => {
         ctx.globalAlpha = p.o;
         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + p.drift * 4, p.y + p.len); ctx.stroke();
@@ -475,7 +475,7 @@ const ParticleEngine = {
       this.particles.forEach((p) => {
         p.sway += 0.01;
         ctx.globalAlpha = p.o * (0.5 + p.depth * 0.5);
-        ctx.fillStyle = '#eef4fa';
+        ctx.fillStyle = '#c9d8e6';
         ctx.beginPath(); ctx.arc(p.x + Math.sin(p.sway) * 8, p.y, p.r * (0.6 + p.depth), 0, Math.PI * 2); ctx.fill();
         p.y += p.speed * (0.6 + p.depth); p.x += p.drift;
         if (p.y > h) { p.y = -10; p.x = Math.random() * w; }
@@ -486,13 +486,13 @@ const ParticleEngine = {
         const d = Math.hypot(p.x - px, p.y - py);
         const push = d < 140 ? (140 - d) / 140 : 0;
         ctx.globalAlpha = clamp(0.3 + Math.sin(p.tw) * 0.3 + push * 0.4, 0, 1);
-        ctx.fillStyle = '#e7e6ed';
+        ctx.fillStyle = '#cdbfa0';
         ctx.beginPath(); ctx.arc(p.x - vx * push * 4, p.y - vy * push * 4, p.r + push * 1.2, 0, Math.PI * 2); ctx.fill();
       });
     } else {
       this.particles.forEach((p) => {
         ctx.globalAlpha = p.o;
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#cdbfa0';
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
         p.y -= p.speed; p.x += p.drift;
         if (p.y < -10) { p.y = h + 10; p.x = Math.random() * w; }
